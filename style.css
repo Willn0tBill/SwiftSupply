@@ -10,6 +10,7 @@
 * {
     margin: 0;
     padding: 0;
+
     box-sizing: border-box;
 }
 
@@ -20,9 +21,13 @@ html {
 
 
 body {
-    font-family: "Inter", Arial, sans-serif;
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
 
     background: #ffffff;
+
     color: #111111;
 
     overflow-x: hidden;
@@ -40,15 +45,23 @@ body.modal-open {
 
 .header {
     position: sticky;
+
     top: 0;
 
     z-index: 100;
 
-    background: rgba(255, 255, 255, 0.92);
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.92
+        );
 
     backdrop-filter: blur(12px);
 
-    border-bottom: 1px solid #eeeeee;
+    border-bottom:
+        1px solid #eeeeee;
 }
 
 
@@ -57,11 +70,14 @@ body.modal-open {
 
     margin: auto;
 
-    padding: 20px 30px;
+    padding:
+        20px
+        30px;
 
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     align-items: center;
 }
@@ -100,7 +116,9 @@ body.modal-open {
 
     display: inline-block;
 
-    padding: 8px 0;
+    padding:
+        8px
+        0;
 
     color: #666666;
 
@@ -110,7 +128,10 @@ body.modal-open {
 
     font-weight: 600;
 
-    transition: color 0.25s ease;
+    transition:
+        color
+        0.25s
+        ease;
 }
 
 
@@ -122,6 +143,7 @@ body.modal-open {
     position: absolute;
 
     left: 0;
+
     bottom: 0;
 
     width: 0%;
@@ -132,7 +154,10 @@ body.modal-open {
 
     border-radius: 20px;
 
-    transition: width 0.3s ease;
+    transition:
+        width
+        0.3s
+        ease;
 }
 
 
@@ -190,19 +215,24 @@ h2 {
 
     align-items: center;
 
-    padding: 100px 30px;
+    padding:
+        100px
+        30px;
 
     background:
+
         radial-gradient(
             circle at 85% 15%,
             #dbeafe 0%,
             transparent 30%
         ),
+
         radial-gradient(
             circle at 10% 90%,
             #eff6ff 0%,
             transparent 25%
         ),
+
         #ffffff;
 }
 
@@ -219,7 +249,12 @@ h2 {
 .hero h1 {
     max-width: 950px;
 
-    font-size: clamp(50px, 8vw, 100px);
+    font-size:
+        clamp(
+            50px,
+            8vw,
+            100px
+        );
 
     line-height: 0.95;
 
@@ -258,7 +293,9 @@ h2 {
 .secondary-button {
     display: inline-block;
 
-    padding: 14px 24px;
+    padding:
+        14px
+        24px;
 
     border-radius: 9px;
 
@@ -283,7 +320,8 @@ h2 {
 
 
 .primary-button:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     background: #2563eb;
 }
@@ -292,14 +330,16 @@ h2 {
 .secondary-button {
     color: #111111;
 
-    border: 1px solid #dddddd;
+    border:
+        1px solid #dddddd;
 
     background: #ffffff;
 }
 
 
 .secondary-button:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     border-color: #2563eb;
 }
@@ -314,14 +354,21 @@ h2 {
 
     margin: auto;
 
-    padding: 120px 30px;
+    padding:
+        120px
+        30px;
 
     text-align: center;
 }
 
 
 .about-section h2 {
-    font-size: clamp(38px, 5vw, 62px);
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            62px
+        );
 
     margin-bottom: 25px;
 }
@@ -335,7 +382,9 @@ h2 {
 .section-text {
     max-width: 700px;
 
-    margin: 15px auto;
+    margin:
+        15px
+        auto;
 
     color: #666666;
 
@@ -350,7 +399,9 @@ h2 {
 ========================= */
 
 .products-section {
-    padding: 120px 30px;
+    padding:
+        120px
+        30px;
 
     text-align: center;
 
@@ -359,7 +410,12 @@ h2 {
 
 
 .products-section h2 {
-    font-size: clamp(38px, 5vw, 62px);
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            62px
+        );
 }
 
 
@@ -375,11 +431,18 @@ h2 {
 .product-grid {
     max-width: 1100px;
 
-    margin: 60px auto 0;
+    margin:
+        60px
+        auto
+        0;
 
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
 
     gap: 22px;
 }
@@ -394,9 +457,12 @@ h2 {
 
     background: #ffffff;
 
-    padding: 42px 30px;
+    padding:
+        42px
+        30px;
 
-    border: 1px solid transparent;
+    border:
+        1px solid transparent;
 
     border-radius: 18px;
 
@@ -408,13 +474,19 @@ h2 {
 
 
 .product-card:hover {
-    transform: translateY(-7px);
+    transform:
+        translateY(-7px);
 
     border-color: #dbeafe;
 
     box-shadow:
         0 20px 45px
-        rgba(0, 0, 0, 0.08);
+        rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
 }
 
 
@@ -446,7 +518,9 @@ h2 {
 
     margin-top: 30px;
 
-    padding: 14px 18px;
+    padding:
+        14px
+        18px;
 
     border: none;
 
@@ -473,7 +547,8 @@ h2 {
 .order-button:hover {
     background: #2563eb;
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 }
 
 
@@ -482,7 +557,9 @@ h2 {
 ========================= */
 
 .goal-section {
-    padding: 130px 30px;
+    padding:
+        130px
+        30px;
 
     background: #111111;
 
@@ -498,14 +575,22 @@ h2 {
 
 
 .goal-section h2 {
-    font-size: clamp(38px, 5vw, 62px);
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            62px
+        );
 }
 
 
 .goal-description {
     max-width: 620px;
 
-    margin: 25px auto 0;
+    margin:
+        25px
+        auto
+        0;
 
     color: #aaaaaa;
 
@@ -514,9 +599,17 @@ h2 {
 
 
 .goal-number {
-    margin: 45px 0 25px;
+    margin:
+        45px
+        0
+        25px;
 
-    font-size: clamp(70px, 12vw, 145px);
+    font-size:
+        clamp(
+            70px,
+            12vw,
+            145px
+        );
 
     font-weight: 800;
 
@@ -578,14 +671,18 @@ h2 {
 
     border-radius: 50px;
 
-    transition: width 1.5s ease;
+    transition:
+        width
+        1.5s
+        ease;
 }
 
 
 .progress-labels {
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     margin-top: 12px;
 
@@ -609,25 +706,39 @@ h2 {
 ========================= */
 
 .future-section {
-    padding: 120px 30px;
+    padding:
+        120px
+        30px;
 
     text-align: center;
 }
 
 
 .future-section h2 {
-    font-size: clamp(38px, 5vw, 62px);
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            62px
+        );
 }
 
 
 .future-grid {
     max-width: 1050px;
 
-    margin: 60px auto 0;
+    margin:
+        60px
+        auto
+        0;
 
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
 
     gap: 25px;
 }
@@ -652,7 +763,9 @@ h2 {
 
 
 .future-card h3 {
-    margin: 15px 0;
+    margin:
+        15px
+        0;
 
     font-size: 24px;
 }
@@ -670,7 +783,9 @@ h2 {
 ========================= */
 
 footer {
-    padding: 60px 30px;
+    padding:
+        60px
+        30px;
 
     text-align: center;
 
@@ -718,9 +833,16 @@ footer p {
 
     padding: 30px;
 
-    background: rgba(0, 0, 0, 0.6);
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.6
+        );
 
-    backdrop-filter: blur(7px);
+    backdrop-filter:
+        blur(7px);
 }
 
 
@@ -731,7 +853,10 @@ footer p {
 
     align-items: center;
 
-    animation: fadeIn 0.25s ease;
+    animation:
+        fadeIn
+        0.25s
+        ease;
 }
 
 
@@ -742,7 +867,10 @@ footer p {
 
     max-width: 620px;
 
-    max-height: calc(100vh - 60px);
+    max-height:
+        calc(
+            100vh - 60px
+        );
 
     overflow-y: auto;
 
@@ -754,9 +882,17 @@ footer p {
 
     box-shadow:
         0 25px 80px
-        rgba(0, 0, 0, 0.3);
+        rgba(
+            0,
+            0,
+            0,
+            0.3
+        );
 
-    animation: slideUp 0.3s ease;
+    animation:
+        slideUp
+        0.3s
+        ease;
 }
 
 
@@ -782,6 +918,11 @@ footer p {
     font-size: 28px;
 
     cursor: pointer;
+
+    transition:
+        background
+        0.2s
+        ease;
 }
 
 
@@ -800,7 +941,10 @@ footer p {
 
 
 .form-description {
-    margin: 12px 0 30px;
+    margin:
+        12px
+        0
+        30px;
 
     color: #666666;
 
@@ -846,7 +990,8 @@ footer p {
 
     padding: 14px;
 
-    border: 1px solid #dddddd;
+    border:
+        1px solid #dddddd;
 
     border-radius: 9px;
 
@@ -857,6 +1002,14 @@ footer p {
     font-family: inherit;
 
     font-size: 14px;
+
+    transition:
+        border-color
+        0.2s
+        ease,
+        box-shadow
+        0.2s
+        ease;
 }
 
 
@@ -876,9 +1029,18 @@ footer p {
 
     box-shadow:
         0 0 0 3px
-        rgba(37, 99, 235, 0.1);
+        rgba(
+            37,
+            99,
+            235,
+            0.1
+        );
 }
 
+
+/* =========================
+   PRIVACY
+========================= */
 
 .privacy-note {
     margin-top: 10px;
@@ -890,6 +1052,10 @@ footer p {
     line-height: 1.6;
 }
 
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
 
 .submit-button {
     margin-top: 15px;
@@ -913,15 +1079,21 @@ footer p {
     cursor: pointer;
 
     transition:
-        transform 0.2s ease,
-        background 0.2s ease;
+        transform
+        0.2s
+        ease,
+
+        background
+        0.2s
+        ease;
 }
 
 
-.submit-button:hover {
+.submit-button:hover:not(:disabled) {
     background: #1d4ed8;
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 }
 
 
@@ -929,24 +1101,102 @@ footer p {
     opacity: 0.7;
 
     cursor: not-allowed;
-
-    transform: none;
 }
 
 
-.form-status {
-    min-height: 20px;
+/* =========================
+   FORMSPREE
+========================= */
 
-    margin-top: 5px;
+/* Hidden until Formspree activates them */
+
+[data-fs-success],
+[data-fs-error] {
+    display: none;
+}
+
+
+/* Success message */
+
+[data-fs-success][data-fs-active] {
+    display: block;
+
+    margin-bottom: 20px;
+
+    padding: 14px;
+
+    border:
+        1px solid #bbf7d0;
+
+    border-radius: 9px;
+
+    background: #f0fdf4;
+
+    color: #166534;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* General form error */
+
+[data-fs-error=""][data-fs-active] {
+    display: block;
+
+    margin-bottom: 15px;
+
+    padding: 14px;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
 
     font-size: 13px;
-
-    text-align: center;
 }
 
 
+/* Field errors */
+
+.field-error[data-fs-active] {
+    display: block;
+
+    color: #dc2626;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* Invalid fields */
+
+[data-fs-field][aria-invalid="true"] {
+    border-color: #dc2626 !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            220,
+            38,
+            38,
+            0.08
+        );
+}
+
+
+/* =========================
+   HONEYPOT
+========================= */
+
 .honeypot {
-    display: none;
+    display: none !important;
 }
 
 
@@ -959,6 +1209,7 @@ footer p {
     from {
         opacity: 0;
     }
+
 
     to {
         opacity: 1;
@@ -977,6 +1228,7 @@ footer p {
             scale(0.98);
     }
 
+
     to {
         opacity: 1;
 
@@ -989,7 +1241,7 @@ footer p {
 
 
 /* =========================
-   MOBILE
+   TABLET
 ========================= */
 
 @media (max-width: 800px) {
@@ -1028,10 +1280,16 @@ footer p {
 }
 
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
 
     .navbar {
-        padding: 16px 20px;
+        padding:
+            16px
+            20px;
     }
 
 
@@ -1050,6 +1308,7 @@ footer p {
     .goal-section,
     .future-section {
         padding-left: 20px;
+
         padding-right: 20px;
     }
 
@@ -1061,15 +1320,33 @@ footer p {
     }
 
 
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
     .modal {
         padding: 12px;
     }
 
 
     .modal-content {
-        max-height: calc(100vh - 24px);
+        max-height:
+            calc(
+                100vh - 24px
+            );
 
-        padding: 38px 22px;
+        padding:
+            38px
+            22px;
+    }
+
+
+    .modal-content h2 {
+        font-size: 27px;
     }
 
 
