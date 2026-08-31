@@ -1,8 +1,10 @@
 /* =========================
-   SETTINGS
+   SWIFTSUPPLY SETTINGS
 ========================= */
 
-// Update this as your vending fund grows.
+// Update this number whenever your
+// vending machine fund increases.
+
 const currentAmount = 0;
 
 const goalAmount = 5000;
@@ -13,11 +15,15 @@ const goalAmount = 5000;
 ========================= */
 
 const sections =
-    document.querySelectorAll("section[id]");
+    document.querySelectorAll(
+        "section[id]"
+    );
 
 
 const navLinks =
-    document.querySelectorAll(".nav-link");
+    document.querySelectorAll(
+        ".nav-link"
+    );
 
 
 function updateActiveNavigation() {
@@ -25,47 +31,70 @@ function updateActiveNavigation() {
     let currentSection = "home";
 
 
-    sections.forEach((section) => {
+    sections.forEach(
+        (section) => {
 
-        const sectionTop =
-            section.offsetTop;
-
-        const sectionHeight =
-            section.offsetHeight;
-
-        const scrollPosition =
-            window.scrollY + 180;
+            const sectionTop =
+                section.offsetTop;
 
 
-        if (
-            scrollPosition >= sectionTop &&
-            scrollPosition <
-            sectionTop + sectionHeight
-        ) {
-
-            currentSection =
-                section.getAttribute("id");
-
-        }
-
-    });
+            const sectionHeight =
+                section.offsetHeight;
 
 
-    navLinks.forEach((link) => {
+            const scrollPosition =
+                window.scrollY + 180;
 
-        link.classList.remove("active");
 
+            if (
 
-        if (
-            link.getAttribute("href") ===
-            "#" + currentSection
-        ) {
+                scrollPosition >=
+                sectionTop
 
-            link.classList.add("active");
+                &&
+
+                scrollPosition <
+                sectionTop +
+                sectionHeight
+
+            ) {
+
+                currentSection =
+                    section.getAttribute(
+                        "id"
+                    );
+
+            }
 
         }
+    );
 
-    });
+
+    navLinks.forEach(
+        (link) => {
+
+            link.classList.remove(
+                "active"
+            );
+
+
+            if (
+
+                link.getAttribute(
+                    "href"
+                ) ===
+                "#" + currentSection
+
+            ) {
+
+                link.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
 
 }
 
@@ -89,22 +118,37 @@ window.addEventListener(
 function updateFundProgress() {
 
     const progress =
-        document.getElementById("progress");
+        document.getElementById(
+            "progress"
+        );
 
 
     const amountDisplay =
-        document.getElementById("currentAmount");
+        document.getElementById(
+            "currentAmount"
+        );
 
 
-    if (!progress || !amountDisplay) {
+    if (
+        !progress ||
+        !amountDisplay
+    ) {
+
         return;
+
     }
 
 
     const percentage =
         Math.min(
-            (currentAmount / goalAmount) * 100,
+
+            (
+                currentAmount /
+                goalAmount
+            ) * 100,
+
             100
+
         );
 
 
@@ -130,27 +174,39 @@ window.addEventListener(
 ========================= */
 
 const modal =
-    document.getElementById("orderModal");
+    document.getElementById(
+        "orderModal"
+    );
 
 
 const closeModalButton =
-    document.getElementById("closeModal");
+    document.getElementById(
+        "closeModal"
+    );
 
 
 const orderButtons =
-    document.querySelectorAll(".order-button");
+    document.querySelectorAll(
+        ".order-button"
+    );
 
 
 const formTitle =
-    document.getElementById("formTitle");
+    document.getElementById(
+        "formTitle"
+    );
 
 
 const formDescription =
-    document.getElementById("formDescription");
+    document.getElementById(
+        "formDescription"
+    );
 
 
 const orderType =
-    document.getElementById("orderType");
+    document.getElementById(
+        "orderType"
+    );
 
 
 const organizationField =
@@ -159,21 +215,37 @@ const organizationField =
     );
 
 
+const nameInput =
+    document.getElementById(
+        "name"
+    );
+
+
+/* =========================
+   OPEN ORDER FORM
+========================= */
+
 function openOrderForm(type) {
 
-    modal.classList.add("show");
+    modal.classList.add(
+        "show"
+    );
+
 
     modal.setAttribute(
         "aria-hidden",
         "false"
     );
 
+
     document.body.classList.add(
         "modal-open"
     );
 
 
-    if (type === "organization") {
+    if (
+        type === "organization"
+    ) {
 
         formTitle.textContent =
             "Bulk & Organization Order";
@@ -193,7 +265,9 @@ function openOrderForm(type) {
     }
 
 
-    if (type === "drinks") {
+    if (
+        type === "drinks"
+    ) {
 
         formTitle.textContent =
             "Order Drinks";
@@ -213,7 +287,9 @@ function openOrderForm(type) {
     }
 
 
-    if (type === "snacks") {
+    if (
+        type === "snacks"
+    ) {
 
         formTitle.textContent =
             "Order Snacks";
@@ -233,19 +309,34 @@ function openOrderForm(type) {
     }
 
 
-    document.getElementById("name").focus();
+    setTimeout(
+        () => {
+
+            nameInput.focus();
+
+        },
+        100
+    );
 
 }
 
 
+/* =========================
+   CLOSE ORDER FORM
+========================= */
+
 function closeOrderForm() {
 
-    modal.classList.remove("show");
+    modal.classList.remove(
+        "show"
+    );
+
 
     modal.setAttribute(
         "aria-hidden",
         "true"
     );
+
 
     document.body.classList.remove(
         "modal-open"
@@ -254,26 +345,37 @@ function closeOrderForm() {
 }
 
 
-/* Open order buttons */
+/* =========================
+   ORDER BUTTON EVENTS
+========================= */
 
-orderButtons.forEach((button) => {
+orderButtons.forEach(
+    (button) => {
 
-    button.addEventListener(
-        "click",
-        () => {
+        button.addEventListener(
+            "click",
 
-            const type =
-                button.dataset.orderType;
+            () => {
 
-            openOrderForm(type);
-
-        }
-    );
-
-});
+                const type =
+                    button.dataset.orderType;
 
 
-/* Close button */
+                openOrderForm(
+                    type
+                );
+
+            }
+
+        );
+
+    }
+);
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
 
 closeModalButton.addEventListener(
     "click",
@@ -281,13 +383,18 @@ closeModalButton.addEventListener(
 );
 
 
-/* Close when clicking outside */
+/* =========================
+   CLICK OUTSIDE MODAL
+========================= */
 
 modal.addEventListener(
     "click",
+
     (event) => {
 
-        if (event.target === modal) {
+        if (
+            event.target === modal
+        ) {
 
             closeOrderForm();
 
@@ -297,15 +404,25 @@ modal.addEventListener(
 );
 
 
-/* Close with Escape */
+/* =========================
+   ESCAPE KEY
+========================= */
 
 document.addEventListener(
     "keydown",
+
     (event) => {
 
         if (
-            event.key === "Escape" &&
-            modal.classList.contains("show")
+
+            event.key === "Escape"
+
+            &&
+
+            modal.classList.contains(
+                "show"
+            )
+
         ) {
 
             closeOrderForm();
@@ -320,10 +437,6 @@ document.addEventListener(
    CONTACT VALIDATION
 ========================= */
 
-const orderForm =
-    document.getElementById("orderForm");
-
-
 const contactMethod =
     document.getElementById(
         "contactMethod"
@@ -331,35 +444,60 @@ const contactMethod =
 
 
 const emailInput =
-    document.getElementById("email");
+    document.getElementById(
+        "email"
+    );
 
 
 const phoneInput =
-    document.getElementById("phone");
+    document.getElementById(
+        "phone"
+    );
 
 
 contactMethod.addEventListener(
     "change",
+
     () => {
 
         if (
-            contactMethod.value === "Email"
+            contactMethod.value ===
+            "Email"
         ) {
 
-            emailInput.required = true;
+            emailInput.required =
+                true;
 
-            phoneInput.required = false;
+
+            phoneInput.required =
+                false;
 
         }
 
 
-        if (
-            contactMethod.value === "Phone"
+        else if (
+            contactMethod.value ===
+            "Phone"
         ) {
 
-            emailInput.required = false;
+            emailInput.required =
+                false;
 
-            phoneInput.required = true;
+
+            phoneInput.required =
+                true;
+
+        }
+
+
+        else {
+
+            emailInput.required =
+                false;
+
+
+            phoneInput.required =
+                false;
 
         }
 
@@ -368,24 +506,17 @@ contactMethod.addEventListener(
 
 
 /* =========================
-   FORM SUBMISSION
+   INITIAL PAGE SETUP
 ========================= */
 
-orderForm.addEventListener(
-    "submit",
+document.addEventListener(
+    "DOMContentLoaded",
+
     () => {
 
-        const submitButton =
-            orderForm.querySelector(
-                ".submit-button"
-            );
+        updateActiveNavigation();
 
-
-        submitButton.disabled = true;
-
-
-        submitButton.textContent =
-            "Sending Request...";
+        updateFundProgress();
 
     }
 );
