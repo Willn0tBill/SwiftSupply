@@ -522,7 +522,7 @@ document.addEventListener(
 );
 /* =========================
 SCROLL REVEAL ANIMATIONS
-REPLAYS ON EVERY VIEW
+REPLAY UP AND DOWN
 ========================= */
 
 const revealElements =
@@ -543,13 +543,40 @@ new IntersectionObserver(
                     entry.isIntersecting
                 ) {
 
-                    entry.target.classList.add(
+                    /*
+                     * Element enters the screen.
+                     * Force the animation to restart.
+                     */
+
+                    entry.target.classList.remove(
                         "visible"
+                    );
+
+
+                    requestAnimationFrame(
+                        () => {
+
+                            requestAnimationFrame(
+                                () => {
+
+                                    entry.target.classList.add(
+                                        "visible"
+                                    );
+
+                                }
+                            );
+
+                        }
                     );
 
                 }
 
                 else {
+
+                    /*
+                     * Element leaves the screen.
+                     * Reset it so it can animate again.
+                     */
 
                     entry.target.classList.remove(
                         "visible"
@@ -563,7 +590,10 @@ new IntersectionObserver(
     },
 
     {
-        threshold: 0.15
+        threshold: 0.1,
+
+        rootMargin:
+            "0px 0px -50px 0px"
     }
 
 );
