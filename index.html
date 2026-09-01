@@ -179,23 +179,27 @@
 
     <section
         id="products"
-        class="products-section section-anchor reveal"
+        class="products-section section-anchor"
     >
 
-        <p class="eyebrow">
-            WHAT WE OFFER
-        </p>
+        <div class="products-heading reveal">
+
+            <p class="eyebrow">
+                WHAT WE OFFER
+            </p>
 
 
-        <h2>
-            Order what you need.
-        </h2>
+            <h2>
+                Order what you need.
+            </h2>
 
 
-        <p class="products-intro">
-            Choose an option below to submit
-            an order request.
-        </p>
+            <p class="products-intro">
+                Choose an option below to submit
+                an order request.
+            </p>
+
+        </div>
 
 
         <div class="product-grid">
@@ -313,10 +317,10 @@
 
     <section
         id="goal"
-        class="goal-section section-anchor reveal"
+        class="goal-section section-anchor"
     >
 
-        <div class="goal-content">
+        <div class="goal-content reveal">
 
             <p class="eyebrow">
                 OUR FIRST MILESTONE
@@ -397,17 +401,21 @@
     ========================== -->
 
     <section
-        class="future-section reveal"
+        class="future-section"
     >
 
-        <p class="eyebrow">
-            LOOKING AHEAD
-        </p>
+        <div class="future-heading reveal">
+
+            <p class="eyebrow">
+                LOOKING AHEAD
+            </p>
 
 
-        <h2>
-            The future of SwiftSupply.
-        </h2>
+            <h2>
+                The future of SwiftSupply.
+            </h2>
+
+        </div>
 
 
         <div class="future-grid">
@@ -526,8 +534,6 @@
         aria-labelledby="formTitle"
     >
 
-        <!-- CLOSE BUTTON -->
-
         <button
             id="closeModal"
             class="close-button"
@@ -537,8 +543,6 @@
             ×
         </button>
 
-
-        <!-- FORM TITLE -->
 
         <h2 id="formTitle">
             Place an Order
@@ -553,7 +557,7 @@
         </p>
 
 
-        <!-- SUCCESS MESSAGE -->
+        <!-- FORMSPREE SUCCESS -->
 
         <div
             class="form-success"
@@ -563,7 +567,7 @@
         </div>
 
 
-        <!-- ERROR MESSAGE -->
+        <!-- FORMSPREE ERROR -->
 
         <div
             class="form-error"
@@ -571,16 +575,13 @@
         ></div>
 
 
-        <!-- =========================
-             ORDER FORM
-        ========================== -->
+        <!-- ORDER FORM -->
 
         <form
             id="orderForm"
             action="https://formspree.io/f/mqpkpkjo"
             method="POST"
         >
-
 
             <!-- ORDER TYPE -->
 
@@ -629,12 +630,6 @@
             >
 
 
-            <span
-                class="field-error"
-                data-fs-error="name"
-            ></span>
-
-
             <!-- ORGANIZATION -->
 
             <div
@@ -643,13 +638,8 @@
             >
 
                 <label for="organization">
-
                     Club or Organization Name
-
-                    <span>
-                        (optional)
-                    </span>
-
+                    <span>(optional)</span>
                 </label>
 
 
@@ -679,22 +669,11 @@
             >
 
 
-            <span
-                class="field-error"
-                data-fs-error="email"
-            ></span>
-
-
             <!-- PHONE -->
 
             <label for="phone">
-
                 Phone Number
-
-                <span>
-                    (optional)
-                </span>
-
+                <span>(optional)</span>
             </label>
 
 
@@ -705,12 +684,6 @@
                 data-fs-field
                 autocomplete="tel"
             >
-
-
-            <span
-                class="field-error"
-                data-fs-error="phone"
-            ></span>
 
 
             <!-- CONTACT METHOD -->
@@ -790,16 +763,11 @@
             >
 
 
-            <!-- ADDITIONAL DETAILS -->
+            <!-- DETAILS -->
 
             <label for="details">
-
                 Additional Details
-
-                <span>
-                    (optional)
-                </span>
-
+                <span>(optional)</span>
             </label>
 
 
@@ -815,16 +783,14 @@
             <!-- PRIVACY NOTE -->
 
             <p class="privacy-note">
-
                 We use the information you provide
                 to review and respond to your order
                 request. Please do not submit
                 sensitive information.
-
             </p>
 
 
-            <!-- SUBMIT BUTTON -->
+            <!-- SUBMIT -->
 
             <button
                 type="submit"
@@ -834,7 +800,6 @@
                 Send Order Request
             </button>
 
-
         </form>
 
     </div>
@@ -842,16 +807,12 @@
 </div>
 
 
-<!-- =========================
-     JAVASCRIPT
-========================== -->
+<!-- JAVASCRIPT -->
 
 <script src="script.js"></script>
 
 
-<!-- =========================
-     FORMSPREE AJAX
-========================== -->
+<!-- FORMSPREE -->
 
 <script>
 
