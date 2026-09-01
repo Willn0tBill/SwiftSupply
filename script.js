@@ -2,8 +2,10 @@
    SWIFTSUPPLY SETTINGS
 ========================= */
 
-// Update this number whenever your
-// vending machine fund increases.
+/*
+   Update this number whenever
+   your vending machine fund increases.
+*/
 
 const currentAmount = 0;
 
@@ -43,26 +45,18 @@ function updateActiveNavigation() {
 
 
             const scrollPosition =
-                window.scrollY + 180;
+                window.scrollY + 200;
 
 
             if (
-
-                scrollPosition >=
-                sectionTop
-
+                scrollPosition >= sectionTop
                 &&
-
                 scrollPosition <
-                sectionTop +
-                sectionHeight
-
+                sectionTop + sectionHeight
             ) {
 
                 currentSection =
-                    section.getAttribute(
-                        "id"
-                    );
+                    section.getAttribute("id");
 
             }
 
@@ -79,12 +73,9 @@ function updateActiveNavigation() {
 
 
             if (
-
-                link.getAttribute(
-                    "href"
-                ) ===
+                link.getAttribute("href")
+                ===
                 "#" + currentSection
-
             ) {
 
                 link.classList.add(
@@ -111,6 +102,7 @@ window.addEventListener(
 );
 
 
+
 /* =========================
    VENDING FUND PROGRESS
 ========================= */
@@ -130,7 +122,8 @@ function updateFundProgress() {
 
 
     if (
-        !progress ||
+        !progress
+        ||
         !amountDisplay
     ) {
 
@@ -141,14 +134,11 @@ function updateFundProgress() {
 
     const percentage =
         Math.min(
-
             (
                 currentAmount /
                 goalAmount
             ) * 100,
-
             100
-
         );
 
 
@@ -167,6 +157,7 @@ window.addEventListener(
     "load",
     updateFundProgress
 );
+
 
 
 /* =========================
@@ -227,6 +218,11 @@ const nameInput =
 
 function openOrderForm(type) {
 
+    if (!modal) {
+        return;
+    }
+
+
     modal.classList.add(
         "show"
     );
@@ -265,7 +261,7 @@ function openOrderForm(type) {
     }
 
 
-    if (
+    else if (
         type === "drinks"
     ) {
 
@@ -287,7 +283,7 @@ function openOrderForm(type) {
     }
 
 
-    if (
+    else if (
         type === "snacks"
     ) {
 
@@ -312,7 +308,11 @@ function openOrderForm(type) {
     setTimeout(
         () => {
 
-            nameInput.focus();
+            if (nameInput) {
+
+                nameInput.focus();
+
+            }
 
         },
         100
@@ -321,11 +321,17 @@ function openOrderForm(type) {
 }
 
 
+
 /* =========================
    CLOSE ORDER FORM
 ========================= */
 
 function closeOrderForm() {
+
+    if (!modal) {
+        return;
+    }
+
 
     modal.classList.remove(
         "show"
@@ -345,6 +351,7 @@ function closeOrderForm() {
 }
 
 
+
 /* =========================
    ORDER BUTTON EVENTS
 ========================= */
@@ -361,9 +368,7 @@ orderButtons.forEach(
                     button.dataset.orderType;
 
 
-                openOrderForm(
-                    type
-                );
+                openOrderForm(type);
 
             }
 
@@ -373,35 +378,46 @@ orderButtons.forEach(
 );
 
 
+
 /* =========================
    CLOSE BUTTON
 ========================= */
 
-closeModalButton.addEventListener(
-    "click",
-    closeOrderForm
-);
+if (closeModalButton) {
+
+    closeModalButton.addEventListener(
+        "click",
+        closeOrderForm
+    );
+
+}
+
 
 
 /* =========================
    CLICK OUTSIDE MODAL
 ========================= */
 
-modal.addEventListener(
-    "click",
+if (modal) {
 
-    (event) => {
+    modal.addEventListener(
+        "click",
 
-        if (
-            event.target === modal
-        ) {
+        (event) => {
 
-            closeOrderForm();
+            if (
+                event.target === modal
+            ) {
+
+                closeOrderForm();
+
+            }
 
         }
+    );
 
-    }
-);
+}
+
 
 
 /* =========================
@@ -414,15 +430,13 @@ document.addEventListener(
     (event) => {
 
         if (
-
             event.key === "Escape"
-
             &&
-
+            modal
+            &&
             modal.classList.contains(
                 "show"
             )
-
         ) {
 
             closeOrderForm();
@@ -431,6 +445,7 @@ document.addEventListener(
 
     }
 );
+
 
 
 /* =========================
@@ -455,71 +470,61 @@ const phoneInput =
     );
 
 
-contactMethod.addEventListener(
-    "change",
+if (contactMethod) {
 
-    () => {
+    contactMethod.addEventListener(
+        "change",
 
-        if (
-            contactMethod.value ===
-            "Email"
-        ) {
+        () => {
 
-            emailInput.required =
-                true;
+            if (
+                contactMethod.value ===
+                "Email"
+            ) {
+
+                emailInput.required =
+                    true;
 
 
-            phoneInput.required =
-                false;
+                phoneInput.required =
+                    false;
+
+            }
+
+
+            else if (
+                contactMethod.value ===
+                "Phone"
+            ) {
+
+                emailInput.required =
+                    false;
+
+
+                phoneInput.required =
+                    true;
+
+            }
+
+
+            else {
+
+                emailInput.required =
+                    false;
+
+
+                phoneInput.required =
+                    false;
+
+            }
 
         }
+    );
+
+}
 
 
-        else if (
-            contactMethod.value ===
-            "Phone"
-        ) {
 
-            emailInput.required =
-                false;
-
-
-            phoneInput.required =
-                true;
-
-        }
-
-
-        else {
-
-            emailInput.required =
-                false;
-
-
-            phoneInput.required =
-                false;
-
-        }
-
-    }
-);
-
-
-/* =========================
-   INITIAL PAGE SETUP
-========================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-
-    () => {
-
-        updateActiveNavigation();
-
-        updateFundProgress();
-
-    }
-);
 /* =========================
    SCROLL REVEAL ANIMATIONS
    REPLAY UP AND DOWN
@@ -543,10 +548,20 @@ const revealObserver =
                         entry.isIntersecting
                     ) {
 
+                        /*
+                           Remove the visible class first.
+                           This resets the animation.
+                        */
+
                         entry.target.classList.remove(
                             "visible"
                         );
 
+
+                        /*
+                           Wait for the browser to reset
+                           the element, then replay.
+                        */
 
                         requestAnimationFrame(
                             () => {
@@ -554,9 +569,15 @@ const revealObserver =
                                 requestAnimationFrame(
                                     () => {
 
-                                        entry.target.classList.add(
-                                            "visible"
-                                        );
+                                        if (
+                                            entry.isIntersecting
+                                        ) {
+
+                                            entry.target.classList.add(
+                                                "visible"
+                                            );
+
+                                        }
 
                                     }
                                 );
@@ -566,7 +587,13 @@ const revealObserver =
 
                     }
 
+
                     else {
+
+                        /*
+                           When the element leaves
+                           the screen, reset it.
+                        */
 
                         entry.target.classList.remove(
                             "visible"
@@ -580,10 +607,12 @@ const revealObserver =
         },
 
         {
-            threshold: 0.1,
+
+            threshold: 0.15,
 
             rootMargin:
                 "0px 0px -50px 0px"
+
         }
 
     );
@@ -595,6 +624,24 @@ revealElements.forEach(
         revealObserver.observe(
             element
         );
+
+    }
+);
+
+
+
+/* =========================
+   INITIAL PAGE SETUP
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+
+    () => {
+
+        updateActiveNavigation();
+
+        updateFundProgress();
 
     }
 );
