@@ -521,93 +521,80 @@ document.addEventListener(
     }
 );
 /* =========================
-SCROLL REVEAL ANIMATIONS
-REPLAY UP AND DOWN
+   SCROLL REVEAL ANIMATIONS
+   REPLAY UP AND DOWN
 ========================= */
 
 const revealElements =
-document.querySelectorAll(
-".reveal, .reveal-left, .reveal-right"
-);
-
-const revealObserver =
-new IntersectionObserver(
-
-```
-    (entries) => {
-
-        entries.forEach(
-            (entry) => {
-
-                if (
-                    entry.isIntersecting
-                ) {
-
-                    /*
-                     * Element enters the screen.
-                     * Force the animation to restart.
-                     */
-
-                    entry.target.classList.remove(
-                        "visible"
-                    );
-
-
-                    requestAnimationFrame(
-                        () => {
-
-                            requestAnimationFrame(
-                                () => {
-
-                                    entry.target.classList.add(
-                                        "visible"
-                                    );
-
-                                }
-                            );
-
-                        }
-                    );
-
-                }
-
-                else {
-
-                    /*
-                     * Element leaves the screen.
-                     * Reset it so it can animate again.
-                     */
-
-                    entry.target.classList.remove(
-                        "visible"
-                    );
-
-                }
-
-            }
-        );
-
-    },
-
-    {
-        threshold: 0.1,
-
-        rootMargin:
-            "0px 0px -50px 0px"
-    }
-
-);
-```
-
-revealElements.forEach(
-(element) => {
-
-```
-    revealObserver.observe(
-        element
+    document.querySelectorAll(
+        ".reveal, .reveal-left, .reveal-right"
     );
 
-}
-```
 
+const revealObserver =
+    new IntersectionObserver(
+
+        (entries) => {
+
+            entries.forEach(
+                (entry) => {
+
+                    if (
+                        entry.isIntersecting
+                    ) {
+
+                        entry.target.classList.remove(
+                            "visible"
+                        );
+
+
+                        requestAnimationFrame(
+                            () => {
+
+                                requestAnimationFrame(
+                                    () => {
+
+                                        entry.target.classList.add(
+                                            "visible"
+                                        );
+
+                                    }
+                                );
+
+                            }
+                        );
+
+                    }
+
+                    else {
+
+                        entry.target.classList.remove(
+                            "visible"
+                        );
+
+                    }
+
+                }
+            );
+
+        },
+
+        {
+            threshold: 0.1,
+
+            rootMargin:
+                "0px 0px -50px 0px"
+        }
+
+    );
+
+
+revealElements.forEach(
+    (element) => {
+
+        revealObserver.observe(
+            element
+        );
+
+    }
 );
