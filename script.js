@@ -521,51 +521,63 @@ document.addEventListener(
     }
 );
 /* =========================
-   SCROLL REVEAL ANIMATIONS
+SCROLL REVEAL ANIMATIONS
+REPLAYS ON EVERY VIEW
 ========================= */
 
 const revealElements =
-    document.querySelectorAll(
-        ".reveal, .reveal-left, .reveal-right"
-    );
-
+document.querySelectorAll(
+".reveal, .reveal-left, .reveal-right"
+);
 
 const revealObserver =
-    new IntersectionObserver(
+new IntersectionObserver(
 
-        (entries) => {
+```
+    (entries) => {
 
-            entries.forEach(
-                (entry) => {
+        entries.forEach(
+            (entry) => {
 
-                    if (
-                        entry.isIntersecting
-                    ) {
+                if (
+                    entry.isIntersecting
+                ) {
 
-                        entry.target.classList.add(
-                            "visible"
-                        );
-
-                    }
+                    entry.target.classList.add(
+                        "visible"
+                    );
 
                 }
-            );
 
-        },
+                else {
 
-        {
-            threshold: 0.15
-        }
+                    entry.target.classList.remove(
+                        "visible"
+                    );
 
-    );
+                }
 
-
-revealElements.forEach(
-    (element) => {
-
-        revealObserver.observe(
-            element
+            }
         );
 
+    },
+
+    {
+        threshold: 0.15
     }
+
+);
+```
+
+revealElements.forEach(
+(element) => {
+
+```
+    revealObserver.observe(
+        element
+    );
+
+}
+```
+
 );
