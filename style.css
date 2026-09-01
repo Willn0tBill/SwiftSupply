@@ -1147,6 +1147,47 @@ font-size: 13px;
 }
 
 /* =========================
+   RESET
+========================= */
+
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+
+    font-family: "Inter", Arial, sans-serif;
+
+    background: #ffffff;
+    color: #111111;
+
+    overflow-x: hidden;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+main {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* =========================
 HONEYPOT
 ========================= */
 
