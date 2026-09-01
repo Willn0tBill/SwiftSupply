@@ -1,77 +1,98 @@
+/* =========================
+   GOOGLE FONT
+========================= */
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-/* ==================================================
-   RESET & BASE
-================================================== */
 
-*,
-*::before,
-*::after {
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
+
 html {
-    width: 100%;
-    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
+
 body {
-    width: 100%;
-    min-width: 0;
-    min-height: 100vh;
-
-    margin: 0;
-
-    overflow-x: hidden;
-
     font-family: "Inter", Arial, sans-serif;
-
     background: #ffffff;
     color: #111111;
+    overflow-x: hidden;
+    width: 100%;
 }
+
 
 body.modal-open {
     overflow: hidden;
 }
 
-img,
-video,
-iframe {
-    max-width: 100%;
-}
 
-button,
-input,
-textarea,
-select {
-    font: inherit;
-}
+/* =========================
+   GENERAL
+========================= */
 
-button {
-    cursor: pointer;
+section {
+    width: 100%;
 }
 
 
-/* ==================================================
+.section-anchor {
+    scroll-margin-top: 90px;
+}
+
+
+.eyebrow {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+
+h1,
+h2,
+h3 {
+    overflow-wrap: break-word;
+}
+
+
+h2 {
+    letter-spacing: -2px;
+}
+
+
+p {
+    overflow-wrap: break-word;
+}
+
+
+/* =========================
    NAVIGATION
-================================================== */
+========================= */
 
 .header {
     position: sticky;
     top: 0;
+    z-index: 100;
 
     width: 100%;
-
-    z-index: 100;
 
     background: rgba(255, 255, 255, 0.94);
 
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 
     border-bottom: 1px solid #eeeeee;
 }
+
 
 .navbar {
     width: 100%;
@@ -82,72 +103,65 @@ button {
     padding: 20px 30px;
 
     display: flex;
-    flex-direction: row;
-
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
 }
 
+
 .logo {
-    flex-shrink: 0;
-
     color: #111111;
-
-    text-decoration: none;
 
     font-size: 23px;
     font-weight: 800;
 
     letter-spacing: -1px;
+
+    text-decoration: none;
+
+    white-space: nowrap;
 }
+
 
 .logo span,
 .footer-logo span {
     color: #2563eb;
 }
 
-.nav-links {
-    display: flex;
-    flex-direction: row;
 
+.nav-links {
+    list-style: none;
+
+    display: flex;
     align-items: center;
 
     gap: 30px;
 
-    list-style: none;
-
     margin: 0;
     padding: 0;
 }
 
-.nav-links li {
-    margin: 0;
-    padding: 0;
-}
 
 .nav-link {
     position: relative;
 
-    display: block;
+    display: inline-block;
 
     padding: 8px 0;
 
     color: #666666;
 
-    text-decoration: none;
-
     font-size: 14px;
     font-weight: 600;
+
+    text-decoration: none;
 
     white-space: nowrap;
 
     transition: color 0.25s ease;
 }
 
-.nav-link:hover,
-.nav-link.active {
-    color: #111111;
-}
+
+/* NAVIGATION UNDERLINE */
 
 .nav-link::after {
     content: "";
@@ -157,15 +171,21 @@ button {
     left: 0;
     bottom: 0;
 
-    width: 0%;
+    width: 0;
     height: 3px;
 
     background: #2563eb;
 
-    border-radius: 100px;
+    border-radius: 20px;
 
     transition: width 0.3s ease;
 }
+
+
+.nav-link:hover {
+    color: #111111;
+}
+
 
 .nav-link:hover::after,
 .nav-link.active::after {
@@ -173,57 +193,20 @@ button {
 }
 
 
-/* ==================================================
-   GENERAL SECTION STYLING
-================================================== */
-
-main {
-    width: 100%;
-}
-
-section {
-    width: 100%;
-}
-
-.section-anchor {
-    scroll-margin-top: 90px;
-}
-
-.eyebrow {
-    margin: 0 0 20px;
-
-    color: #2563eb;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    letter-spacing: 2px;
-}
-
-h1,
-h2,
-h3,
-p {
-    margin-top: 0;
-}
-
-h2 {
-    margin-bottom: 20px;
-
-    letter-spacing: -2px;
+.nav-link.active {
+    color: #111111;
 }
 
 
-/* ==================================================
-   HERO
-================================================== */
+/* =========================
+   HERO / HOME
+========================= */
 
 .hero {
     width: 100%;
     min-height: 720px;
 
     display: flex;
-
     align-items: center;
 
     padding: 100px 30px;
@@ -242,6 +225,7 @@ h2 {
         #ffffff;
 }
 
+
 .hero-content {
     width: 100%;
     max-width: 1100px;
@@ -249,30 +233,29 @@ h2 {
     margin: 0 auto;
 }
 
+
 .hero h1 {
     width: 100%;
     max-width: 950px;
 
-    margin: 0;
-
     font-size: clamp(50px, 8vw, 100px);
 
-    font-weight: 800;
-
-    line-height: 1.05;
+    line-height: 0.98;
 
     letter-spacing: -4px;
 }
+
 
 .hero h1 span {
     color: #2563eb;
 }
 
+
 .hero-text {
     width: 100%;
     max-width: 620px;
 
-    margin: 30px 0 0;
+    margin-top: 30px;
 
     color: #666666;
 
@@ -281,16 +264,16 @@ h2 {
     line-height: 1.7;
 }
 
+
 .hero-buttons {
     display: flex;
-    flex-direction: row;
-
-    align-items: center;
+    flex-wrap: wrap;
 
     gap: 15px;
 
     margin-top: 35px;
 }
+
 
 .primary-button,
 .secondary-button {
@@ -299,18 +282,14 @@ h2 {
     align-items: center;
     justify-content: center;
 
-    min-height: 48px;
-
     padding: 14px 24px;
 
     border-radius: 9px;
 
-    text-decoration: none;
-
     font-size: 14px;
     font-weight: 600;
 
-    white-space: nowrap;
+    text-decoration: none;
 
     transition:
         transform 0.2s ease,
@@ -318,35 +297,38 @@ h2 {
         border-color 0.2s ease;
 }
 
+
 .primary-button {
     background: #111111;
     color: #ffffff;
 }
 
-.primary-button:hover {
-    background: #2563eb;
 
+.primary-button:hover {
     transform: translateY(-2px);
+    background: #2563eb;
 }
 
-.secondary-button {
-    background: #ffffff;
 
+.secondary-button {
     color: #111111;
+
+    background: #ffffff;
 
     border: 1px solid #dddddd;
 }
 
-.secondary-button:hover {
-    border-color: #2563eb;
 
+.secondary-button:hover {
     transform: translateY(-2px);
+
+    border-color: #2563eb;
 }
 
 
-/* ==================================================
+/* =========================
    ABOUT
-================================================== */
+========================= */
 
 .about-section {
     width: 100%;
@@ -359,17 +341,20 @@ h2 {
     text-align: center;
 }
 
+
 .about-section h2 {
-    margin-bottom: 25px;
+    width: 100%;
 
     font-size: clamp(38px, 5vw, 62px);
 
-    line-height: 1.1;
+    margin-bottom: 25px;
 }
+
 
 .about-section h2 span {
     color: #2563eb;
 }
+
 
 .section-text {
     width: 100%;
@@ -385,19 +370,20 @@ h2 {
 }
 
 
-/* ==================================================
+/* =========================
    PRODUCTS
-================================================== */
+========================= */
 
 .products-section {
     width: 100%;
 
     padding: 120px 30px;
 
-    background: #f7f8fa;
-
     text-align: center;
+
+    background: #f7f8fa;
 }
+
 
 .products-heading {
     width: 100%;
@@ -406,19 +392,20 @@ h2 {
     margin: 0 auto;
 }
 
+
 .products-section h2 {
     font-size: clamp(38px, 5vw, 62px);
-
-    line-height: 1.1;
 }
 
+
 .products-intro {
-    margin: 20px 0 0;
+    margin-top: 20px;
 
     color: #666666;
 
     font-size: 16px;
 }
+
 
 .product-grid {
     width: 100%;
@@ -428,11 +415,11 @@ h2 {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 
     gap: 22px;
 }
+
 
 .product-card {
     min-width: 0;
@@ -440,21 +427,23 @@ h2 {
     display: flex;
     flex-direction: column;
 
-    padding: 42px 30px;
+    text-align: left;
 
     background: #ffffff;
+
+    padding: 42px 30px;
 
     border: 1px solid transparent;
 
     border-radius: 18px;
 
-    text-align: left;
-
     transition:
+        opacity 0.7s ease,
+        transform 0.7s ease,
         box-shadow 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease;
+        border-color 0.25s ease;
 }
+
 
 .product-card:hover {
     transform: translateY(-7px);
@@ -466,25 +455,22 @@ h2 {
         rgba(0, 0, 0, 0.08);
 }
 
-.icon {
-    margin-bottom: 25px;
 
+.icon {
     font-size: 42px;
 
-    line-height: 1;
+    margin-bottom: 25px;
 }
+
 
 .product-card h3 {
-    margin: 0 0 15px;
-
     font-size: 22px;
 
-    line-height: 1.25;
+    margin-bottom: 15px;
 }
 
-.product-card p {
-    margin: 0;
 
+.product-card p {
     color: #666666;
 
     line-height: 1.7;
@@ -492,9 +478,9 @@ h2 {
     flex-grow: 1;
 }
 
+
 .order-button {
     width: 100%;
-    min-height: 50px;
 
     margin-top: 30px;
 
@@ -508,15 +494,18 @@ h2 {
 
     color: #ffffff;
 
+    font-family: inherit;
+
     font-size: 14px;
     font-weight: 600;
 
-    line-height: 1.2;
+    cursor: pointer;
 
     transition:
         transform 0.2s ease,
         background 0.2s ease;
 }
+
 
 .order-button:hover {
     background: #2563eb;
@@ -525,9 +514,9 @@ h2 {
 }
 
 
-/* ==================================================
-   GOAL
-================================================== */
+/* =========================
+   OUR GOAL
+========================= */
 
 .goal-section {
     width: 100%;
@@ -541,22 +530,26 @@ h2 {
     text-align: center;
 }
 
+
 .goal-content {
     width: 100%;
-    max-width: 900px;
+    max-width: 850px;
 
     margin: 0 auto;
 }
+
 
 .goal-section .eyebrow {
     color: #60a5fa;
 }
 
-.goal-section h2 {
-    font-size: clamp(38px, 5vw, 62px);
 
-    line-height: 1.1;
+.goal-section h2 {
+    width: 100%;
+
+    font-size: clamp(38px, 5vw, 62px);
 }
+
 
 .goal-description {
     width: 100%;
@@ -569,19 +562,23 @@ h2 {
     line-height: 1.7;
 }
 
+
 .goal-number {
+    width: 100%;
+
     margin: 45px 0 25px;
 
     font-size: clamp(70px, 12vw, 145px);
 
     font-weight: 800;
 
-    line-height: 1;
-
     letter-spacing: -6px;
 }
 
+
 .fund-status {
+    width: 100%;
+
     display: flex;
 
     justify-content: center;
@@ -594,9 +591,11 @@ h2 {
     color: #aaaaaa;
 }
 
+
 .fund-status strong {
     color: #ffffff;
 }
+
 
 .progress-container {
     width: 100%;
@@ -604,6 +603,7 @@ h2 {
 
     margin: 0 auto;
 }
+
 
 .progress-bar {
     width: 100%;
@@ -613,8 +613,9 @@ h2 {
 
     background: #333333;
 
-    border-radius: 100px;
+    border-radius: 50px;
 }
+
 
 .progress {
     width: 0%;
@@ -627,12 +628,15 @@ h2 {
             #60a5fa
         );
 
-    border-radius: 100px;
+    border-radius: 50px;
 
     transition: width 1.5s ease;
 }
 
+
 .progress-labels {
+    width: 100%;
+
     display: flex;
 
     justify-content: space-between;
@@ -644,8 +648,11 @@ h2 {
     font-size: 13px;
 }
 
+
 .small-text {
-    margin: 35px 0 0;
+    width: 100%;
+
+    margin-top: 35px;
 
     color: #777777;
 
@@ -653,9 +660,9 @@ h2 {
 }
 
 
-/* ==================================================
+/* =========================
    FUTURE
-================================================== */
+========================= */
 
 .future-section {
     width: 100%;
@@ -665,6 +672,7 @@ h2 {
     text-align: center;
 }
 
+
 .future-heading {
     width: 100%;
     max-width: 800px;
@@ -672,11 +680,11 @@ h2 {
     margin: 0 auto;
 }
 
+
 .future-section h2 {
     font-size: clamp(38px, 5vw, 62px);
-
-    line-height: 1.1;
 }
+
 
 .future-grid {
     width: 100%;
@@ -686,19 +694,22 @@ h2 {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 
     gap: 25px;
 }
+
 
 .future-card {
     min-width: 0;
 
     padding: 30px;
 
-    text-align: center;
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
+
 
 .future-card span {
     display: inline-block;
@@ -711,49 +722,51 @@ h2 {
     letter-spacing: 1px;
 }
 
+
 .future-card h3 {
     margin: 15px 0;
 
     font-size: 24px;
 }
 
-.future-card p {
-    margin: 0;
 
+.future-card p {
     color: #666666;
 
     line-height: 1.7;
 }
 
 
-/* ==================================================
+/* =========================
    FOOTER
-================================================== */
+========================= */
 
 footer {
     width: 100%;
 
     padding: 60px 30px;
 
+    text-align: center;
+
     background: #080808;
 
     color: #ffffff;
-
-    text-align: center;
 }
+
 
 .footer-logo {
     margin-bottom: 15px;
 
     font-size: 25px;
+
     font-weight: 800;
 }
 
-footer p {
-    margin: 0;
 
+footer p {
     color: #aaaaaa;
 }
+
 
 .copyright {
     margin-top: 30px;
@@ -762,9 +775,9 @@ footer p {
 }
 
 
-/* ==================================================
+/* =========================
    ORDER MODAL
-================================================== */
+========================= */
 
 .modal {
     display: none;
@@ -773,30 +786,27 @@ footer p {
 
     inset: 0;
 
-    width: 100%;
-    height: 100%;
-
     z-index: 1000;
-
-    padding: 30px;
 
     overflow-y: auto;
 
-    background:
-        rgba(0, 0, 0, 0.6);
+    padding: 30px;
+
+    background: rgba(0, 0, 0, 0.6);
 
     backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
 }
+
 
 .modal.show {
     display: flex;
 
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
-    animation: modalFadeIn 0.25s ease;
+    animation: fadeIn 0.25s ease;
 }
+
 
 .modal-content {
     position: relative;
@@ -806,11 +816,9 @@ footer p {
 
     max-height: calc(100vh - 60px);
 
-    margin: auto;
+    overflow-y: auto;
 
     padding: 45px;
-
-    overflow-y: auto;
 
     background: #ffffff;
 
@@ -820,8 +828,9 @@ footer p {
         0 25px 80px
         rgba(0, 0, 0, 0.3);
 
-    animation: modalSlideUp 0.3s ease;
+    animation: slideUp 0.3s ease;
 }
+
 
 .close-button {
     position: absolute;
@@ -831,11 +840,6 @@ footer p {
 
     width: 42px;
     height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
 
     border: none;
 
@@ -847,26 +851,23 @@ footer p {
 
     font-size: 28px;
 
-    line-height: 1;
-
-    transition: background 0.2s ease;
+    cursor: pointer;
 }
+
 
 .close-button:hover {
     background: #e5e5e5;
 }
 
-.modal-content h2 {
-    padding-right: 45px;
 
-    margin-bottom: 0;
+.modal-content h2 {
+    padding-right: 40px;
 
     font-size: 32px;
 
-    line-height: 1.15;
-
     letter-spacing: -1px;
 }
+
 
 .form-description {
     margin: 12px 0 30px;
@@ -877,18 +878,19 @@ footer p {
 }
 
 
-/* ==================================================
-   ORDER FORM
-================================================== */
+/* =========================
+   FORM
+========================= */
 
 #orderForm {
+    width: 100%;
+
     display: flex;
     flex-direction: column;
 
-    width: 100%;
-
     gap: 12px;
 }
+
 
 #orderForm label {
     margin-top: 10px;
@@ -899,18 +901,19 @@ footer p {
     font-weight: 600;
 }
 
+
 #orderForm label span {
     color: #888888;
 
     font-weight: 400;
 }
 
+
 #orderForm input,
 #orderForm select,
 #orderForm textarea {
     width: 100%;
-
-    min-width: 0;
+    max-width: 100%;
 
     padding: 14px;
 
@@ -918,11 +921,11 @@ footer p {
 
     border-radius: 9px;
 
-    outline: none;
-
     background: #ffffff;
 
     color: #111111;
+
+    font-family: inherit;
 
     font-size: 14px;
 
@@ -931,15 +934,19 @@ footer p {
         box-shadow 0.2s ease;
 }
 
-#orderForm textarea {
-    min-height: 110px;
 
+#orderForm textarea {
     resize: vertical;
+
+    min-height: 110px;
 }
+
 
 #orderForm input:focus,
 #orderForm select:focus,
 #orderForm textarea:focus {
+    outline: none;
+
     border-color: #2563eb;
 
     box-shadow:
@@ -947,8 +954,9 @@ footer p {
         rgba(37, 99, 235, 0.1);
 }
 
+
 .privacy-note {
-    margin: 10px 0 0;
+    margin-top: 10px;
 
     color: #888888;
 
@@ -956,6 +964,7 @@ footer p {
 
     line-height: 1.6;
 }
+
 
 .submit-button {
     width: 100%;
@@ -972,19 +981,25 @@ footer p {
 
     color: #ffffff;
 
+    font-family: inherit;
+
     font-size: 15px;
     font-weight: 700;
+
+    cursor: pointer;
 
     transition:
         transform 0.2s ease,
         background 0.2s ease;
 }
 
+
 .submit-button:hover:not(:disabled) {
     background: #1d4ed8;
 
     transform: translateY(-2px);
 }
+
 
 .submit-button:disabled {
     opacity: 0.7;
@@ -993,14 +1008,15 @@ footer p {
 }
 
 
-/* ==================================================
+/* =========================
    FORMSPREE
-================================================== */
+========================= */
 
 [data-fs-success],
 [data-fs-error] {
     display: none;
 }
+
 
 [data-fs-success][data-fs-active] {
     display: block;
@@ -1019,6 +1035,7 @@ footer p {
 
     font-size: 14px;
 }
+
 
 [data-fs-error][data-fs-active] {
     display: block;
@@ -1039,30 +1056,22 @@ footer p {
 }
 
 
-/* ==================================================
+/* =========================
    HONEYPOT
-================================================== */
+========================= */
 
 .honeypot {
     display: none !important;
 }
 
 
-/* ==================================================
-   SCROLL REVEAL ANIMATIONS
-================================================== */
-
-.reveal,
-.reveal-left,
-.reveal-right {
-    opacity: 0;
-
-    will-change:
-        opacity,
-        transform;
-}
+/* =========================
+   SCROLL ANIMATIONS
+========================= */
 
 .reveal {
+    opacity: 0;
+
     transform: translateY(35px);
 
     transition:
@@ -1070,53 +1079,74 @@ footer p {
         transform 0.7s ease;
 }
 
+
+.reveal.visible {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
 .reveal-left {
+    opacity: 0;
+
     transform: translateX(-45px);
 
     transition:
-        opacity 0.7s ease,
-        transform 0.7s ease;
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
 
+
+.reveal-left.visible {
+    opacity: 1;
+
+    transform: translateX(0);
+}
+
+
 .reveal-right {
+    opacity: 0;
+
     transform: translateX(45px);
 
     transition:
-        opacity 0.7s ease,
-        transform 0.7s ease;
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
 
-.reveal.visible,
-.reveal-left.visible,
+
 .reveal-right.visible {
     opacity: 1;
 
-    transform: translate(0, 0);
+    transform: translateX(0);
 }
 
 
-/* ==================================================
+/* =========================
    ANIMATION DELAYS
-================================================== */
+========================= */
 
 .reveal-delay-1 {
     transition-delay: 0.1s;
 }
 
+
 .reveal-delay-2 {
     transition-delay: 0.2s;
 }
+
 
 .reveal-delay-3 {
     transition-delay: 0.3s;
 }
 
 
-/* ==================================================
+/* =========================
    MODAL ANIMATIONS
-================================================== */
+========================= */
 
-@keyframes modalFadeIn {
+@keyframes fadeIn {
 
     from {
         opacity: 0;
@@ -1128,7 +1158,8 @@ footer p {
 
 }
 
-@keyframes modalSlideUp {
+
+@keyframes slideUp {
 
     from {
         opacity: 0;
@@ -1149,67 +1180,69 @@ footer p {
 }
 
 
-/* ==================================================
+/* =========================
    TABLET
-================================================== */
+========================= */
 
-@media screen and (max-width: 900px) {
+@media (max-width: 900px) {
 
     .navbar {
-        padding: 18px 25px;
+        padding: 18px 24px;
     }
 
-    .nav-links {
-        gap: 20px;
+
+    .product-grid,
+    .future-grid {
+        grid-template-columns: 1fr;
+        max-width: 650px;
     }
+
 
     .hero {
         min-height: 650px;
     }
 
-    .product-grid,
-    .future-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .product-card {
-        text-align: center;
-    }
-
 }
 
 
-/* ==================================================
+/* =========================
    MOBILE
-================================================== */
+========================= */
 
-@media screen and (max-width: 650px) {
+@media (max-width: 650px) {
 
-    .header {
-        position: sticky;
-    }
+    /* NAVIGATION */
 
     .navbar {
         flex-direction: column;
 
-        gap: 14px;
+        align-items: flex-start;
+
+        gap: 15px;
 
         padding: 16px 20px;
     }
 
+
     .nav-links {
         width: 100%;
 
-        justify-content: center;
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 8px;
 
         flex-wrap: wrap;
-
-        gap: 12px 18px;
     }
+
 
     .nav-link {
         font-size: 13px;
     }
+
+
+    /* HOME */
 
     .hero {
         min-height: 620px;
@@ -1217,79 +1250,117 @@ footer p {
         padding: 80px 20px;
     }
 
-    .hero h1 {
-        font-size: clamp(42px, 12vw, 70px);
 
-        line-height: 1.08;
+    .hero h1 {
+        font-size: clamp(42px, 12vw, 62px);
 
         letter-spacing: -2px;
     }
+
 
     .hero-text {
         font-size: 16px;
     }
 
+
     .hero-buttons {
         width: 100%;
 
         flex-direction: column;
-
-        align-items: stretch;
     }
+
 
     .primary-button,
     .secondary-button {
         width: 100%;
     }
 
-    .about-section,
-    .products-section,
-    .goal-section,
-    .future-section {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+
+    /* ABOUT */
 
     .about-section {
-        padding-top: 90px;
-        padding-bottom: 90px;
+        padding: 90px 20px;
     }
 
-    .products-section,
-    .future-section {
-        padding-top: 90px;
-        padding-bottom: 90px;
+
+    .about-section h2 {
+        font-size: clamp(36px, 10vw, 50px);
     }
 
-    .goal-section {
-        padding-top: 100px;
-        padding-bottom: 100px;
+
+    .section-text {
+        font-size: 16px;
     }
 
-    .product-grid,
-    .future-grid {
+
+    /* PRODUCTS */
+
+    .products-section {
+        padding: 90px 20px;
+    }
+
+
+    .product-grid {
         margin-top: 40px;
     }
 
+
     .product-card {
-        padding: 35px 25px;
+        padding: 32px 24px;
     }
 
+
+    /* GOAL */
+
+    .goal-section {
+        padding: 100px 20px;
+    }
+
+
+    .goal-section h2 {
+        font-size: clamp(36px, 10vw, 50px);
+    }
+
+
     .goal-number {
-        font-size: clamp(65px, 18vw, 110px);
+        font-size: clamp(60px, 18vw, 100px);
 
         letter-spacing: -3px;
     }
 
+
+    .fund-status {
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    /* FUTURE */
+
+    .future-section {
+        padding: 90px 20px;
+    }
+
+
+    .future-grid {
+        margin-top: 40px;
+    }
+
+
+    /* MODAL */
+
     .modal {
         padding: 12px;
     }
+
 
     .modal-content {
         max-height: calc(100vh - 24px);
 
         padding: 38px 22px;
     }
+
 
     .modal-content h2 {
         font-size: 27px;
@@ -1298,22 +1369,29 @@ footer p {
 }
 
 
-/* ==================================================
+/* =========================
    SMALL MOBILE
-================================================== */
+========================= */
 
-@media screen and (max-width: 400px) {
+@media (max-width: 400px) {
 
     .nav-links {
-        gap: 10px;
+        gap: 6px;
     }
+
 
     .nav-link {
         font-size: 12px;
     }
 
+
     .hero h1 {
-        font-size: 42px;
+        font-size: 40px;
+    }
+
+
+    .goal-number {
+        font-size: 58px;
     }
 
 }
