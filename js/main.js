@@ -79,12 +79,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1700);
   }
 });
-
-// Admin-only enhancements. These are isolated so they cannot break public pages.
-document.addEventListener("DOMContentLoaded", () => {
-  if (!location.pathname.includes("/admin/")) return;
-
-  const style = document.createElement("style");
-  style.textContent = `.admin-wrap{width:100%}.admin-grid{align-items:start}.admin-panel{min-width:0}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}.admin-table{min-width:1050px}.admin-table th,.admin-table td{vertical-align:middle;white-space:normal}.admin-table .field{box-sizing:border-box}.admin-number{width:100px}.admin-number-small{width:90px}.bundle-input{min-width:130px}.admin-thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;margin-bottom:6px}.save-success{border-color:#86efac!important;color:#15803d!important;background:#f0fdf4!important}`;
-  document.head.appendChild(style);
-});
