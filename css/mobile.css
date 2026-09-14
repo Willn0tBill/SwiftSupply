@@ -1,7 +1,7 @@
 /* SwiftSupply mobile improvements */
 @media (max-width: 600px) {
   html { -webkit-text-size-adjust: 100%; }
-  body { min-width: 0; }
+  body { min-width: 0; overflow-x: hidden; }
   .container { width: calc(100% - 28px); }
   .site-header { backdrop-filter: blur(10px); }
   .navbar { min-height: 64px; gap: 10px; }
@@ -62,20 +62,38 @@
   .site-footer { padding: 42px 0; }
   .site-footer .button { width: 100%; }
 
-  /* Admin: make controls easy to tap and prevent the whole page from becoming a tiny desktop table. */
+  /* Admin mobile layout: turn every table row into a full-width card so there is no horizontal scrolling. */
   .admin-wrap { width: calc(100% - 28px) !important; max-width: none !important; left: auto !important; transform: none !important; }
   .admin-panel { padding: 18px; border-radius: 16px; }
   .admin-panel h3 { font-size: 20px; }
   .stat-row { grid-template-columns: 1fr 1fr; gap: 9px; }
   .stat { padding: 14px; }
   .stat strong { font-size: 24px; }
-  .table-wrap { margin: 0 -4px; padding-bottom: 4px; }
-  .admin-table { min-width: 920px; font-size: 13px; }
-  .admin-table th, .admin-table td { padding: 11px 9px; }
-  .admin-number { width: 90px; }
-  .bundle-input { min-width: 115px; }
-
-  .announcement { padding: 18px; border-radius: 16px; }
+  .table-wrap { margin: 0; padding: 0; overflow: visible !important; }
+  .admin-table, .admin-table tbody { display: block; width: 100%; min-width: 0 !important; }
+  .admin-table thead { display: none; }
+  .admin-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; width: 100%; margin-bottom: 14px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: #fff; }
+  .admin-table td { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 0; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  .admin-table td:before { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; }
+  .admin-table td:nth-child(1):before { content: "Product / Date"; }
+  .admin-table td:nth-child(2):before { content: "Category / Customer"; }
+  .admin-table td:nth-child(3):before { content: "Price / Product"; }
+  .admin-table td:nth-child(4):before { content: "Stock / Contact"; }
+  .admin-table td:nth-child(5):before { content: "Active / Status"; }
+  .admin-table td:nth-child(6):before { content: "Bundle / Save"; }
+  .admin-table td:nth-child(7):before { content: "Picture"; }
+  .admin-table td:nth-child(8):before { content: "Save"; }
+  .admin-table td:nth-child(9):before { content: "Delete"; }
+  .admin-table td:nth-child(1), .admin-table td:nth-child(2), .admin-table td:nth-child(3), .admin-table td:nth-child(4) { grid-column: span 1; }
+  .admin-table td:nth-child(6), .admin-table td:nth-child(7), .admin-table td:nth-child(8), .admin-table td:nth-child(9) { grid-column: span 2; }
+  .admin-table td .field { width: 100%; min-width: 0; }
+  .admin-table .button { width: 100%; }
+  .admin-table .admin-number, .admin-table .admin-number-small, .admin-table .bundle-input { width: 100%; min-width: 0; }
+  .admin-table .image-cell { width: 100%; }
+  .admin-thumb { width: 64px; height: 64px; }
+  .admin-table input[type="checkbox"] { width: 22px; height: 22px; margin: 4px 0; }
+  .announcement > div { flex-direction: column; }
+  .announcement .button { width: 100%; }
 }
 
 @media (max-width: 380px) {
@@ -86,6 +104,8 @@
   .hero h1, .page-hero h1 { font-size: 40px; letter-spacing: -2.2px; }
   .section { padding: 62px 0; }
   .stat-row { grid-template-columns: 1fr; }
+  .admin-table tr { grid-template-columns: 1fr; }
+  .admin-table td:nth-child(n) { grid-column: span 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
