@@ -1,0 +1,93 @@
+/* SwiftSupply mobile improvements */
+@media (max-width: 600px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { min-width: 0; }
+  .container { width: calc(100% - 28px); }
+  .site-header { backdrop-filter: blur(10px); }
+  .navbar { min-height: 64px; gap: 10px; }
+  .brand { font-size: 19px; gap: 8px; }
+  .brand img { width: 38px; height: 38px; }
+  .button-row { gap: 8px; margin-top: 24px; }
+  .navbar .button-row { margin-top: 0; }
+  .navbar .button { min-height: 40px; padding: 0 12px; font-size: 12px; }
+  .nav-links { left: 14px; right: 14px; top: 62px; padding: 8px 16px; }
+  .nav-link { padding: 14px 0; font-size: 14px; }
+  .menu-button { padding: 10px 6px; }
+  .menu-button span { width: 22px; }
+
+  .hero { min-height: auto; padding: 72px 0 78px; }
+  .hero-content { max-width: 100%; }
+  .hero h1, .page-hero h1 { font-size: clamp(43px, 14vw, 62px); line-height: .98; letter-spacing: -2.8px; }
+  .hero-text { margin-top: 20px; font-size: 16px; line-height: 1.6; }
+  .hero .button-row { flex-direction: column; align-items: stretch; }
+  .hero .button { width: 100%; }
+  .section { padding: 72px 0; }
+  .section-title { font-size: clamp(38px, 12vw, 52px); letter-spacing: -2px; }
+  .section-intro { margin-top: 16px; font-size: 15px; line-height: 1.65; }
+  .section-heading { margin-bottom: 34px; }
+  .card { padding: 24px; border-radius: 18px; }
+  .card h3 { font-size: 20px; }
+  .card-number { margin-bottom: 18px; }
+
+  .page-hero { padding: 66px 0 58px; }
+  .page-hero p { margin-top: 17px; font-size: 15px; line-height: 1.65; }
+
+  .shop-toolbar { gap: 12px; margin-bottom: 18px; }
+  .filter-row { width: 100%; overflow-x: auto; padding-bottom: 3px; scrollbar-width: none; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter { flex: 0 0 auto; padding: 10px 14px; }
+  .status-box { margin-bottom: 18px; padding: 12px 14px; }
+  .product-grid { gap: 14px; }
+  .product-card { border-radius: 18px; }
+  .product-image { height: 170px; }
+  .product-body { padding: 19px; }
+  .product-body h3 { font-size: 20px; }
+  .product-body p { min-height: 0; margin-bottom: 10px; }
+  .product-bottom { margin: 16px 0 7px; }
+  .product-bottom strong { font-size: 20px; }
+  .product-order { min-height: 46px; }
+
+  .form-shell { max-width: none; }
+  .form-grid { grid-template-columns: 1fr; gap: 0; }
+  .field-group { margin-bottom: 14px; }
+  .field, .input, textarea, select { min-height: 46px; font-size: 16px; padding: 12px 13px; }
+  textarea.field, textarea { min-height: 110px; }
+  .button { width: 100%; min-height: 48px; padding: 0 16px; }
+  .button-row .button { flex: 1 1 100%; }
+
+  .goal-number { margin-top: 28px; font-size: clamp(58px, 18vw, 88px); letter-spacing: -4px; overflow-wrap: anywhere; }
+  .progress-track { height: 10px; margin-top: 22px; }
+
+  .footer-inner { gap: 20px; }
+  .site-footer { padding: 42px 0; }
+  .site-footer .button { width: 100%; }
+
+  /* Admin: make controls easy to tap and prevent the whole page from becoming a tiny desktop table. */
+  .admin-wrap { width: calc(100% - 28px) !important; max-width: none !important; left: auto !important; transform: none !important; }
+  .admin-panel { padding: 18px; border-radius: 16px; }
+  .admin-panel h3 { font-size: 20px; }
+  .stat-row { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .stat { padding: 14px; }
+  .stat strong { font-size: 24px; }
+  .table-wrap { margin: 0 -4px; padding-bottom: 4px; }
+  .admin-table { min-width: 920px; font-size: 13px; }
+  .admin-table th, .admin-table td { padding: 11px 9px; }
+  .admin-number { width: 90px; }
+  .bundle-input { min-width: 115px; }
+
+  .announcement { padding: 18px; border-radius: 16px; }
+}
+
+@media (max-width: 380px) {
+  .container { width: calc(100% - 24px); }
+  .brand { font-size: 17px; }
+  .brand img { width: 35px; height: 35px; }
+  .navbar .button { padding: 0 9px; font-size: 11px; }
+  .hero h1, .page-hero h1 { font-size: 40px; letter-spacing: -2.2px; }
+  .section { padding: 62px 0; }
+  .stat-row { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero:before, .hero:after, .page-hero:after, .dark-section:after { animation: none !important; }
+}
