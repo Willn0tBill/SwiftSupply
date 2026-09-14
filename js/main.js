@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   decor.href = prefix + "css/decor.css";
   document.head.appendChild(decor);
 
+  const mobile = document.createElement("link");
+  mobile.rel = "stylesheet";
+  mobile.href = prefix + "css/mobile.css";
+  document.head.appendChild(mobile);
+
   const menuButton = document.querySelector(".menu-button");
   const navLinks = document.querySelector(".nav-links");
   if (menuButton && navLinks) {
