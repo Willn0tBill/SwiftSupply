@@ -46,7 +46,7 @@
             <span class="home-card-label">Monster</span>
           </div>
           <div class="home-card home-card-main">
-            <img class="home-product-image" src="assets/home-alani-cutout.png?v=1" alt="Alani energy drink can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));">
+            <img class="home-product-image" src="assets/home-alani-cutout.webp?v=2" alt="Alani energy drink can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));">
             <span class="home-card-label">Alani</span>
           </div>
           <div class="home-card home-card-right">
@@ -66,7 +66,7 @@
   <script src="js/main.js"></script><script src="js/config.js"></script><script src="js/supabase.js"></script>
   <script>
     function esc(s){return String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]))}
-    const HOME_BRAND_IMAGES={'Monster':'assets/home-monster.webp?v=2','Alani Nu':'assets/home-alani-cutout.png?v=1','Cheetos':'assets/home-cheetos.webp?v=2'};
+    const HOME_BRAND_IMAGES={'Monster':'assets/home-monster.webp?v=2','Alani Nu':'assets/home-alani-cutout.webp?v=2','Cheetos':'assets/home-cheetos.webp?v=2'};
     function brandCard(name,products){const items=products.filter(p=>(p.brand||'').toLowerCase()===name.toLowerCase());const flavors=items.filter(p=>p.flavor).map(p=>p.flavor);const image=HOME_BRAND_IMAGES[name];return `<a class="home-brand-card" href="shop.html?brand=${encodeURIComponent(name)}"><div class="home-brand-image"><img src="${image}" alt="${esc(name)} product"></div><div class="home-brand-copy"><span class="home-brand-count">${items.length} ${items.length===1?'product':'products'}</span><h3>${esc(name)}</h3><p>${flavors.length?esc(flavors.slice(0,3).join(' · ')):'Add flavors in the Admin Panel.'}</p><span class="home-brand-link">View flavors →</span></div></a>`}
     async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')}}catch(e){console.error(e)}}document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
   </script>
