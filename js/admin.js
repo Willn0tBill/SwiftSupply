@@ -1,158 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
   if (!location.pathname.includes("/admin/")) return;
-
-  const style = document.createElement("style");
-  style.textContent = `.admin-wrap{width:100%}.admin-grid{align-items:start}.admin-panel{min-width:0}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}.admin-table{min-width:1150px}.admin-table th,.admin-table td{vertical-align:middle;white-space:normal}.admin-table .field{box-sizing:border-box}.admin-number{width:100px}.admin-number-small{width:90px}.bundle-input{min-width:130px}.admin-thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;margin-bottom:6px}.save-success{border-color:#86efac!important;color:#15803d!important;background:#f0fdf4!important}`;
-  document.head.appendChild(style);
-
-  const $ = (id) => document.getElementById(id);
-  const esc = (s) => String(s ?? "").replace(/[&<>\"']/g, (m) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-  let products = [];
-  let editingAnnouncementId = null;
-
-  function msg(text) {
-    const notice = $("adminNotice");
-    if (!notice) return;
-    notice.textContent = text;
-    notice.style.display = "block";
-  }
-
-  async function uploadImage(file) {
-    if (!file) return null;
-    if (file.size > 5 * 1024 * 1024) throw new Error("Images must be 5 MB or smaller.");
-    const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const path = crypto.randomUUID() + "." + ext;
-    const { error } = await sb.storage.from("product-images").upload(path, file, {cacheControl:"3600",upsert:false});
-    if (error) throw error;
-    return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
-  }
-
-  function renderProducts() {
-    const table = $("productsTable");
-    if (!table) return;
-    table.innerHTML = products.map((p) => `<tr>
-      <td><input class="field" data-p="name" data-id="${p.id}" value="${esc(p.name)}"></td>
-      <td>${esc(p.category)}</td>
-      <td><input class="field admin-number" data-p="price" data-id="${p.id}" type="number" step=".01" min="0" value="${p.price}"></td>
-      <td><input class="field admin-number-small" data-p="stock" data-id="${p.id}" type="number" min="0" value="${p.stock}"></td>
-      <td><input data-p="active" data-id="${p.id}" type="checkbox" ${p.active ? "checked" : ""}></td>
-      <td><input class="field bundle-input" data-p="bundle_label" data-id="${p.id}" value="${esc(p.bundle_label || "")}" placeholder="2 for $5"></td>
-      <td><div class="image-cell">${p.image_url ? `<img class="admin-thumb" src="${esc(p.image_url)}" alt="">` : ""}<input class="field image-input" data-image="${p.id}" type="file" accept="image/png,image/jpeg,image/webp"></div></td>
-      <td><button class="button button-secondary save-product" data-id="${p.id}">Save</button></td>
-      <td><button class="button button-secondary delete-product" data-id="${p.id}" style="border-color:#fecaca;color:#b91c1c">Delete</button></td>
-    </tr>`).join("");
-
-    table.querySelectorAll(".save-product").forEach((button) => {
-      button.onclick = async () => {
-        const id = button.dataset.id;
-        try {
-          button.disabled = true;
-          button.textContent = "Saving...";
-          const values = {};
-          table.querySelectorAll(`[data-id="${id}"]`).forEach((input) => {
-            if (!input.dataset.p) return;
-            if (input.type === "checkbox") values[input.dataset.p] = input.checked;
-            else if (input.dataset.p === "price" || input.dataset.p === "stock") values[input.dataset.p] = Number(input.value);
-            else values[input.dataset.p] = input.value.trim();
-          });
-          const file = table.querySelector(`[data-image="${id}"]`)?.files?.[0];
-          if (file) {
-            msg("Uploading product picture...");
-            values.image_url = await uploadImage(file);
-          }
-          const { error } = await sb.from("products").update({...values,updated_at:new Date().toISOString()}).eq("id",id);
-          if (error) throw error;
-          msg("Product saved.");
-          button.textContent = "Saved";
-          button.classList.add("save-success");
-          const updated = products.find((p) => p.id === id);
-          if (updated) Object.assign(updated, values);
-          setTimeout(() => {button.textContent="Save";button.classList.remove("save-success");button.disabled=false;},1200);
-        } catch (error) {
-          console.error(error);
-          msg(error.message || "Could not save product.");
-          button.textContent = "Save";
-          button.disabled = false;
-        }
-      };
-    });
-
-    table.querySelectorAll(".delete-product").forEach((button) => {
-      button.onclick = async () => {
-        const product = products.find((p) => p.id === button.dataset.id);
-        if (!product || !confirm(`Delete ${product.name}? This will remove the product completely.`)) return;
-        const { error } = await sb.from("products").delete().eq("id",button.dataset.id);
-        msg(error ? "Could not delete product." : "Product deleted.");
-        if (!error) loadAll();
-      };
-    });
-  }
-
-  function renderOrders(rows) {
-    const table = $("ordersTable");
-    table.innerHTML = rows.map((o) => `<tr><td>${new Date(o.created_at).toLocaleString()}</td><td>${esc(o.customer_name)}</td><td>${esc(o.email||o.phone||"")}</td><td>${esc(JSON.stringify(o.items))}</td><td><select class="field order-status" data-id="${o.id}"><option ${o.status==="new"?"selected":""}>new</option><option ${o.status==="confirmed"?"selected":""}>confirmed</option><option ${o.status==="ready"?"selected":""}>ready</option><option ${o.status==="completed"?"selected":""}>completed</option><option ${o.status==="cancelled"?"selected":""}>cancelled</option></select></td><td><button class="button button-secondary save-order" data-id="${o.id}">Save</button></td></tr>`).join("");
-    table.querySelectorAll(".save-order").forEach((button) => button.onclick = async () => {
-      const value = table.querySelector(`.order-status[data-id="${button.dataset.id}"]`).value;
-      const {error} = await sb.from("orders").update({status:value}).eq("id",button.dataset.id);
-      msg(error?"Could not save order.":"Order updated."); if(!error) loadAll();
-    });
-  }
-
-  function renderRequests(rows) {
-    const table = $("requestsTable");
-    table.innerHTML = rows.map((r) => `<tr><td>${new Date(r.created_at).toLocaleString()}</td><td>${esc(r.name)}</td><td>${esc(r.requested_product)}</td><td>${esc(r.email||r.phone||"")}</td><td><select class="field req-status" data-id="${r.id}"><option ${r.status==="new"?"selected":""}>new</option><option ${r.status==="reviewing"?"selected":""}>reviewing</option><option ${r.status==="approved"?"selected":""}>approved</option><option ${r.status==="declined"?"selected":""}>declined</option><option ${r.status==="fulfilled"?"selected":""}>fulfilled</option></select></td><td><button class="button button-secondary save-request" data-id="${r.id}">Save</button></td></tr>`).join("");
-    table.querySelectorAll(".save-request").forEach((button) => button.onclick = async () => {
-      const value = table.querySelector(`.req-status[data-id="${button.dataset.id}"]`).value;
-      const {error} = await sb.from("product_requests").update({status:value}).eq("id",button.dataset.id);
-      msg(error?"Could not save request.":"Request updated."); if(!error) loadAll();
-    });
-  }
-
-  function renderAnnouncements(rows) {
-    const container = $("announcements");
-    container.innerHTML = rows.map((a) => `<div class="announcement"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h3>${esc(a.title)}</h3><p>${esc(a.body)}</p><time>${new Date(a.created_at).toLocaleString()}</time></div><button class="button button-secondary edit-announcement" data-id="${a.id}">Edit</button></div></div>`).join("");
-    container.querySelectorAll(".edit-announcement").forEach((button) => button.onclick = () => {
-      const a = rows.find((item) => item.id === button.dataset.id); if(!a) return;
-      editingAnnouncementId=a.id; $("announcementForm").title.value=a.title; $("announcementForm").body.value=a.body; $("announcementSubmit").textContent="Save Changes"; $("announcementCancel").hidden=false; $("announcementForm").scrollIntoView({behavior:"smooth",block:"center"});
-    });
-  }
-
-  async function loadAll() {
-    try {
-      const [p,o,r,a,g] = await Promise.all([
-        sb.from("products").select("*").order("name"),
-        sb.from("orders").select("*").order("created_at",{ascending:false}),
-        sb.from("product_requests").select("*").order("created_at",{ascending:false}),
-        sb.from("announcements").select("*").order("created_at",{ascending:false}),
-        sb.from("site_settings").select("*")
-      ]);
-      if(p.error||o.error||r.error||a.error||g.error) throw(p.error||o.error||r.error||a.error||g.error);
-      products=p.data||[]; renderProducts(); renderOrders(o.data||[]); renderRequests(r.data||[]); renderAnnouncements(a.data||[]);
-      const settings=Object.fromEntries((g.data||[]).map((x)=>[x.key,x.value]));
-      $("goalForm").goal.value=settings.goal_amount||5000; $("goalForm").current.value=settings.current_amount||0;
-      $("stats").innerHTML=`<div class="stat"><strong>${products.length}</strong><span>Products</span></div><div class="stat"><strong>${o.data.length}</strong><span>Orders</span></div><div class="stat"><strong>${r.data.length}</strong><span>Requests</span></div><div class="stat"><strong>${a.data.length}</strong><span>Announcements</span></div>`;
-      msg("Connected. Changes save directly to Supabase.");
-    } catch(error) { console.error(error); msg("Could not load admin data. Check your Supabase setup."); }
-  }
-
-  function showDash(){ $("loginPanel").hidden=true; $("dashboard").hidden=false; $("logout").hidden=false; }
-
-  async function init(){
-    if(!window.sb||!window.SWIFTSUPPLY_CONFIG) return;
-    const {data:{session}}=await sb.auth.getSession(); if(!session) return;
-    if((session.user.email||"").toLowerCase()!==window.SWIFTSUPPLY_CONFIG.ADMIN_EMAIL.toLowerCase()){await sb.auth.signOut();$("loginMessage").textContent="This account is not authorized.";$("loginMessage").classList.add("show");return;}
-    showDash(); loadAll();
-  }
-
-  document.addEventListener("supabase-ready",init);
-
-  $("loginForm").onsubmit=async(e)=>{e.preventDefault();const {error}=await sb.auth.signInWithPassword({email:$("loginEmail").value,password:$("loginPassword").value});$("loginMessage").textContent=error?error.message:"Logged in.";$("loginMessage").classList.add("show");if(!error){showDash();loadAll();}};
-  $("logout").onclick=()=>sb.auth.signOut().then(()=>location.reload());
-
-  $("productForm").onsubmit=async(e)=>{e.preventDefault();try{const p=Object.fromEntries(new FormData(e.currentTarget));const file=p.image;delete p.image;p.price=Number(p.price);p.stock=Number(p.stock);if(file&&file.size){msg("Uploading product picture...");p.image_url=await uploadImage(file);}const {error}=await sb.from("products").insert({...p,active:true});msg(error?"Could not add product.":"Product added.");if(!error){e.currentTarget.reset();loadAll();}}catch(err){console.error(err);msg(err.message||"Could not add product.");}};
-
-  $("goalForm").onsubmit=async(e)=>{e.preventDefault();const f=e.currentTarget;for(const[key,val]of [["goal_amount",f.goal.value],["current_amount",f.current.value]]){const {error}=await sb.from("site_settings").upsert({key,value:String(val)});if(error){msg("Could not save goal.");return;}}msg("Goal saved.");loadAll();};
-
-  $("announcementForm").onsubmit=async(e)=>{e.preventDefault();const p=Object.fromEntries(new FormData(e.currentTarget));const result=editingAnnouncementId?await sb.from("announcements").update(p).eq("id",editingAnnouncementId):await sb.from("announcements").insert(p);const {error}=result;msg(error?(editingAnnouncementId?"Could not save announcement.":"Could not publish announcement."):(editingAnnouncementId?"Announcement updated.":"Announcement published."));if(!error){editingAnnouncementId=null;e.currentTarget.reset();$("announcementSubmit").textContent="Publish Announcement";$("announcementCancel").hidden=true;loadAll();}};
-  $("announcementCancel").onclick=()=>{editingAnnouncementId=null;$("announcementForm").reset();$("announcementSubmit").textContent="Publish Announcement";$("announcementCancel").hidden=true;};
+  const style=document.createElement("style");style.textContent=`.admin-wrap{width:100%}.admin-grid{align-items:start}.admin-panel{min-width:0}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}.admin-table{min-width:1150px}.admin-table th,.admin-table td{vertical-align:middle;white-space:normal}.admin-number{width:100px}.admin-number-small{width:90px}.bundle-input{min-width:130px}.admin-thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:block;margin-bottom:6px}.save-success{border-color:#86efac!important;color:#15803d!important;background:#f0fdf4!important}.analytics-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.analytics-card{padding:16px;border:1px solid var(--border);border-radius:16px;background:#fff}.analytics-card strong{display:block;font-size:24px}.analytics-card span{font-size:13px;color:var(--muted)}.low-stock-panel{margin-top:14px}.low-stock-list{display:flex;flex-wrap:wrap;gap:8px}.low-stock-item{padding:8px 12px;border-radius:999px;background:#fff7ed;border:1px solid #fed7aa;font-size:13px}.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.admin-filter{max-width:190px}@media(max-width:800px){.analytics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.panel-heading{flex-direction:column}.admin-filter{max-width:none;width:100%}}`;document.head.appendChild(style);
+  const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+  let products=[],orders=[],requests=[],announcements=[],editingAnnouncementId=null;
+  function msg(text){const n=$("adminNotice");if(!n)return;n.textContent=text;n.style.display="block";}
+  function money(v){return "$"+Number(v||0).toFixed(2)}
+  async function uploadImage(file){if(!file)return null;if(file.size>5*1024*1024)throw Error("Images must be 5 MB or smaller.");const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const path=crypto.randomUUID()+"."+ext;const{error}=await sb.storage.from("product-images").upload(path,file,{cacheControl:"3600",upsert:false});if(error)throw error;return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;}
+  async function notifyRestock(id){try{const{data,error}=await sb.functions.invoke('send-restock-alerts',{body:{product_id:id}});if(error)throw error;return data?.sent||0}catch(e){console.error('Restock notification failed',e);return 0}}
+  function renderAnalytics(){const revenue=orders.filter(o=>o.status!=="cancelled").reduce((n,o)=>n+Number(o.total||0),0),open=orders.filter(o=>!['completed','cancelled'].includes(o.status)).length,completed=orders.filter(o=>o.status==='completed').length,low=products.filter(p=>p.active&&p.stock>=0&&p.stock<=3),units=products.filter(p=>p.active).reduce((n,p)=>n+Number(p.stock||0),0);$("analyticsGrid").innerHTML=`<div class="analytics-card"><strong>${money(revenue)}</strong><span>Order value</span></div><div class="analytics-card"><strong>${open}</strong><span>Open orders</span></div><div class="analytics-card"><strong>${completed}</strong><span>Completed</span></div><div class="analytics-card"><strong>${units}</strong><span>Units in stock</span></div>`;$("lowStockPanel").innerHTML=low.length?`<strong>Low stock</strong><div class="low-stock-list">${low.map(p=>`<span class="low-stock-item">${esc(p.name)}: ${p.stock}</span>`).join('')}</div>`:'<span class="muted">No products are currently low or out of stock.</span>';}
+  function renderProducts(){const table=$("productsTable");if(!table)return;table.innerHTML=products.map(p=>`<tr><td><input class="field" data-p="name" data-id="${p.id}" value="${esc(p.name)}"></td><td>${esc(p.category)}</td><td><input class="field admin-number" data-p="price" data-id="${p.id}" type="number" step=".01" min="0" value="${p.price}"></td><td><input class="field admin-number-small" data-p="stock" data-id="${p.id}" type="number" min="0" value="${p.stock}"></td><td><input data-p="active" data-id="${p.id}" type="checkbox" ${p.active?"checked":""}></td><td><input class="field bundle-input" data-p="bundle_label" data-id="${p.id}" value="${esc(p.bundle_label||"")}" placeholder="2 for $5"></td><td><div>${p.image_url?`<img class="admin-thumb" src="${esc(p.image_url)}" alt="">`:""}<input class="field image-input" data-image="${p.id}" type="file" accept="image/png,image/jpeg,image/webp"></div></td><td><button class="button button-secondary save-product" data-id="${p.id}">Save</button></td><td><button class="button button-secondary delete-product" data-id="${p.id}" style="border-color:#fecaca;color:#b91c1c">Delete</button></td></tr>`).join('');
+    table.querySelectorAll('.save-product').forEach(button=>button.onclick=async()=>{const id=button.dataset.id,old=products.find(p=>p.id===id);try{button.disabled=true;button.textContent='Saving...';const values={};table.querySelectorAll(`[data-id="${id}"]`).forEach(input=>{if(!input.dataset.p)return;if(input.type==='checkbox')values[input.dataset.p]=input.checked;else if(['price','stock'].includes(input.dataset.p))values[input.dataset.p]=Number(input.value);else values[input.dataset.p]=input.value.trim()});const file=table.querySelector(`[data-image="${id}"]`)?.files?.[0];if(file){msg('Uploading product picture...');values.image_url=await uploadImage(file)}const{error}=await sb.from('products').update({...values,updated_at:new Date().toISOString()}).eq('id',id);if(error)throw error;const becameInStock=old&&Number(old.stock)===0&&Number(values.stock)>0;if(becameInStock){const sent=await notifyRestock(id);msg(sent?`Product saved. ${sent} stock alert${sent===1?'':'s'} sent.`:'Product saved.');}else msg('Product saved.');button.textContent='Saved';button.classList.add('save-success');Object.assign(old,values);renderAnalytics();setTimeout(()=>{button.textContent='Save';button.classList.remove('save-success');button.disabled=false},1200)}catch(error){console.error(error);msg(error.message||'Could not save product.');button.textContent='Save';button.disabled=false}});
+    table.querySelectorAll('.delete-product').forEach(button=>button.onclick=async()=>{const product=products.find(p=>p.id===button.dataset.id);if(!product||!confirm(`Delete ${product.name}? This will remove the product completely.`))return;const{error}=await sb.from('products').delete().eq('id',button.dataset.id);msg(error?'Could not delete product.':'Product deleted.');if(!error)loadAll()});}
+  function orderSort(a,b){const rank=s=>({new:0,confirmed:1,ready:2,completed:3,cancelled:4}[s]??5);return rank(a.status)-rank(b.status)||new Date(b.created_at)-new Date(a.created_at)}
+  function renderOrders(){const table=$("ordersTable"),mode=$("orderFilter")?.value||'active';let rows=[...orders].sort(orderSort);if(mode==='active')rows=rows.filter(o=>!['completed','cancelled'].includes(o.status));if(mode==='completed')rows=rows.filter(o=>o.status==='completed');if(mode==='cancelled')rows=rows.filter(o=>o.status==='cancelled');table.innerHTML=rows.map(o=>`<tr><td>${new Date(o.created_at).toLocaleString()}</td><td><strong>${esc(o.order_number||'—')}</strong></td><td>${esc(o.customer_name)}</td><td>${esc(o.email||o.phone||'')}</td><td>${(o.items||[]).map(i=>`${esc(i.quantity)} × ${esc(i.name)}`).join('<br>')}</td><td>${money(o.total)}</td><td><select class="field order-status" data-id="${o.id}"><option value="new" ${o.status==='new'?'selected':''}>new</option><option value="confirmed" ${o.status==='confirmed'?'selected':''}>confirmed</option><option value="ready" ${o.status==='ready'?'selected':''}>ready</option><option value="completed" ${o.status==='completed'?'selected':''}>completed</option><option value="cancelled" ${o.status==='cancelled'?'selected':''}>cancelled</option></select></td><td><button class="button button-secondary save-order" data-id="${o.id}">Save</button></td></tr>`).join('');table.querySelectorAll('.save-order').forEach(button=>button.onclick=async()=>{const value=table.querySelector(`.order-status[data-id="${button.dataset.id}"]`).value;const{error}=await sb.from('orders').update({status:value}).eq('id',button.dataset.id);msg(error?'Could not save order.':'Order updated.');if(!error)loadAll()})}
+  function renderRequests(){const table=$("requestsTable");table.innerHTML=requests.map(r=>`<tr><td>${new Date(r.created_at).toLocaleString()}</td><td>${esc(r.name)}</td><td>${esc(r.requested_product)}</td><td>${esc(r.email||r.phone||'')}</td><td><select class="field req-status" data-id="${r.id}"><option ${r.status==='new'?'selected':''}>new</option><option ${r.status==='reviewing'?'selected':''}>reviewing</option><option ${r.status==='approved'?'selected':''}>approved</option><option ${r.status==='declined'?'selected':''}>declined</option><option ${r.status==='fulfilled'?'selected':''}>fulfilled</option></select></td><td><button class="button button-secondary save-request" data-id="${r.id}">Save</button></td></tr>`).join('');table.querySelectorAll('.save-request').forEach(button=>button.onclick=async()=>{const value=table.querySelector(`.req-status[data-id="${button.dataset.id}"]`).value;const{error}=await sb.from('product_requests').update({status:value}).eq('id',button.dataset.id);msg(error?'Could not save request.':'Request updated.');if(!error)loadAll()})}
+  function renderAnnouncements(){const container=$("announcements");container.innerHTML=announcements.map(a=>`<div class="announcement"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h3>${esc(a.title)}</h3><p>${esc(a.body)}</p><time>${new Date(a.created_at).toLocaleString()}</time></div><button class="button button-secondary edit-announcement" data-id="${a.id}">Edit</button></div></div>`).join('');container.querySelectorAll('.edit-announcement').forEach(button=>button.onclick=()=>{const a=announcements.find(x=>x.id===button.dataset.id);if(!a)return;editingAnnouncementId=a.id;$("announcementForm").title.value=a.title;$("announcementForm").body.value=a.body;$("announcementSubmit").textContent='Save Changes';$("announcementCancel").hidden=false;$("announcementForm").scrollIntoView({behavior:'smooth',block:'center'})})}
+  async function loadAll(){try{const[p,o,r,a,g]=await Promise.all([sb.from('products').select('*').order('name'),sb.from('orders').select('*').order('created_at',{ascending:false}),sb.from('product_requests').select('*').order('created_at',{ascending:false}),sb.from('announcements').select('*').order('created_at',{ascending:false}),sb.from('site_settings').select('*')]);if(p.error||o.error||r.error||a.error||g.error)throw(p.error||o.error||r.error||a.error||g.error);products=p.data||[];orders=o.data||[];requests=r.data||[];announcements=a.data||[];renderProducts();renderOrders();renderRequests();renderAnnouncements();renderAnalytics();const settings=Object.fromEntries((g.data||[]).map(x=>[x.key,x.value]));$("goalForm").goal.value=settings.goal_amount||5000;$("goalForm").current.value=settings.current_amount||0;$("stats").innerHTML=`<div class="stat"><strong>${products.length}</strong><span>Products</span></div><div class="stat"><strong>${orders.length}</strong><span>Orders</span></div><div class="stat"><strong>${requests.length}</strong><span>Requests</span></div><div class="stat"><strong>${announcements.length}</strong><span>Announcements</span></div>`;msg('Connected. Changes save directly to Supabase.')}catch(error){console.error(error);msg('Could not load admin data. Check your Supabase setup.')}}
+  function showDash(){$("loginPanel").hidden=true;$("dashboard").hidden=false;$("logout").hidden=false;loadAll()}
+  async function init(){if(!window.sb||!window.SWIFTSUPPLY_CONFIG)return;const{data:{session}}=await sb.auth.getSession();if(!session)return;if((session.user.email||'').toLowerCase()!==window.SWIFTSUPPLY_CONFIG.ADMIN_EMAIL.toLowerCase()){await sb.auth.signOut();$("loginMessage").textContent='This account is not authorized.';$("loginMessage").classList.add('show');return}showDash()}
+  document.addEventListener('supabase-ready',init);$("loginForm").onsubmit=async e=>{e.preventDefault();const{error}=await sb.auth.signInWithPassword({email:$("loginEmail").value,password:$("loginPassword").value});$("loginMessage").textContent=error?error.message:'Logged in.';$("loginMessage").classList.add('show');if(!error)showDash()};$("logout").onclick=()=>sb.auth.signOut().then(()=>location.reload());$("orderFilter")?.addEventListener('change',renderOrders);
+  $("productForm").onsubmit=async e=>{e.preventDefault();try{const p=Object.fromEntries(new FormData(e.currentTarget));const file=p.image;delete p.image;p.price=Number(p.price);p.stock=Number(p.stock);if(file&&file.size){msg('Uploading product picture...');p.image_url=await uploadImage(file)}const{error}=await sb.from('products').insert({...p,active:true});msg(error?'Could not add product.':'Product added.');if(!error){e.currentTarget.reset();loadAll()}}catch(err){console.error(err);msg(err.message||'Could not add product.')}};
+  $("goalForm").onsubmit=async e=>{e.preventDefault();const f=e.currentTarget;for(const[key,val]of [['goal_amount',f.goal.value],['current_amount',f.current.value]]){const{error}=await sb.from('site_settings').upsert({key,value:String(val)});if(error){msg('Could not save goal.');return}}msg('Goal saved.');loadAll()};
+  $("announcementForm").onsubmit=async e=>{e.preventDefault();const p=Object.fromEntries(new FormData(e.currentTarget));const result=editingAnnouncementId?await sb.from('announcements').update(p).eq('id',editingAnnouncementId):await sb.from('announcements').insert(p);const{error}=result;msg(error?(editingAnnouncementId?'Could not save announcement.':'Could not publish announcement.'):(editingAnnouncementId?'Announcement updated.':'Announcement published.'));if(!error){editingAnnouncementId=null;e.currentTarget.reset();$("announcementSubmit").textContent='Publish Announcement';$("announcementCancel").hidden=true;loadAll()}};$("announcementCancel").onclick=()=>{editingAnnouncementId=null;$("announcementForm").reset();$("announcementSubmit").textContent='Publish Announcement';$("announcementCancel").hidden=true};
 });
