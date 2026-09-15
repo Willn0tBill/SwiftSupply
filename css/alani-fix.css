@@ -1,0 +1,5 @@
+/* Alani image fix: use the real transparent product image directly. */
+.home-card-main .home-product-image{display:block!important;content:url('../assets/home-alani-cutout.webp?v=3')!important;}
+.home-card-main:after{display:none!important;content:none!important;}
+.home-brand-card:nth-child(2) .home-brand-image img{display:block!important;content:url('../assets/home-alani-cutout.webp?v=3')!important;}
+.home-brand-card:nth-child(2) .home-brand-image:before{display:none!important;content:none!important;}
