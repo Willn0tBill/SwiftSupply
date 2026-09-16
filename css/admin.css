@@ -16,6 +16,18 @@
 .admin-login-page #dashboard .admin-panel{min-width:0;max-width:100%;overflow:hidden;background:linear-gradient(145deg,#171a20,#101216);border-color:rgba(255,255,255,.08);box-shadow:0 18px 45px rgba(0,0,0,.18)}
 .admin-login-page #dashboard .admin-panel h2,.admin-login-page #dashboard .admin-panel h3{color:#f8fafc}
 .admin-login-page #dashboard .section-intro,.admin-login-page #dashboard .muted{color:#8f99a8}
+
+/* Store Overview intentionally uses a light card for easy dashboard readability */
+.admin-login-page #dashboard .store-overview-panel{background:#fff;color:#111827;border-color:rgba(15,23,42,.12);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.admin-login-page #dashboard .store-overview-panel h2,.admin-login-page #dashboard .store-overview-panel h3{color:#111827}
+.admin-login-page #dashboard .store-overview-panel .eyebrow{color:#9a6a00}
+.admin-login-page #dashboard .store-overview-panel .muted,.admin-login-page #dashboard .store-overview-panel .section-intro{color:#4b5563}
+.admin-login-page #dashboard .store-overview-panel .analytics-card{background:#f8fafc;color:#111827;border-color:#e5e7eb}
+.admin-login-page #dashboard .store-overview-panel .analytics-card strong{color:#111827}
+.admin-login-page #dashboard .store-overview-panel .analytics-card span{color:#4b5563}
+.admin-login-page #dashboard .store-overview-panel .low-stock-panel{color:#111827}
+.admin-login-page #dashboard .store-overview-panel .low-stock-item{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
+
 .admin-login-page .site-footer{display:block}
 .admin-login-page .site-header{background:#0b0d10;border-bottom:1px solid rgba(255,255,255,.07)}
 
