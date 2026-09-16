@@ -2,7 +2,7 @@
 .admin-login-page main{min-height:calc(100vh - 74px);display:block;background:#0b0d10;overflow-x:hidden}
 .admin-login-page .page-hero{display:none}
 .admin-login-page .admin-login-section{width:100%;padding:70px 18px 70px;overflow-x:hidden}
-.admin-login-page .admin-login-wrap{width:min(100%,1500px);max-width:1500px;margin:0 auto;min-width:0}
+.admin-login-page .admin-login-wrap{width:min(100%,1600px);max-width:1600px;margin:0 auto;min-width:0}
 .admin-login-page .admin-login-brand{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:22px;font-size:12px;font-weight:900;letter-spacing:2px;color:#fbbf24;text-transform:uppercase}
 .admin-login-page .admin-login-brand:before,.admin-login-page .admin-login-brand:after{content:"";width:28px;height:2px;border-radius:999px;background:#fbbf24;flex:0 0 auto}
 .admin-login-page #loginPanel{width:min(100%,430px);margin:0 auto;padding:34px;border:1px solid rgba(251,191,36,.18);border-radius:24px;background:linear-gradient(145deg,#181b21,#101216);box-shadow:0 28px 80px rgba(0,0,0,.4),0 0 45px rgba(251,191,36,.04);position:relative;overflow:hidden}
@@ -10,10 +10,10 @@
 .admin-login-page #loginPanel h3{font-size:30px;letter-spacing:-1px;margin-bottom:9px;color:#f8fafc}
 .admin-login-page #loginPanel .section-intro{font-size:14px;line-height:1.6;color:#9da6b4}
 .admin-login-page #loginForm .button{width:100%;margin-top:4px}
-.admin-login-page #dashboard{width:100%;max-width:1500px;margin:0 auto;min-width:0;overflow:visible}
+.admin-login-page #dashboard{width:100%;max-width:1600px;margin:0 auto;min-width:0;overflow:visible}
 .admin-login-page #dashboard>.admin-panel,.admin-login-page #dashboard>.admin-grid,.admin-login-page #dashboard>#stats{width:100%;max-width:100%;min-width:0}
-.admin-login-page #dashboard .admin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
-.admin-login-page #dashboard .admin-panel{min-width:0;max-width:100%;overflow:hidden;background:linear-gradient(145deg,#171a20,#101216);border-color:rgba(255,255,255,.08);box-shadow:0 18px 45px rgba(0,0,0,.18)}
+.admin-login-page #dashboard .admin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.admin-login-page #dashboard .admin-panel{min-width:0;max-width:100%;overflow:hidden;background:linear-gradient(145deg,#171a20,#101216);border-color:rgba(255,255,255,.08);box-shadow:0 18px 45px rgba(0,0,0,.18);padding:30px}
 .admin-login-page #dashboard .admin-panel h2,.admin-login-page #dashboard .admin-panel h3{color:#f8fafc}
 .admin-login-page #dashboard .section-intro,.admin-login-page #dashboard .muted{color:#8f99a8}
 
@@ -33,52 +33,63 @@
 
 /* Keep every admin box and control inside the viewport */
 .admin-login-page .field-group,.admin-login-page .form-grid,.admin-login-page form{min-width:0;max-width:100%}
-.admin-login-page .form-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.admin-login-page .form-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
 .admin-login-page .field,.admin-login-page input,.admin-login-page select,.admin-login-page textarea{width:100%;max-width:100%;min-width:0}
-.admin-login-page .panel-heading{min-width:0;gap:16px;flex-wrap:wrap}
+.admin-login-page .panel-heading{min-width:0;gap:18px;flex-wrap:wrap}
 .admin-login-page .panel-heading>div{min-width:0;max-width:100%}
 .admin-login-page .admin-filter{width:auto;max-width:100%;min-width:0}
 
 /* Product filter controls: give the search and dropdowns enough room for full names */
-.admin-login-page #productFilters{grid-template-columns:minmax(360px,2.5fr) minmax(220px,1.2fr) minmax(220px,1.2fr) auto}
+.admin-login-page #productFilters{grid-template-columns:minmax(420px,2.5fr) minmax(250px,1.2fr) minmax(250px,1.2fr) auto;gap:14px}
 .admin-login-page #productFilters>div{min-width:0}
-.admin-login-page #productFilters .field{min-height:48px;padding:11px 14px;font-size:14px}
+.admin-login-page #productFilters .field{min-height:50px;padding:12px 15px;font-size:14px}
 .admin-login-page #productFilters select{padding-right:36px;text-overflow:ellipsis}
-.admin-login-page #productFilters button{min-height:48px;white-space:nowrap}
+.admin-login-page #productFilters button{min-height:50px;white-space:nowrap;padding-left:22px;padding-right:22px}
+
+/* Give admin content sections breathing room so fields and text don't collide */
+.admin-login-page #dashboard .admin-panel>*+*{margin-top:18px}
+.admin-login-page #dashboard .panel-heading+*{margin-top:20px}
+.admin-login-page #dashboard .admin-panel input,.admin-login-page #dashboard .admin-panel select,.admin-login-page #dashboard .admin-panel textarea{min-height:46px;padding:11px 13px;line-height:1.35}
+.admin-login-page #dashboard .admin-panel textarea{min-height:100px;resize:vertical}
 
 /* Tables are contained by their cards; cells wrap instead of widening the page */
-.admin-login-page .table-wrap{display:block;width:100%;max-width:100%;min-width:0;overflow-x:hidden;overflow-y:visible}
-.admin-login-page .admin-table{width:100%;max-width:100%;table-layout:fixed;word-break:break-word}
-.admin-login-page .admin-table th,.admin-login-page .admin-table td{white-space:normal;overflow-wrap:anywhere;word-break:break-word;min-width:0;max-width:0}
-.admin-login-page .admin-table th{font-size:10px}
+.admin-login-page .table-wrap{display:block;width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch}
+.admin-login-page .admin-table{width:100%;max-width:100%;table-layout:auto;min-width:900px;word-break:break-word}
+.admin-login-page .admin-table th,.admin-login-page .admin-table td{white-space:normal;overflow-wrap:anywhere;word-break:break-word;min-width:0}
+.admin-login-page .admin-table th{font-size:11px;padding:12px 9px}
+.admin-login-page .admin-table td{padding:11px 9px;vertical-align:middle}
 .admin-login-page .admin-table td .field,.admin-login-page .admin-table td input,.admin-login-page .admin-table td select,.admin-login-page .admin-table td textarea{width:100%;min-width:0;max-width:100%}
 .admin-login-page .admin-table button{max-width:100%;white-space:normal}
 
-@media(min-width:1100px){
-  .admin-login-page #dashboard .admin-grid{grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr)}
-  .admin-login-page #dashboard .admin-panel{padding:28px}
-  .admin-login-page #dashboard .stat-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media(min-width:1200px){
+  .admin-login-page #dashboard .admin-grid{grid-template-columns:minmax(0,1.35fr) minmax(380px,.65fr);gap:26px}
+  .admin-login-page #dashboard .admin-panel{padding:32px}
+  .admin-login-page #dashboard .stat-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+}
+
+@media(max-width:1100px){
+  .admin-login-page #productFilters{grid-template-columns:minmax(300px,2fr) minmax(200px,1fr) minmax(200px,1fr)}
+  .admin-login-page #productFilters button{grid-column:1/-1}
 }
 
 @media(max-width:950px){
-  .admin-login-page #dashboard .admin-grid{grid-template-columns:minmax(0,1fr)}
-  .admin-login-page #dashboard .admin-panel{padding:22px 18px}
+  .admin-login-page #dashboard .admin-grid{grid-template-columns:minmax(0,1fr);gap:20px}
+  .admin-login-page #dashboard .admin-panel{padding:24px 20px}
   .admin-login-page .form-grid{grid-template-columns:minmax(0,1fr)}
   .admin-login-page #dashboard .stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}
   .admin-login-page #productFilters{grid-template-columns:minmax(260px,2fr) minmax(180px,1fr) minmax(180px,1fr)}
-  .admin-login-page #productFilters button{grid-column:1/-1}
 }
 
 @media(max-width:600px){
   .admin-login-page .admin-login-section{padding:55px 12px 45px}
   .admin-login-page #loginPanel{padding:28px 22px;border-radius:20px}
   .admin-login-page #loginPanel h3{font-size:27px}
-  .admin-login-page #dashboard .admin-panel{padding:20px 14px}
+  .admin-login-page #dashboard .admin-panel{padding:22px 15px}
   .admin-login-page .admin-login-wrap{width:100%}
   .admin-login-page #dashboard .stat-row{grid-template-columns:minmax(0,1fr)}
-  .admin-login-page .admin-table{font-size:12px}
-  .admin-login-page .admin-table th,.admin-login-page .admin-table td{padding:9px 6px}
-  .admin-login-page #productFilters{grid-template-columns:1fr}
+  .admin-login-page .admin-table{font-size:12px;min-width:820px}
+  .admin-login-page .admin-table th,.admin-login-page .admin-table td{padding:9px 7px}
+  .admin-login-page #productFilters{grid-template-columns:1fr;gap:10px}
   .admin-login-page #productFilters .product-filter-search{grid-column:auto}
   .admin-login-page #productFilters button{grid-column:auto;width:100%}
 }
