@@ -39,6 +39,13 @@
 .admin-login-page .panel-heading>div{min-width:0;max-width:100%}
 .admin-login-page .admin-filter{width:auto;max-width:100%;min-width:0}
 
+/* Product filter controls: give the search and dropdowns enough room for full names */
+.admin-login-page #productFilters{grid-template-columns:minmax(360px,2.5fr) minmax(220px,1.2fr) minmax(220px,1.2fr) auto}
+.admin-login-page #productFilters>div{min-width:0}
+.admin-login-page #productFilters .field{min-height:48px;padding:11px 14px;font-size:14px}
+.admin-login-page #productFilters select{padding-right:36px;text-overflow:ellipsis}
+.admin-login-page #productFilters button{min-height:48px;white-space:nowrap}
+
 /* Tables are contained by their cards; cells wrap instead of widening the page */
 .admin-login-page .table-wrap{display:block;width:100%;max-width:100%;min-width:0;overflow-x:hidden;overflow-y:visible}
 .admin-login-page .admin-table{width:100%;max-width:100%;table-layout:fixed;word-break:break-word}
@@ -58,6 +65,8 @@
   .admin-login-page #dashboard .admin-panel{padding:22px 18px}
   .admin-login-page .form-grid{grid-template-columns:minmax(0,1fr)}
   .admin-login-page #dashboard .stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .admin-login-page #productFilters{grid-template-columns:minmax(260px,2fr) minmax(180px,1fr) minmax(180px,1fr)}
+  .admin-login-page #productFilters button{grid-column:1/-1}
 }
 
 @media(max-width:600px){
@@ -69,4 +78,7 @@
   .admin-login-page #dashboard .stat-row{grid-template-columns:minmax(0,1fr)}
   .admin-login-page .admin-table{font-size:12px}
   .admin-login-page .admin-table th,.admin-login-page .admin-table td{padding:9px 6px}
+  .admin-login-page #productFilters{grid-template-columns:1fr}
+  .admin-login-page #productFilters .product-filter-search{grid-column:auto}
+  .admin-login-page #productFilters button{grid-column:auto;width:100%}
 }
