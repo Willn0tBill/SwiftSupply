@@ -1,45 +1,78 @@
 document.addEventListener('DOMContentLoaded',()=>{
   if(!location.pathname.includes('/admin/'))return;
   const table=document.getElementById('productsTable');
-  if(!table)return;
-  const $=s=>document.querySelector(s);
-  const esc=s=>String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));
-  const notice=t=>{const n=document.getElementById('adminNotice');if(n){n.textContent=t;n.style.display='block'}};
-  const money=v=>'$'+Number(v||0).toFixed(2);
-  async function loadProducts(){
-    if(!window.sb)return;
-    const {data,error}=await sb.from('products').select('*').order('brand').order('name');
-    if(error){console.error(error);notice('Products could not be loaded. Check the Products table permissions.');return;}
-    const products=data||[];
-    table.innerHTML=products.length?products.map(p=>`<tr>
-      <td data-label="Brand"><input class="field" data-p="brand" data-id="${p.id}" value="${esc(p.brand||'')}" placeholder="Monster"></td>
-      <td data-label="Flavor"><input class="field" data-p="flavor" data-id="${p.id}" value="${esc(p.flavor||'')}" placeholder="Flavor"></td>
-      <td data-label="Product"><input class="field" data-p="name" data-id="${p.id}" value="${esc(p.name||'')}"></td>
-      <td data-label="Category">${esc(p.category||'')}</td>
-      <td data-label="Price"><input class="field admin-number" data-p="price" data-id="${p.id}" type="number" step=".01" min="0" value="${Number(p.price||0)}"></td>
-      <td data-label="Stock"><input class="field admin-number-small" data-p="stock" data-id="${p.id}" type="number" min="0" value="${Number(p.stock||0)}"></td>
-      <td data-label="Active"><input data-p="active" data-id="${p.id}" type="checkbox" ${p.active?'checked':''}></td>
-      <td data-label="Bundle Label"><input class="field bundle-input" data-p="bundle_label" data-id="${p.id}" value="${esc(p.bundle_label||'')}" placeholder="2 for $5"></td>
-      <td data-label="Picture">${p.image_url?`<img class="admin-thumb" src="${esc(p.image_url)}" alt="">`:''}</td>
-      <td data-label="Save"><button type="button" class="button button-secondary fallback-save-product" data-id="${p.id}">Save</button></td>
-      <td data-label="Delete"><button type="button" class="button button-secondary fallback-delete-product" data-id="${p.id}">Delete</button></td>
-    </tr>`).join(''):'<tr><td colspan="11" style="padding:24px;text-align:center">No products have been added yet.</td></tr>';
-    table.querySelectorAll('.fallback-save-product').forEach(btn=>btn.onclick=async()=>{
-      const id=btn.dataset.id, values={};
-      table.querySelectorAll(`[data-id="${id}"]`).forEach(input=>{if(input.type==='checkbox')values[input.dataset.p]=input.checked;else if(input.dataset.p)values[input.dataset.p]=['price','stock'].includes(input.dataset.p)?Number(input.value):input.value.trim()||null});
-      btn.disabled=true;btn.textContent='Saving...';
-      const {error}=await sb.from('products').update({...values,updated_at:new Date().toISOString()}).eq('id',id);
-      btn.disabled=false;btn.textContent=error?'Save':'Saved';notice(error?'Could not save product.':'Product saved.');
-      if(!error)setTimeout(()=>btn.textContent='Save',1000);
-    });
-    table.querySelectorAll('.fallback-delete-product').forEach(btn=>btn.onclick=async()=>{
-      const row=btn.closest('tr'),name=row?.querySelector('[data-p="name"]')?.value||'this product';
-      if(!confirm(`Delete ${name}? This will remove the product completely.`))return;
-      const {error}=await sb.from('products').delete().eq('id',btn.dataset.id);
-      notice(error?'Could not delete product.':'Product deleted.');if(!error)loadProducts();
-    });
+  const filters=document.getElementById('productFilters');
+  if(!table||!filters)return;
+
+  const search=document.getElementById('productSearch');
+  const brandFilter=document.getElementById('productBrandFilter');
+  const categoryFilter=document.getElementById('productCategoryFilter');
+  const clear=document.getElementById('clearProductFilters');
+  const count=document.getElementById('productFilterCount');
+
+  const style=document.createElement('style');
+  style.textContent=`
+    .product-filters{display:grid;grid-template-columns:minmax(240px,2fr) minmax(150px,1fr) minmax(150px,1fr) auto;gap:12px;align-items:end;margin:18px 0 10px;padding:16px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.025)}
+    .product-filters>div{min-width:0}.product-filters label{display:block;margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .product-filters .field{width:100%}.product-filter-count{min-height:22px;margin:0 0 8px;font-size:13px;color:var(--muted)}
+    @media(max-width:800px){.product-filters{grid-template-columns:1fr 1fr}.product-filter-search{grid-column:1/-1}.product-filters button{width:100%}}
+    @media(max-width:520px){.product-filters{grid-template-columns:1fr}}
+  `;
+  document.head.appendChild(style);
+
+  let lastRows=[];
+
+  function textOf(row,selector){return row.querySelector(selector)?.value?.trim()||''}
+  function selectedValues(){return{
+    search:(search?.value||'').trim().toLowerCase(),
+    brand:(brandFilter?.value||'').trim().toLowerCase(),
+    category:(categoryFilter?.value||'').trim().toLowerCase()
+  }}
+
+  function updateOptions(rows){
+    const brands=[...new Set(rows.map(r=>textOf(r,'[data-p="brand"]')).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    const categories=[...new Set(rows.map(r=>r.querySelector('[data-label="Category"]')?.textContent?.trim()||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    const oldBrand=brandFilter.value,oldCategory=categoryFilter.value;
+    brandFilter.innerHTML='<option value="">All brands</option>'+brands.map(v=>`<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+    categoryFilter.innerHTML='<option value="">All categories</option>'+categories.map(v=>`<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+    if(brands.some(v=>v.toLowerCase()===oldBrand))brandFilter.value=oldBrand;
+    if(categories.some(v=>v.toLowerCase()===oldCategory))categoryFilter.value=oldCategory;
   }
-  const start=()=>setTimeout(loadProducts,300);
-  document.addEventListener('supabase-ready',start);
-  start();
+
+  function escapeHtml(value){return String(value??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]))}
+  function escapeAttr(value){return escapeHtml(value)}
+
+  function applyFilters(){
+    const f=selectedValues();
+    let shown=0;
+    [...table.querySelectorAll('tr')].forEach(row=>{
+      if(!row.querySelector('[data-p="brand"]'))return;
+      const brand=textOf(row,'[data-p="brand"]'),flavor=textOf(row,'[data-p="flavor"]'),name=textOf(row,'[data-p="name"]');
+      const category=row.querySelector('[data-label="Category"]')?.textContent?.trim()||'';
+      const haystack=`${brand} ${flavor} ${name}`.toLowerCase();
+      const matchesSearch=!f.search||haystack.includes(f.search);
+      const matchesBrand=!f.brand||brand.toLowerCase()===f.brand;
+      const matchesCategory=!f.category||category.toLowerCase()===f.category;
+      const show=matchesSearch&&matchesBrand&&matchesCategory;
+      row.style.display=show?'':'none';
+      if(show)shown++;
+    });
+    const total=lastRows.length;
+    if(count)count.textContent=(f.search||f.brand||f.category)?`${shown} of ${total} products shown`:`${total} products`;
+  }
+
+  function refresh(){
+    const rows=[...table.querySelectorAll('tr')].filter(r=>r.querySelector('[data-p="brand"]'));
+    if(rows.length){lastRows=rows;updateOptions(rows)}else if(lastRows.length){lastRows=[];brandFilter.innerHTML='<option value="">All brands</option>';categoryFilter.innerHTML='<option value="">All categories</option>'}
+    applyFilters();
+  }
+
+  search?.addEventListener('input',applyFilters);
+  brandFilter?.addEventListener('change',applyFilters);
+  categoryFilter?.addEventListener('change',applyFilters);
+  clear?.addEventListener('click',()=>{search.value='';brandFilter.value='';categoryFilter.value='';applyFilters()});
+
+  const observer=new MutationObserver(()=>requestAnimationFrame(refresh));
+  observer.observe(table,{childList:true,subtree:true});
+  setTimeout(refresh,350);
 });
