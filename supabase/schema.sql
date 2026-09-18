@@ -14,7 +14,7 @@ create table if not exists public.product_requests (
   id uuid primary key default gen_random_uuid(), name text not null, requested_product text not null, category text, notes text, email text, phone text, status text not null default 'new' check (status in ('new','reviewing','approved','declined','fulfilled')), created_at timestamptz not null default now()
 );
 create table if not exists public.stock_alerts (
-  id uuid primary key default gen_random_uuid(), email text, phone text, product_id uuid references public.products(id) on delete cascade, channel text not null default 'email' check (channel in ('email','phone')), active boolean not null default true, created_at timestamptz not null default now(), unique(email, product_id, channel)
+  id uuid primary key default gen_random_uuid(), email text, phone text, product_id uuid references public.products(id) on delete cascade, channel text not null default 'email' check (channel in ('email','phone')), active boolean not null default true, created_at timestamptz not null default now(), brand text, unsubscribe_token uuid not null default gen_random_uuid(), unique(email, product_id, channel)
 );
 create table if not exists public.announcements (
   id uuid primary key default gen_random_uuid(), title text not null, body text not null, active boolean not null default true, created_at timestamptz not null default now()
