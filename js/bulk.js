@@ -4,6 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if(!input||!addButton)return;
   const setMessage=(text,error=false)=>{if(!message)return;message.textContent=text;message.classList.add("show");message.style.color=error?"#ef4444":""};
   const parseBool=v=>!["false","no","0","inactive","off"].includes(String(v??"").trim().toLowerCase());
+  const normalizeBrand=brand=>/monster/i.test(String(brand||"").trim())?"Monster":String(brand||"").trim();
+  const normalizeProduct=p=>{
+    const brand=normalizeBrand(p.brand);
+    const flavor=String(p.flavor||"").trim();
+    const name=brand==="Monster"?(flavor?`${flavor} Monster`:"Monster"):String(p.name||"").trim();
+    return {...p,brand,flavor,name};
+  };
 
   addButton.addEventListener("click",async()=>{
     const lines=input.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
@@ -15,16 +22,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const [brand,flavor,name,category,priceRaw,stockRaw,bundle_label="",description="",activeRaw="true",image_url=""]=p;
       const price=Number(String(priceRaw).replace(/^\$/,"")),stock=Number(stockRaw);
       if(!brand||!name||!category||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){invalid.push(`Line ${index+1}: check brand, name, category, price, and stock`);return}
-      products.push({brand,flavor,name,category,price,stock,bundle_label:bundle_label||null,description:description||null,active:parseBool(activeRaw),image_url:image_url||null});
+      products.push(normalizeProduct({brand,flavor,name,category,price,stock,bundle_label:bundle_label||null,description:description||null,active:parseBool(activeRaw),image_url:image_url||null}));
     });
     if(invalid.length){setMessage(invalid.slice(0,4).join(" • ")+(invalid.length>4?` • +${invalid.length-4} more`:""),true);return}
     addButton.disabled=true;addButton.textContent="Importing...";
     try{
       const {data:existing,error:existingError}=await sb.from("products").select("brand,flavor,name");
       if(existingError)throw existingError;
-      const keys=new Set((existing||[]).map(x=>`${(x.brand||"").trim().toLowerCase()}|${(x.flavor||"").trim().toLowerCase()}|${(x.name||"").trim().toLowerCase()}`));
+      const keyFor=x=>normalizeBrand(x.brand)==="Monster"
+        ?`monster|${(x.flavor||"").trim().toLowerCase()}`
+        :`${(x.brand||"").trim().toLowerCase()}|${(x.flavor||"").trim().toLowerCase()}|${(x.name||"").trim().toLowerCase()}`;
+      const keys=new Set((existing||[]).map(keyFor));
       const unique=[],seen=new Set();
-      for(const x of products){const key=`${x.brand.toLowerCase()}|${x.flavor.toLowerCase()}|${x.name.toLowerCase()}`;if(keys.has(key)||seen.has(key))continue;seen.add(key);unique.push(x)}
+      for(const x of products){const key=keyFor(x);if(keys.has(key)||seen.has(key))continue;seen.add(key);unique.push(x)}
       if(!unique.length){setMessage("All of those products already exist.");return}
       const {error}=await sb.from("products").insert(unique);if(error)throw error;
       setMessage(`Imported ${unique.length} product${unique.length===1?"":"s"} with their category, brand, flavor, name, price, stock, bundle, description, active status, and image URL.`);
@@ -46,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const [brand,flavor,name,category,priceRaw,stockRaw,bundle_label="",description="",activeRaw="true",image_url=""]=p;
       const price=Number(String(priceRaw).replace(/^\$/,"")),stock=Number(stockRaw);
       if(!brand||!name||!category||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){invalid.push(`Line ${index+1}: check brand, name, category, price, and stock`);return}
-      updates.push({brand,flavor,name,category,price,stock,bundle_label:bundle_label||null,description:description||null,active:parseBool(activeRaw),image_url:image_url||null});
+      updates.push(normalizeProduct({brand,flavor,name,category,price,stock,bundle_label:bundle_label||null,description:description||null,active:parseBool(activeRaw),image_url:image_url||null}));
     });
     if(invalid.length){setUpdateMessage(invalid.slice(0,4).join(" • ")+(invalid.length>4?` • +${invalid.length-4} more`:""),true);return}
     updateButton.disabled=true;updateButton.textContent="Updating...";
