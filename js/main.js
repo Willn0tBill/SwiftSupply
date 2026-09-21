@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const prefix = location.pathname.includes("/admin/") ? "../" : "";
-  ["css/decor.css","css/mobile.css","css/store-upgrade.css","css/dark-theme.css"].forEach(file=>{const link=document.createElement("link");link.rel="stylesheet";link.href=prefix+file;document.head.appendChild(link)});
+  ["css/decor.css","css/mobile.css","css/store-upgrade.css","css/dark-theme.css","css/professional.css"].forEach(file=>{const link=document.createElement("link");link.rel="stylesheet";link.href=prefix+file;document.head.appendChild(link)});
   const menuButton=document.querySelector(".menu-button"),navLinks=document.querySelector(".nav-links");
   if(menuButton&&navLinks){menuButton.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open))});navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("open");menuButton.setAttribute("aria-expanded","false")}))}
   if(navLinks&&!navLinks.querySelector('.cart-link')){const li=document.createElement('li');li.innerHTML=`<a class="nav-link cart-link" href="${prefix}checkout.html">Cart <span data-cart-count hidden>0</span></a>`;navLinks.appendChild(li)}
