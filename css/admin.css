@@ -93,3 +93,25 @@
   .admin-login-page #productFilters .product-filter-search{grid-column:auto}
   .admin-login-page #productFilters button{grid-column:auto;width:100%}
 }
+
+/* Admin dashboard masonry-style flow: prevent a tall importer from forcing empty space below Add Product */
+.admin-login-page #dashboard .admin-grid{
+  display:block!important;
+  columns:2;
+  column-gap:24px;
+}
+.admin-login-page #dashboard .admin-grid>.admin-panel{
+  display:inline-block;
+  width:100%;
+  margin:0 0 24px!important;
+  break-inside:avoid;
+  -webkit-column-break-inside:avoid;
+  vertical-align:top;
+}
+@media(min-width:1200px){
+  .admin-login-page #dashboard .admin-grid{columns:2;column-gap:26px}
+}
+@media(max-width:950px){
+  .admin-login-page #dashboard .admin-grid{columns:1}
+  .admin-login-page #dashboard .admin-grid>.admin-panel{margin-bottom:20px!important}
+}
