@@ -108,3 +108,35 @@ body{background:var(--ss-bg);color:var(--ss-text);font-family:Inter,ui-sans-seri
  .shop-toolbar>.filter-row,#brandFilters{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important}
  .shop-toolbar .filter,.filter-check{width:100%;justify-content:center;min-width:0}
 }
+
+
+/* More conventional storefront styling: flatter, simpler, less template-like */
+:root{--ss-radius:10px;--ss-shadow:none}
+.site-header{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#0b0c0f!important}
+.brand:hover,.nav-link:hover,.button:hover,.product-card:hover{transform:none!important}
+.nav-link{border-radius:6px}
+.nav-link.active{background:transparent!important;box-shadow:none!important;border-bottom:2px solid var(--ss-gold);border-radius:0}
+.cart-link{border-radius:7px!important}
+.page-hero{padding:64px 0 44px;background:var(--ss-bg)!important}
+.page-hero .container{text-align:left;max-width:1180px}
+.page-hero h1{font-size:clamp(38px,5vw,58px);letter-spacing:-2px;margin:7px 0 12px}
+.page-hero p:not(.eyebrow){margin:0;max-width:720px;font-size:15px}
+.eyebrow{font-size:10px!important;letter-spacing:.11em!important}
+.section{padding:56px 0}
+.button{border-radius:7px;min-height:42px;font-weight:700;transition:background .15s ease,border-color .15s ease,color .15s ease}
+.product-grid{gap:14px}
+.product-card{border-radius:9px!important;transition:border-color .15s ease!important}
+.product-card:hover{border-color:#4a505a!important}
+.product-card .product-image{height:210px!important;min-height:210px!important}
+.product-body{padding:16px!important}
+.product-body h3{font-size:17px!important;letter-spacing:-.15px}
+.shop-toolbar{border-radius:9px!important;padding:18px!important}
+.input,.field,textarea,select{border-radius:7px!important}
+.filter{border-radius:7px!important}
+.filter.active,.filter:hover{background:#24272e!important;border-color:#555c68!important;color:#fff!important}
+.filter-check{border-radius:7px}
+.status-box,.empty-state{border-radius:8px!important}
+.admin-panel,.alert-form,.unsubscribe-card,#checkoutForm,.cart-item{border-radius:10px!important;box-shadow:none!important}
+.home-announcement,.home-goal{border-radius:10px!important}
+.reveal,.reveal-left,.reveal-right{transition-duration:.25s!important}
+@media(max-width:850px){.nav-link.active{border-bottom:0;color:var(--ss-gold)!important}.page-hero .container{text-align:left}}
