@@ -133,3 +133,54 @@
 .admin-login-page #dashboard .store-overview-panel .low-stock-panel{color:#f5f6f7}
 .admin-login-page #dashboard .store-overview-panel .low-stock-item{background:#19170f;border-color:#4b4020;color:#e9d58a}
 .admin-login-page #dashboard .admin-panel>*+*{margin-top:14px}
+
+
+/* SS admin signature styling: polished without looking like a stock dashboard template */
+.admin-login-page .admin-login-brand{
+  justify-content:flex-start;color:#f6c84c;letter-spacing:.1em;
+}
+.admin-login-page .admin-login-brand:before{
+  display:block;width:22px;height:2px;background:#f6c84c;border-radius:99px;
+}
+.admin-login-page .admin-login-brand:after{display:none}
+.admin-login-page #loginPanel{
+  border-radius:20px;
+  background:linear-gradient(160deg,#191c22 0%,#111319 72%);
+  box-shadow:0 22px 60px rgba(0,0,0,.32);
+}
+.admin-login-page #loginPanel:before{
+  height:3px;background:linear-gradient(90deg,#c98c16,#f6c84c 60%,transparent);
+}
+.admin-login-page #dashboard .admin-panel{
+  position:relative;
+  background:linear-gradient(155deg,#171a20 0%,#111319 76%);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  box-shadow:0 14px 34px rgba(0,0,0,.16);
+}
+.admin-login-page #dashboard .admin-panel:before{
+  content:"";position:absolute;left:18px;top:0;width:42px;height:2px;
+  background:linear-gradient(90deg,#f6c84c,rgba(246,200,76,.08));
+}
+.admin-login-page #dashboard .admin-panel:hover{
+  transform:translateY(-1px);
+  box-shadow:0 18px 42px rgba(0,0,0,.2);
+}
+.admin-login-page #dashboard .store-overview-panel{
+  background:
+    radial-gradient(circle at 92% 10%,rgba(246,200,76,.06),transparent 22%),
+    linear-gradient(155deg,#171a20,#111319);
+  color:#f5f6f7;border-color:rgba(255,255,255,.08);
+}
+.admin-login-page #dashboard .store-overview-panel .analytics-card{
+  background:#0d0f13;color:#f5f6f7;border:1px solid #2b3038;border-radius:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+}
+.admin-login-page #dashboard .store-overview-panel .analytics-card strong{color:#fff}
+.admin-login-page #dashboard .store-overview-panel .analytics-card span{color:#9aa3af}
+.admin-login-page #dashboard .store-overview-panel .low-stock-panel{color:#f5f6f7}
+.admin-login-page #dashboard .store-overview-panel .low-stock-item{
+  background:rgba(246,200,76,.07);border-color:rgba(246,200,76,.22);color:#ead27d;
+}
+.admin-login-page #dashboard .admin-panel h3{letter-spacing:-.2px}
+.admin-login-page #dashboard .admin-panel>*+*{margin-top:16px}
