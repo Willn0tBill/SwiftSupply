@@ -115,3 +115,21 @@
   .admin-login-page #dashboard .admin-grid{columns:1}
   .admin-login-page #dashboard .admin-grid>.admin-panel{margin-bottom:20px!important}
 }
+
+
+/* Practical admin styling */
+.admin-login-page .admin-login-brand:before,.admin-login-page .admin-login-brand:after{display:none}
+.admin-login-page .admin-login-brand{justify-content:flex-start;letter-spacing:.08em;color:#c9a83e}
+.admin-login-page #loginPanel{border-radius:10px;background:#14171c;box-shadow:none}
+.admin-login-page #loginPanel:before{height:2px;background:#f6c84c}
+.admin-login-page #dashboard .admin-panel{background:#14171c;border:1px solid #2b3038;box-shadow:none;padding:24px;border-radius:9px}
+.admin-login-page #dashboard .admin-panel:hover{transform:none;box-shadow:none}
+.admin-login-page #dashboard .store-overview-panel{background:#14171c;color:#f5f6f7;border-color:#2b3038;box-shadow:none}
+.admin-login-page #dashboard .store-overview-panel h2,.admin-login-page #dashboard .store-overview-panel h3{color:#f5f6f7}
+.admin-login-page #dashboard .store-overview-panel .muted,.admin-login-page #dashboard .store-overview-panel .section-intro{color:#9aa3af}
+.admin-login-page #dashboard .store-overview-panel .analytics-card{background:#0e1014;color:#f5f6f7;border-color:#2b3038;border-radius:7px}
+.admin-login-page #dashboard .store-overview-panel .analytics-card strong{color:#fff}
+.admin-login-page #dashboard .store-overview-panel .analytics-card span{color:#9aa3af}
+.admin-login-page #dashboard .store-overview-panel .low-stock-panel{color:#f5f6f7}
+.admin-login-page #dashboard .store-overview-panel .low-stock-item{background:#19170f;border-color:#4b4020;color:#e9d58a}
+.admin-login-page #dashboard .admin-panel>*+*{margin-top:14px}
