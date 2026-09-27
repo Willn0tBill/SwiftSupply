@@ -3,5 +3,6 @@ window.SWIFTSUPPLY_CONFIG={
   SUPABASE_PUBLISHABLE_KEY:'sb_publishable_tQ1LD0sjVRowkHoiU3XHhA_Ib3KEDBZ',
   FORM_ID:'mqpkpkjo',
   ADMIN_EMAIL:'winotbill@gmail.com',
+  SUPPORT_EMAIL:'support.swiftsupply@gmail.com',
   EMAIL_FROM:'SwiftSupply <noreply@yucai.org>'
 };
