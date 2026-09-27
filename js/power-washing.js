@@ -6,16 +6,27 @@ document.addEventListener('DOMContentLoaded',()=>{
   const serviceSelect=document.getElementById('pwService');
   const sizeSelect=document.getElementById('pwSize');
   const serviceDetailsGroup=document.getElementById('pwServiceDetailsGroup');
+  const serviceDetailsLabel=document.getElementById('pwServiceDetailsLabel');
   const sizeDetailsGroup=document.getElementById('pwSizeDetailsGroup');
   const serviceDetails=document.getElementById('pwServiceDetails');
   const sizeDetails=document.getElementById('pwSizeDetails');
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
   function syncDetailFields(){
-    const multipleServices=serviceSelect?.value==='Multiple Areas / Services';
+    const serviceValue=serviceSelect?.value||'';
+    const multipleServices=serviceValue==='Multiple Areas / Services';
+    const otherService=serviceValue==='Other';
+    const needsServiceDetails=multipleServices||otherService;
     const multipleSizes=sizeSelect?.value==='Multiple areas / cans';
-    if(serviceDetailsGroup)serviceDetailsGroup.hidden=!multipleServices;
-    if(serviceDetails){serviceDetails.required=multipleServices;if(!multipleServices)serviceDetails.value=''}
+
+    if(serviceDetailsGroup)serviceDetailsGroup.hidden=!needsServiceDetails;
+    if(serviceDetailsLabel)serviceDetailsLabel.textContent=otherService?'What do you need cleaned?':'Which areas or services?';
+    if(serviceDetails){
+      serviceDetails.required=needsServiceDetails;
+      serviceDetails.placeholder=otherService?'Tell us what you need cleaned.':'Example: driveway, front sidewalk, patio, and 2 trash cans';
+      if(!needsServiceDetails)serviceDetails.value='';
+    }
+
     if(sizeDetailsGroup)sizeDetailsGroup.hidden=!multipleSizes;
     if(sizeDetails){sizeDetails.required=multipleSizes;if(!multipleSizes)sizeDetails.value=''}
   }
@@ -44,26 +55,29 @@ document.addEventListener('DOMContentLoaded',()=>{
     const service_details=String(fd.get('service_details')||'').trim();
     const size_details=String(fd.get('size_details')||'').trim();
     const notes=String(fd.get('notes')||'').trim();
+    const needsServiceDetails=service_type==='Multiple Areas / Services'||service_type==='Other';
+    const serviceDetailsLabelText=service_type==='Other'?'What needs cleaning':'Areas / services';
+
     message.classList.add('show');
     if(!email&&!phone){message.textContent='Please add an email or phone number so we can follow up.';return}
-    if(service_type==='Multiple Areas / Services'&&!service_details){message.textContent='Please tell us which areas or services you need cleaned.';serviceDetails?.focus();return}
+    if(needsServiceDetails&&!service_details){message.textContent=service_type==='Other'?'Please tell us what you need cleaned.':'Please tell us which areas or services you need cleaned.';serviceDetails?.focus();return}
     if(size_estimate==='Multiple areas / cans'&&!size_details){message.textContent='Please give us the size or amount for each area.';sizeDetails?.focus();return}
     button.disabled=true;button.textContent='Sending request...';message.textContent='Submitting your request...';
     try{
       if(!window.sb)throw Error('Database not configured');
       const noteParts=[];
-      if(service_details)noteParts.push(`Areas / services: ${service_details}`);
+      if(service_details)noteParts.push(`${serviceDetailsLabelText}: ${service_details}`);
       if(size_details)noteParts.push(`Size details: ${size_details}`);
       if(notes)noteParts.push(notes);
       const combinedNotes=noteParts.join('\n\n');
       const payload={name,email:email||null,phone:phone||null,city:city||null,service_type,property_type:property_type||null,size_estimate:size_estimate||null,preferred_date:preferred_date||null,notes:combinedNotes||null,status:'new'};
       const{error}=await sb.from('powerwashing_requests').insert(payload);
       if(error)throw error;
-      const adminHtml=`<h2>New SwiftSupply Power Washing request</h2><p><strong>Name:</strong> ${esc(name)}</p><p><strong>Contact:</strong> ${esc(email||phone)}</p><p><strong>City / area:</strong> ${esc(city||'Not provided')}</p><p><strong>Service:</strong> ${esc(service_type)}</p>${service_details?`<p><strong>Areas / services:</strong> ${esc(service_details)}</p>`:''}<p><strong>Property:</strong> ${esc(property_type||'Not provided')}</p><p><strong>Size:</strong> ${esc(size_estimate||'Not sure')}</p>${size_details?`<p><strong>Size details:</strong> ${esc(size_details)}</p>`:''}<p><strong>Preferred date:</strong> ${esc(preferred_date||'Flexible')}</p><p><strong>Notes:</strong><br>${esc(notes||'None').replace(/\n/g,'<br>')}</p>`;
+      const adminHtml=`<h2>New SwiftSupply Power Washing request</h2><p><strong>Name:</strong> ${esc(name)}</p><p><strong>Contact:</strong> ${esc(email||phone)}</p><p><strong>City / area:</strong> ${esc(city||'Not provided')}</p><p><strong>Service:</strong> ${esc(service_type)}</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p><strong>Property:</strong> ${esc(property_type||'Not provided')}</p><p><strong>Size:</strong> ${esc(size_estimate||'Not sure')}</p>${size_details?`<p><strong>Size details:</strong> ${esc(size_details)}</p>`:''}<p><strong>Preferred date:</strong> ${esc(preferred_date||'Flexible')}</p><p><strong>Notes:</strong><br>${esc(notes||'None').replace(/\n/g,'<br>')}</p>`;
       let emailWarning=false;
-      try{await sendEmail(SWIFTSUPPLY_CONFIG.ADMIN_EMAIL,'New SS Power Washing request',adminHtml)}catch(err){console.error('Power washing admin email failed',err);emailWarning=true}
+      try{await sendEmail(SWIFTSUPPLY_CONFIG.SUPPORT_EMAIL||SWIFTSUPPLY_CONFIG.ADMIN_EMAIL,'New SS Power Washing request',adminHtml)}catch(err){console.error('Power washing support email failed',err);emailWarning=true}
       if(email){
-        const customerHtml=`<h2>We received your SwiftSupply Power Washing request</h2><p>Hi ${esc(name)},</p><p>We received your request for <strong>${esc(service_type)}</strong>.</p>${service_details?`<p><strong>Areas / services:</strong> ${esc(service_details)}</p>`:''}<p>We’ll review the details and follow up with you before anything is scheduled.</p><p>SwiftSupply Power Washing</p>`;
+        const customerHtml=`<h2>We received your SwiftSupply Power Washing request</h2><p>Hi ${esc(name)},</p><p>We received your request for <strong>${esc(service_type)}</strong>.</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p>We’ll review the details and follow up with you before anything is scheduled.</p><p>SwiftSupply Power Washing</p>`;
         try{await sendEmail(email,'SwiftSupply Power Washing request received',customerHtml)}catch(err){console.error('Power washing customer email failed',err);emailWarning=true}
       }
       form.reset();
