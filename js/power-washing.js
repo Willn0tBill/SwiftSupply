@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const sizeDetailsGroup=document.getElementById('pwSizeDetailsGroup');
   const serviceDetails=document.getElementById('pwServiceDetails');
   const sizeDetails=document.getElementById('pwSizeDetails');
-  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
 
   function syncDetailFields(){
     const serviceValue=serviceSelect?.value||'';
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!data?.ok)throw Error(data?.error||'Email could not be sent');
     return data;
   }
+
   form.addEventListener('submit',async e=>{
     e.preventDefault();
     const fd=new FormData(form);
@@ -59,10 +60,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const serviceDetailsLabelText=service_type==='Other'?'What needs cleaning':'Areas / services';
 
     message.classList.add('show');
-    if(!email&&!phone){message.textContent='Please add an email or phone number so we can follow up.';return}
+    if(!email&&!phone){message.textContent='Please add an email or phone number so SSPW can follow up.';return}
     if(needsServiceDetails&&!service_details){message.textContent=service_type==='Other'?'Please tell us what you need cleaned.':'Please tell us which areas or services you need cleaned.';serviceDetails?.focus();return}
     if(size_estimate==='Multiple areas / cans'&&!size_details){message.textContent='Please give us the size or amount for each area.';sizeDetails?.focus();return}
-    button.disabled=true;button.textContent='Sending request...';message.textContent='Submitting your request...';
+
+    button.disabled=true;button.textContent='Sending request...';message.textContent='Submitting your SSPW request...';
     try{
       if(!window.sb)throw Error('Database not configured');
       const noteParts=[];
@@ -73,17 +75,20 @@ document.addEventListener('DOMContentLoaded',()=>{
       const payload={name,email:email||null,phone:phone||null,city:city||null,service_type,property_type:property_type||null,size_estimate:size_estimate||null,preferred_date:preferred_date||null,notes:combinedNotes||null,status:'new'};
       const{error}=await sb.from('powerwashing_requests').insert(payload);
       if(error)throw error;
-      const adminHtml=`<h2>New SwiftSupply Power Washing request</h2><p><strong>Name:</strong> ${esc(name)}</p><p><strong>Contact:</strong> ${esc(email||phone)}</p><p><strong>City / area:</strong> ${esc(city||'Not provided')}</p><p><strong>Service:</strong> ${esc(service_type)}</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p><strong>Property:</strong> ${esc(property_type||'Not provided')}</p><p><strong>Size:</strong> ${esc(size_estimate||'Not sure')}</p>${size_details?`<p><strong>Size details:</strong> ${esc(size_details)}</p>`:''}<p><strong>Preferred date:</strong> ${esc(preferred_date||'Flexible')}</p><p><strong>Notes:</strong><br>${esc(notes||'None').replace(/\n/g,'<br>')}</p>`;
+
+      const adminHtml=`<h2>New SSPW quote request</h2><p><strong>Name:</strong> ${esc(name)}</p><p><strong>Contact:</strong> ${esc(email||phone)}</p><p><strong>City / area:</strong> ${esc(city||'Not provided')}</p><p><strong>Service:</strong> ${esc(service_type)}</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p><strong>Property:</strong> ${esc(property_type||'Not provided')}</p><p><strong>Size:</strong> ${esc(size_estimate||'Not sure')}</p>${size_details?`<p><strong>Size details:</strong> ${esc(size_details)}</p>`:''}<p><strong>Preferred date:</strong> ${esc(preferred_date||'Flexible')}</p><p><strong>Notes:</strong><br>${esc(notes||'None').replace(/\n/g,'<br>')}</p>`;
       let emailWarning=false;
-      try{await sendEmail(SWIFTSUPPLY_CONFIG.SUPPORT_EMAIL||SWIFTSUPPLY_CONFIG.ADMIN_EMAIL,'New SS Power Washing request',adminHtml)}catch(err){console.error('Power washing support email failed',err);emailWarning=true}
+      try{await sendEmail(SWIFTSUPPLY_CONFIG.SUPPORT_EMAIL||SWIFTSUPPLY_CONFIG.ADMIN_EMAIL,'New SSPW quote request',adminHtml)}catch(err){console.error('SSPW support email failed',err);emailWarning=true}
+
       if(email){
-        const customerHtml=`<h2>We received your SwiftSupply Power Washing request</h2><p>Hi ${esc(name)},</p><p>We received your request for <strong>${esc(service_type)}</strong>.</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p>We’ll review the details and follow up with you before anything is scheduled.</p><p>SwiftSupply Power Washing</p>`;
-        try{await sendEmail(email,'SwiftSupply Power Washing request received',customerHtml)}catch(err){console.error('Power washing customer email failed',err);emailWarning=true}
+        const customerHtml=`<h2>We received your SSPW quote request</h2><p>Hi ${esc(name)},</p><p>We received your request for <strong>${esc(service_type)}</strong>.</p>${service_details?`<p><strong>${esc(serviceDetailsLabelText)}:</strong> ${esc(service_details)}</p>`:''}<p>SSPW will review the details and follow up with you before anything is scheduled.</p><p>SSPW<br>SwiftSupply Power Washing</p>`;
+        try{await sendEmail(email,'SSPW quote request received',customerHtml)}catch(err){console.error('SSPW customer email failed',err);emailWarning=true}
       }
+
       form.reset();
       syncDetailFields();
-      message.textContent=emailWarning?'Your request was saved. Email confirmation may be delayed, but we still received it.':'Request sent. We’ll review it and follow up with you.';
-    }catch(err){console.error(err);message.textContent='Could not submit the request right now. Please try again later.'}
-    finally{button.disabled=false;button.textContent='Request a Quote'}
+      message.textContent=emailWarning?'Your SSPW request was saved. Email confirmation may be delayed, but we still received it.':'SSPW request sent. We’ll review it and follow up with you.';
+    }catch(err){console.error(err);message.textContent='Could not submit the SSPW request right now. Please try again later.'}
+    finally{button.disabled=false;button.textContent='Request an SSPW Quote'}
   });
 });
