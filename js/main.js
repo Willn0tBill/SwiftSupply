@@ -18,11 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if(menuButton&&navLinks){menuButton.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open))});navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("open");menuButton.setAttribute("aria-expanded","false")}))}
 
-  if(isAdmin&&!document.querySelector('script[data-admin-powerwashing]')){
-    const script=document.createElement('script');
-    script.src=prefix+'js/admin-powerwashing.js';
-    script.dataset.adminPowerwashing='true';
-    document.body.appendChild(script);
+  if(isAdmin){
+    document.querySelectorAll('h3').forEach(heading=>{
+      if(heading.textContent.trim()==='SS Importer')heading.textContent='SwiftSupply Importer';
+      if(heading.textContent.trim()==='SS Updater')heading.textContent='SwiftSupply Updater';
+    });
+    if(!document.querySelector('script[data-admin-powerwashing]')){
+      const script=document.createElement('script');
+      script.src=prefix+'js/admin-powerwashing.js';
+      script.dataset.adminPowerwashing='true';
+      document.body.appendChild(script);
+    }
   }
 
   function updateCartBadge(){let count=0;try{count=JSON.parse(localStorage.getItem('swiftsupplyCartV1')||'[]').reduce((n,i)=>n+Number(i.quantity||0),0)}catch{}document.querySelectorAll('[data-cart-count]').forEach(el=>{el.textContent=count;el.hidden=count===0})}updateCartBadge();window.addEventListener('cart-updated',updateCartBadge);window.addEventListener('storage',updateCartBadge);
