@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if(navLinks&&!isAdmin){
     navLinks.innerHTML=`
       <li><a class="nav-link" data-section="home" href="${prefix}index.html">Home</a></li>
-      <li><a class="nav-link" data-section="ssshop" href="${prefix}shop.html">SS Shop</a></li>
-      <li><a class="nav-link" data-section="ssvm" href="${prefix}vending.html">SSVM</a></li>
-      <li><a class="nav-link power-washing-link" data-section="sspw" href="${prefix}power-washing.html">SSPW</a></li>
-      <li><a class="nav-link" data-section="about" href="${prefix}about.html">About SS</a></li>
+      <li><a class="nav-link" data-section="ssshop" href="${prefix}shop.html">Direct Ordering</a></li>
+      <li><a class="nav-link" data-section="ssvm" href="${prefix}vending.html">Vending</a></li>
+      <li><a class="nav-link power-washing-link" data-section="sspw" href="${prefix}power-washing.html">Power Washing</a></li>
+      <li><a class="nav-link" data-section="about" href="${prefix}about.html">About SwiftSupply</a></li>
       <li><a class="nav-link" data-section="support" href="${prefix}support.html">Support</a></li>
       <li><a class="nav-link admin-link" data-section="admin" href="${prefix}admin/">Admin</a></li>
       <li><a class="nav-link cart-link" data-section="cart" href="${prefix}checkout.html">Cart <span data-cart-count hidden>0</span></a></li>`;
@@ -40,19 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
     else if(page==='support.html')section='support';
     else if(page==='checkout.html')section='cart';
 
-    document.body.dataset.ssSection=section||'ss';
+    document.body.dataset.ssSection=section||'swiftsupply';
     navLinks.querySelectorAll('.nav-link').forEach(link=>link.classList.toggle('active',link.dataset.section===section));
 
     const eyebrow=document.querySelector('.page-hero .eyebrow');
     if(eyebrow){
       const text=eyebrow.textContent.trim();
-      if(section==='ssshop'&&!/^SS\b/i.test(text))eyebrow.textContent='SS · '+text;
-      else if(section==='ssvm'&&!/^SSVM\b/i.test(text))eyebrow.textContent='SSVM · '+text;
-      else if(section==='sspw'&&!/^SSPW\b/i.test(text))eyebrow.textContent='SSPW · '+text;
+      if(section==='ssshop'&&!/^SWIFTSUPPLY DIRECT ORDERING\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY DIRECT ORDERING · '+text;
+      else if(section==='ssvm'&&!/^SWIFTSUPPLY VENDING\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY VENDING · '+text;
+      else if(section==='sspw'&&!/^SWIFTSUPPLY POWER WASHING\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY POWER WASHING · '+text;
       else if(section==='support'&&!/^SWIFTSUPPLY\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY · '+text;
     }
 
-    document.querySelectorAll('.site-footer .footer-text').forEach(el=>{if(!el.textContent.includes('SS · SSVM · SSPW'))el.textContent='SS · SSVM · SSPW. One SwiftSupply.'});
+    document.querySelectorAll('.site-footer .footer-text').forEach(el=>{el.textContent='Direct Ordering · Vending · Power Washing. One SwiftSupply.'});
   }
 
   const year=document.querySelector("[data-year]");if(year)year.textContent=new Date().getFullYear();
@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(isIntroPage&&!reduceMotion&&!sessionStorage.getItem("swiftsupplyIntroSeen")){
     const css=document.createElement("link");css.rel="stylesheet";css.href=prefix+"css/intro.css";document.head.appendChild(css);
-    const intro=document.createElement("div");intro.id="siteIntro";intro.innerHTML='<div class="intro-orbs"><i class="intro-orb orb-1"></i><i class="intro-orb orb-2"></i><i class="intro-orb orb-3"></i><i class="intro-orb orb-4"></i><i class="intro-orb orb-5"></i><i class="intro-orb orb-6"></i></div><div class="intro-content"><div class="intro-logo-wrap"><span class="intro-ring"></span><img class="intro-logo" src="'+prefix+'assets/logo.png" alt="SwiftSupply logo"></div><div class="intro-greeting">Hey there!</div><div class="intro-name">Swift<span>Supply</span></div><div class="intro-tagline">Getting SS ready...</div><div class="intro-loader"><span></span></div><div class="intro-subline">SS · SSVM · SSPW. One SwiftSupply.</div></div>';
+    const intro=document.createElement("div");intro.id="siteIntro";intro.innerHTML='<div class="intro-orbs"><i class="intro-orb orb-1"></i><i class="intro-orb orb-2"></i><i class="intro-orb orb-3"></i><i class="intro-orb orb-4"></i><i class="intro-orb orb-5"></i><i class="intro-orb orb-6"></i></div><div class="intro-content"><div class="intro-logo-wrap"><span class="intro-ring"></span><img class="intro-logo" src="'+prefix+'assets/logo.png" alt="SwiftSupply logo"></div><div class="intro-greeting">Hey there!</div><div class="intro-name">Swift<span>Supply</span></div><div class="intro-tagline">Getting SwiftSupply ready...</div><div class="intro-loader"><span></span></div><div class="intro-subline">Direct Ordering · Vending · Power Washing.</div></div>';
     document.body.prepend(intro);document.body.classList.add("intro-active");
-    const messages=["Getting SS ready...","Loading SS + SSVM + SSPW...","Almost there..."];const tagline=intro.querySelector(".intro-tagline");let index=0;
+    const messages=["Getting SwiftSupply ready...","Loading everything...","Almost there..."];const tagline=intro.querySelector(".intro-tagline");let index=0;
     const timer=setInterval(()=>{index=(index+1)%messages.length;tagline.classList.add("intro-message-change");setTimeout(()=>{tagline.textContent=messages[index];tagline.classList.remove("intro-message-change")},140)},430);
     setTimeout(()=>{clearInterval(timer);intro.classList.add("intro-hide");document.body.classList.remove("intro-active");sessionStorage.setItem("swiftsupplyIntroSeen","1");setTimeout(()=>intro.remove(),500)},1200)
   }
