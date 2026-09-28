@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if(navLinks&&!isAdmin){
     navLinks.innerHTML=`
       <li><a class="nav-link" data-section="home" href="${prefix}index.html">Home</a></li>
-      <li><a class="nav-link" data-section="ssshop" href="${prefix}shop.html">Direct Ordering</a></li>
-      <li><a class="nav-link" data-section="ssvm" href="${prefix}vending.html">Vending</a></li>
-      <li><a class="nav-link power-washing-link" data-section="sspw" href="${prefix}power-washing.html">Power Washing</a></li>
+      <li><a class="nav-link" data-section="ssshop" href="${prefix}shop.html">SwiftSupply Direct Ordering</a></li>
+      <li><a class="nav-link" data-section="ssvm" href="${prefix}vending.html">SwiftSupply Vending</a></li>
+      <li><a class="nav-link power-washing-link" data-section="sspw" href="${prefix}power-washing.html">SwiftSupply Power Washing</a></li>
       <li><a class="nav-link" data-section="about" href="${prefix}about.html">About SwiftSupply</a></li>
       <li><a class="nav-link" data-section="support" href="${prefix}support.html">Support</a></li>
       <li><a class="nav-link admin-link" data-section="admin" href="${prefix}admin/">Admin</a></li>
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else if(section==='support'&&!/^SWIFTSUPPLY\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY · '+text;
     }
 
-    document.querySelectorAll('.site-footer .footer-text').forEach(el=>{el.textContent='Direct Ordering · Vending · Power Washing. One SwiftSupply.'});
+    document.querySelectorAll('.site-footer .footer-text').forEach(el=>{el.textContent='SwiftSupply Direct Ordering · SwiftSupply Vending · SwiftSupply Power Washing.'});
   }
 
   const year=document.querySelector("[data-year]");if(year)year.textContent=new Date().getFullYear();
