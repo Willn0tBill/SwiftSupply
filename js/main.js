@@ -37,7 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
     else if(['about.html','goal.html','faq.html'].includes(page))section='about';
     else if(page==='support.html')section='support';
     else if(page==='checkout.html')section='cart';
+
+    document.body.dataset.ssSection=section||'ss';
     navLinks.querySelectorAll('.nav-link').forEach(link=>link.classList.toggle('active',link.dataset.section===section));
+
+    const eyebrow=document.querySelector('.page-hero .eyebrow');
+    if(eyebrow){
+      const text=eyebrow.textContent.trim();
+      if(section==='ssvm'&&!/^SSVM\b/i.test(text))eyebrow.textContent='SSVM · '+text;
+      else if(section==='sspw'&&!/^SSPW\b/i.test(text))eyebrow.textContent='SSPW · '+text;
+      else if(section==='support'&&!/^SWIFTSUPPLY\b/i.test(text))eyebrow.textContent='SWIFTSUPPLY · '+text;
+    }
+
+    document.querySelectorAll('.site-footer .footer-text').forEach(el=>{if(!el.textContent.includes('SSVM + SSPW'))el.textContent='SSVM + SSPW. One SwiftSupply.'});
   }
 
   const year=document.querySelector("[data-year]");if(year)year.textContent=new Date().getFullYear();
