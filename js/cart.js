@@ -3,22 +3,55 @@
   const read = () => { try { const value = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } };
   const write = (items) => { localStorage.setItem(KEY, JSON.stringify(items)); window.dispatchEvent(new CustomEvent('cart-updated')); };
   const clean = (items) => items.filter(i => i && i.id && Number(i.quantity) > 0).map(i => ({...i, quantity: Math.max(1, Math.floor(Number(i.quantity)))}));
-  const reserved = (id) => read().filter(i => i.id === id).reduce((n, i) => n + Math.max(0, Math.floor(Number(i.quantity) || 0)), 0);
-  const available = (product) => Math.max(0, Math.floor(Number(product?.stock) || 0) - reserved(product?.id));
+  const groupKey = item => item?.stock_group || `catalog:${item?.id || ''}`;
+  const reservedGroup = item => {
+    const key = typeof item === 'string' ? item : groupKey(item);
+    return read().filter(i => groupKey(i) === key).reduce((n, i) => n + Math.max(0, Math.floor(Number(i.quantity) || 0)), 0);
+  };
+  const reserved = keyOrId => read().filter(i => i.id === keyOrId || groupKey(i) === keyOrId).reduce((n, i) => n + Math.max(0, Math.floor(Number(i.quantity) || 0)), 0);
+  const available = product => Math.max(0, Math.floor(Number(product?.stock) || 0) - reservedGroup(product));
+
   function add(product, quantity = 1) {
     if (!product?.id) return { ok:false, available:0 };
     const requested = Math.max(1, Math.floor(Number(quantity) || 1));
-    const existing = read().find(i => i.id === product.id);
-    const alreadyInCart = existing ? Number(existing.quantity) || 0 : 0;
-    const remaining = Math.max(0, Math.floor(Number(product.stock) || 0) - alreadyInCart);
-    if (requested > remaining) return { ok:false, available:remaining };
     const items = read();
-    if (existing) existing.quantity += requested;
-    else items.push({ id: product.id, name: product.name, price: Number(product.price), bundle_label: product.bundle_label || '', image_url: product.image_url || '', quantity: requested });
+    const existing = items.find(i => i.id === product.id);
+    const remaining = Math.max(0, Math.floor(Number(product.stock) || 0) - items.filter(i => groupKey(i) === groupKey(product)).reduce((n,i)=>n+Number(i.quantity||0),0));
+    if (requested > remaining) return { ok:false, available:remaining };
+    if (existing) {
+      existing.quantity += requested;
+      existing.stock = Number(product.stock) || existing.stock || 0;
+      existing.stock_group = product.stock_group || existing.stock_group;
+      existing.shared_stock = !!product.shared_stock;
+    } else {
+      items.push({
+        id: product.id,
+        name: product.name,
+        brand: product.brand || '',
+        flavor: product.flavor || '',
+        price: Number(product.price),
+        bundle_label: product.bundle_label || '',
+        image_url: product.image_url || '',
+        stock: Number(product.stock) || 0,
+        stock_group: product.stock_group || `catalog:${product.id}`,
+        shared_stock: !!product.shared_stock,
+        quantity: requested
+      });
+    }
     write(clean(items));
     return { ok:true, available:remaining-requested };
   }
-  function update(id, quantity) { write(clean(read().map(i => i.id === id ? {...i, quantity} : i))); }
+
+  function update(id, quantity) {
+    const items = read();
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    const desired = Math.max(1, Math.floor(Number(quantity) || 1));
+    const otherGroupQty = items.filter(i => i.id !== id && groupKey(i) === groupKey(item)).reduce((n,i)=>n+Number(i.quantity||0),0);
+    const maxForItem = Math.max(0, Math.floor(Number(item.stock) || 0) - otherGroupQty);
+    item.quantity = Math.max(1, Math.min(desired, Math.max(1,maxForItem)));
+    write(clean(items));
+  }
   function remove(id) { write(read().filter(i => i.id !== id)); }
   function clear() { localStorage.removeItem(KEY); window.dispatchEvent(new CustomEvent('cart-updated')); }
   function count() { return read().reduce((n, i) => n + Number(i.quantity || 0), 0); }
@@ -33,7 +66,7 @@
     document.querySelectorAll('[data-cart-count]').forEach(el => { el.textContent = count(); el.hidden = count() === 0; });
     document.querySelectorAll('[data-cart-total]').forEach(el => { el.textContent = money(total()); });
   }
-  window.SwiftCart = { read, add, update, remove, clear, count, total, lineTotal, money, bundle, reserved, available, renderBadges };
+  window.SwiftCart = { read, add, update, remove, clear, count, total, lineTotal, money, bundle, reserved, reservedGroup, available, groupKey, renderBadges };
   document.addEventListener('DOMContentLoaded', renderBadges);
   window.addEventListener('cart-updated', renderBadges);
 })();
