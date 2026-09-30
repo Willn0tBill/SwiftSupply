@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="SwiftSupply — fast, simple, convenient access to snacks and beverages.">
+  <meta name="description" content="SwiftSupply — fast, simple, convenient access to snacks and beverages, plus local power washing and exterior cleaning.">
   <title>SwiftSupply | Fast. Simple. Convenient.</title>
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/alani-fix.css">
+  <link rel="stylesheet" href="css/power-washing.css">
 </head>
 <body>
   <header class="site-header">
@@ -22,6 +23,19 @@
     <section class="home-hero"><div class="home-hero-inner"><div class="home-copy reveal"><p class="home-kicker">Fast. Simple. Convenient.</p><h1 class="home-title">Snacks.<br>Drinks.<br><span>Convenience.</span></h1><p class="home-lead">A simple way to find the snacks and drinks you want, build one cart, and send in your order. Built locally with bigger plans ahead.</p><div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div></div><div class="home-visual reveal-right" aria-label="Popular SwiftSupply products"><div class="home-glow"></div><div class="home-card home-card-left"><img class="home-product-image" src="assets/home-monster.webp?v=2" alt="Monster Zero Ultra can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Monster</span></div><div class="home-card home-card-main"><img class="home-product-image" src="assets/home-alani-cutout.webp?v=2" alt="Alani energy drink can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Alani</span></div><div class="home-card home-card-right"><img class="home-product-image" src="assets/home-cheetos.webp?v=2" alt="Cheetos snack bag" style="width:86%;height:86%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Cheetos</span></div><div class="home-visual-tag">Local. Simple. Ready.</div></div></div></section>
     <section class="home-brands-section"><div class="container"><div class="section-heading reveal"><p class="eyebrow">SHOP BY BRAND</p><h2 class="section-title">Pick a <span>favorite.</span></h2><p class="section-intro">Browse flavors from the brands currently carried by SwiftSupply.</p></div><div id="homeBrands" class="home-brand-grid"><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Monster</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Alani Nu</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Cheetos</h3><p>Loading flavors...</p></div></article></div></div></section>
     <section class="home-feature-strip"><div class="container home-feature-grid"><article class="home-feature reveal"><span class="home-feature-number">01</span><h3>Pick what you want</h3><p>Browse the shop and see availability while you build your cart.</p></article><article class="home-feature reveal delay-1"><span class="home-feature-number">02</span><h3>Send one order</h3><p>Checkout sends the whole cart together. No online payment required.</p></article><article class="home-feature reveal delay-2"><span class="home-feature-number">03</span><h3>We'll follow up</h3><p>Your order request is reviewed and confirmed using the contact info you provide.</p></article></div></section>
+
+    <section class="pw-section pw-section-alt" aria-labelledby="homePowerWashingTitle">
+      <div class="container">
+        <div class="pw-heading reveal"><p class="eyebrow">POWER WASHING</p><h2 id="homePowerWashingTitle">SwiftSupply cleans outside too.</h2><p>Along with snacks and drinks, SwiftSupply also offers local exterior cleaning. Send a request first, get the quote, and confirm the job before anything is scheduled.</p></div>
+        <div class="pw-services">
+          <article class="pw-service reveal"><span class="pw-service-number">01</span><h3>Driveways &amp; sidewalks</h3><p>Outdoor concrete and walking areas around homes, businesses, churches, and organizations.</p></article>
+          <article class="pw-service reveal delay-1"><span class="pw-service-number">02</span><h3>Patios &amp; outdoor areas</h3><p>Patios and other exterior spaces that need a general wash and cleanup.</p></article>
+          <article class="pw-service reveal delay-2"><span class="pw-service-number">03</span><h3>Trash can cleaning</h3><p>Trash and recycling cans that need to be washed and cleaned out.</p></article>
+        </div>
+        <div class="button-row reveal" style="margin-top:26px"><a class="button button-primary" href="power-washing.html#quote">Request a Quote</a><a class="button button-secondary" href="power-washing.html">See Power Washing</a></div>
+      </div>
+    </section>
+
     <section class="section home-section-dark"><div class="container"><div class="section-heading reveal"><p class="eyebrow">LATEST UPDATES</p><h2 class="section-title">What's <span>new.</span></h2></div><div id="announcements" class="home-announcements"><div class="status-box">Loading updates...</div></div></div></section>
     <section class="section home-section-dark"><div class="container"><div class="home-goal reveal"><p class="eyebrow">OUR FIRST MILESTONE</p><h2 class="section-title">Building toward our first machine.</h2><p class="section-intro">Our first major goal is a $5,000 vending-machine fund. This will help SwiftSupply move from small orders toward a larger service.</p><div class="goal-number" id="goal">$5,000</div><p class="footer-text" id="goalText">Current progress: $0</p><div class="progress-track"><div class="progress-fill" id="progress"></div></div></div></div></section>
   </main>
