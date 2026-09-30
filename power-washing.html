@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="SwiftSupply Power Washing — local power washing, exterior cleaning, and trash can cleaning.">
-  <title>SwiftSupply Power Washing</title>
+  <meta name="description" content="SwiftSupply Power Washing — local exterior cleaning, driveway washing, patio cleaning, and trash can cleaning.">
+  <title>Power Washing | SwiftSupply</title>
   <link rel="icon" href="assets/favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/power-washing.css">
@@ -14,7 +14,14 @@
   <nav class="navbar container" aria-label="Main navigation">
     <a class="brand" href="index.html"><img src="assets/logo.png" alt="SwiftSupply logo">Swift<span>Supply</span></a>
     <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
-    <ul class="nav-links"></ul>
+    <ul class="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="shop.html">Shop</a></li>
+      <li><a class="nav-link" href="bulk-orders.html">Bulk</a></li>
+      <li><a class="nav-link" href="alerts.html">Alerts</a></li>
+      <li><a class="nav-link" href="about.html">About</a></li>
+      <li><a class="nav-link power-washing-link" href="power-washing.html">Power Washing</a></li>
+    </ul>
   </nav>
 </header>
 <main>
@@ -22,42 +29,59 @@
     <div class="container pw-hero-grid">
       <div class="reveal">
         <p class="pw-kicker">SWIFTSUPPLY POWER WASHING</p>
-        <h1>Exterior cleaning.<br><span>Powered by SwiftSupply.</span></h1>
-        <p class="pw-lead">SwiftSupply Power Washing handles power washing, outdoor surface cleaning, and trash can cleaning. Send the job details first and we’ll review everything before quoting or scheduling anything.</p>
+        <h1>Clean outside.<br><span>Keep it simple.</span></h1>
+        <p class="pw-lead">Local exterior cleaning for driveways, sidewalks, patios, trash cans, and other outdoor surfaces. Send the job details first and we’ll review everything before giving you a quote or scheduling anything.</p>
         <div class="pw-actions"><a class="button button-primary" href="#quote">Request a Quote</a><a class="button button-secondary" href="#services">See Services</a></div>
+        <div class="pw-hero-points" aria-label="Power Washing highlights"><span>Local requests</span><span>Clear quote first</span><span>No automatic booking</span></div>
       </div>
       <div class="pw-mark reveal-right" aria-label="SwiftSupply Power Washing">
-        <div class="pw-mark-inner"><div class="pw-drop" aria-hidden="true"></div><strong>Power Washing</strong><span>SwiftSupply</span></div>
+        <div class="pw-mark-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="pw-mark-inner"><div class="pw-drop" aria-hidden="true"></div><strong>Power Washing</strong><span>by SwiftSupply</span></div>
       </div>
+    </div>
+  </section>
+
+  <section class="pw-trust-strip">
+    <div class="container pw-trust-grid">
+      <div><strong>01</strong><span>Tell us what needs cleaning</span></div>
+      <div><strong>02</strong><span>We review the request</span></div>
+      <div><strong>03</strong><span>You get the quote before scheduling</span></div>
     </div>
   </section>
 
   <section id="services" class="pw-section">
     <div class="container">
-      <div class="pw-heading reveal"><p class="eyebrow">POWER WASHING SERVICES</p><h2>What we can help clean.</h2><p>Every request is reviewed first so SwiftSupply Power Washing can make sure the job is a good fit before anything gets scheduled.</p></div>
+      <div class="pw-heading reveal"><p class="eyebrow">SERVICES</p><h2>Exterior cleaning without making it complicated.</h2><p>Choose the closest option when you request a quote. If the job includes more than one area, you can list everything in the form.</p></div>
       <div class="pw-services">
-        <article class="pw-service reveal"><span class="pw-service-number">01</span><h3>Driveways &amp; sidewalks</h3><p>Concrete and other outdoor walking or parking surfaces around a property.</p></article>
-        <article class="pw-service reveal delay-1"><span class="pw-service-number">02</span><h3>Patios &amp; outdoor areas</h3><p>Outdoor areas that need a general exterior clean-up and wash.</p></article>
-        <article class="pw-service reveal delay-2"><span class="pw-service-number">03</span><h3>Trash can cleaning</h3><p>Residential or business trash and recycling cans that need to be washed and cleaned out.</p></article>
-        <article class="pw-service reveal"><span class="pw-service-number">04</span><h3>Other exterior surfaces</h3><p>Fences, walls, and other exterior areas can be reviewed case-by-case before we quote the work.</p></article>
+        <article class="pw-service reveal"><span class="pw-service-number">01</span><h3>Driveways</h3><p>Concrete driveway cleaning for dirt and normal outdoor buildup.</p></article>
+        <article class="pw-service reveal delay-1"><span class="pw-service-number">02</span><h3>Sidewalks &amp; walkways</h3><p>Outdoor walking areas around homes, businesses, churches, and organizations.</p></article>
+        <article class="pw-service reveal delay-2"><span class="pw-service-number">03</span><h3>Patios &amp; outdoor areas</h3><p>Patios and similar outdoor spaces that need a general wash and cleanup.</p></article>
+        <article class="pw-service reveal"><span class="pw-service-number">04</span><h3>Trash can cleaning</h3><p>Trash and recycling cans that need to be washed and cleaned out.</p></article>
+        <article class="pw-service reveal delay-1"><span class="pw-service-number">05</span><h3>Fences &amp; exterior walls</h3><p>Other exterior surfaces can be reviewed case-by-case before a quote is given.</p></article>
+        <article class="pw-service pw-service-featured reveal delay-2"><span class="pw-service-number">+</span><h3>Multiple areas</h3><p>Need several things cleaned at once? List each area and approximate size in one request.</p></article>
       </div>
     </div>
   </section>
 
   <section class="pw-section pw-section-alt">
-    <div class="container">
-      <div class="pw-heading reveal"><p class="eyebrow">HOW POWER WASHING WORKS</p><h2>Request. Review. Schedule.</h2></div>
+    <div class="container pw-process-layout">
+      <div class="pw-heading reveal"><p class="eyebrow">HOW IT WORKS</p><h2>Request. Review. Confirm.</h2><p>Nothing is automatically booked when you submit the form. The request gets reviewed first so the job, price, and timing can all be confirmed with you.</p></div>
       <div class="pw-process">
-        <div class="pw-step reveal"><strong>STEP 1</strong><h3>Tell us about the job</h3><p>Choose the type of cleaning, the general size, your area, and anything else we should know.</p></div>
-        <div class="pw-step reveal delay-1"><strong>STEP 2</strong><h3>We review it</h3><p>SwiftSupply Power Washing looks over the request and follows up if more information is needed before giving you a quote.</p></div>
-        <div class="pw-step reveal delay-2"><strong>STEP 3</strong><h3>Confirm the job</h3><p>If everything works, we’ll confirm the quote and scheduling details with you directly.</p></div>
+        <div class="pw-step reveal"><strong>STEP 1</strong><h3>Send the details</h3><p>Tell us the service, property type, approximate size, area, and anything else that would help explain the job.</p></div>
+        <div class="pw-step reveal delay-1"><strong>STEP 2</strong><h3>We look it over</h3><p>If more information is needed, SwiftSupply will follow up before giving you a quote.</p></div>
+        <div class="pw-step reveal delay-2"><strong>STEP 3</strong><h3>Confirm the quote</h3><p>If the job works, the price and scheduling details are confirmed directly with you before anything happens.</p></div>
       </div>
     </div>
   </section>
 
-  <section id="quote" class="pw-section">
+  <section id="quote" class="pw-section pw-quote-section">
     <div class="container pw-quote-layout">
-      <div class="pw-quote-copy reveal"><p class="eyebrow">REQUEST A POWER WASHING QUOTE</p><h2>Send the job details.</h2><p>You don’t need every measurement. Give us what you know and SwiftSupply Power Washing can follow up for anything else.</p></div>
+      <div class="pw-quote-copy reveal">
+        <p class="eyebrow">REQUEST A QUOTE</p>
+        <h2>Tell us about the job.</h2>
+        <p>You do not need perfect measurements. Give us what you know and we can follow up if anything else is needed.</p>
+        <div class="pw-quote-note"><strong>Before you submit</strong><span>Add either an email or phone number so we have a way to contact you.</span></div>
+      </div>
       <form id="powerWashingForm" class="pw-quote-card reveal-right">
         <div class="form-grid">
           <div class="field-group"><label for="pwName">Name</label><input class="field" id="pwName" name="name" required></div>
@@ -70,16 +94,16 @@
           <div class="field-group"><label for="pwSize">Approximate size</label><select class="field" id="pwSize" name="size_estimate"><option value="">Not sure</option><option>Small</option><option>Medium</option><option>Large</option><option>Multiple areas / cans</option></select></div>
           <div class="field-group"><label for="pwDate">Preferred date (optional)</label><input class="field" id="pwDate" name="preferred_date" type="date"></div>
           <div class="field-group full" id="pwSizeDetailsGroup" hidden><label for="pwSizeDetails">Give us the size of each area</label><textarea class="field" id="pwSizeDetails" name="size_details" rows="3" placeholder="Example: medium driveway, small patio, 20 ft sidewalk, 2 trash cans"></textarea></div>
-          <div class="field-group full"><label for="pwNotes">Anything else?</label><textarea class="field" id="pwNotes" name="notes" rows="5" placeholder="Describe anything else you want SwiftSupply Power Washing to know about the job."></textarea></div>
+          <div class="field-group full"><label for="pwNotes">Anything else?</label><textarea class="field" id="pwNotes" name="notes" rows="5" placeholder="Add anything else we should know about the job."></textarea></div>
         </div>
-        <button class="button button-primary" type="submit">Request a Power Washing Quote</button>
+        <button class="button button-primary" type="submit">Request a Quote</button>
         <p class="pw-note">Submitting this form is only a request. Nothing is scheduled until SwiftSupply confirms the details with you.</p>
         <div id="pwMessage" class="form-message" role="status" aria-live="polite"></div>
       </form>
     </div>
   </section>
 </main>
-<footer class="site-footer"><div class="footer-inner container"><div><div class="footer-brand">Swift<span>Supply</span></div><p class="footer-text">Direct Ordering · Vending · Power Washing. One SwiftSupply.</p><p class="footer-copy">© <span data-year>2026</span> SwiftSupply.</p></div><a class="footer-link" href="index.html">Back to SwiftSupply</a></div></footer>
+<footer class="site-footer"><div class="footer-inner container"><div><div class="footer-brand">Swift<span>Supply</span></div><p class="footer-text">Fast. Simple. Convenient.</p><p class="footer-copy">© <span data-year>2026</span> SwiftSupply.</p></div><a class="footer-link" href="index.html">Back to homepage</a></div></footer>
 <script src="js/main.js"></script><script src="js/config.js"></script><script src="js/supabase.js"></script><script src="js/power-washing.js"></script>
 </body>
 </html>
