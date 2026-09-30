@@ -1,4 +1,4 @@
-let products=[];let filter='All';let brandFilter='All';let stockRefreshTimer=null;let loadingProducts=false;
+let products=[];let filter='All';let brandFilter='All';let stockRefreshTimer=null;let loadingProducts=false;let stockChannel=null;let liveRefreshTimer=null;
 
 function money(v){return '$'+Number(v||0).toFixed(2)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -8,6 +8,14 @@ function stockText(p,available){
   if(p.shared_stock&&String(p.brand||'').toLowerCase()==='monster')return `${available} total Monster cans available`;
   return `${available} in stock`;
 }
+function scheduleLiveRefresh(){clearTimeout(liveRefreshTimer);liveRefreshTimer=setTimeout(()=>loadProducts(true),180)}
+function subscribeLiveStock(){
+  if(!window.sb||stockChannel)return;
+  stockChannel=sb.channel('swiftsupply-storefront-stock')
+    .on('postgres_changes',{event:'*',schema:'public',table:'products'},scheduleLiveRefresh)
+    .subscribe();
+}
+function connectStorefront(){loadProducts();subscribeLiveStock()}
 
 function startShop(){
   const params=new URLSearchParams(location.search);
@@ -18,13 +26,13 @@ function startShop(){
     b.classList.add('active');filter=b.dataset.filter;render();
   }));
   document.getElementById('stockOnly')?.addEventListener('change',render);
-  if(window.sb) loadProducts();
+  if(window.sb) connectStorefront();
   if(!stockRefreshTimer) stockRefreshTimer=setInterval(()=>{if(document.visibilityState==='visible'&&window.sb)loadProducts(true)},15000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&window.sb)loadProducts(true)});
   window.addEventListener('focus',()=>{if(window.sb)loadProducts(true)});
 }
 document.addEventListener('DOMContentLoaded',startShop);
-document.addEventListener('supabase-ready',loadProducts);
+document.addEventListener('supabase-ready',connectStorefront);
 window.addEventListener('cart-updated',()=>{if(products.length)render()});
 
 async function loadProducts(silent=false){
@@ -67,7 +75,7 @@ function render(){
   if(status&&products.length)status.textContent=list.length===products.length?`${products.length} products · live stock from SwiftSupply Ops.`:`${list.length} of ${products.length} products shown.`;
   root.innerHTML=list.map(p=>{
     const available=availableFor(p);
-    return `<article class="product-card reveal visible"><a class="product-image" href="product.html?id=${encodeURIComponent(p.id)}">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy">`:'<span>SwiftSupply</span>'}</a><div class="product-body"><span class="product-category">${esc(p.brand||p.category)}${p.flavor?` · ${esc(p.flavor)}`:''}</span><h3><a href="product.html?id=${encodeURIComponent(p.id)}">${esc(p.name)}</a></h3><p>${esc(p.description||'')}</p><div class="product-bottom"><strong>${money(p.price)}</strong><span class="stock-pill ${available>0?'in':'out'}">${esc(stockText(p,available))}</span></div>${p.shared_stock&&String(p.brand||'').toLowerCase()==='monster'?'<small>Monster flavors share one live inventory pool.</small>':(p.bundle_label?`<small>${esc(p.bundle_label)}</small>`:'')}<div class="button-row"><button type="button" class="button button-primary add-cart" data-id="${p.id}" ${available<1?'disabled':''}>${available>0?'Add to Cart':'Out of Stock'}</button><a class="button button-secondary" href="product.html?id=${encodeURIComponent(p.id)}">Details</a></div></div></article>`;
+    return `<article class="product-card reveal visible"><a class="product-image" href="product.html?id=${encodeURIComponent(p.id)}">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy">`:'<span>SwiftSupply</span>'}</a><div class="product-body"><span class="product-category">${esc(p.brand||p.category)}${p.flavor?` · ${esc(p.flavor)}`:''}</span><h3><a href="product.html?id=${encodeURIComponent(p.id)}">${esc(p.name)}</a></h3><p>${esc(p.description||'')}</p><div class="product-bottom"><strong>${money(p.price)}</strong><span class="stock-pill ${available>0?'in':'out'}">${esc(stockText(p,available))}</span></div>${p.shared_stock&&String(p.brand||'').toLowerCase()==='monster'?'<small>All Monster flavors share the same live SwiftSupply inventory total.</small>':(p.bundle_label?`<small>${esc(p.bundle_label)}</small>`:'')}<div class="button-row"><button type="button" class="button button-primary add-cart" data-id="${p.id}" ${available<1?'disabled':''}>${available>0?'Add to Cart':'Out of Stock'}</button><a class="button button-secondary" href="product.html?id=${encodeURIComponent(p.id)}">Details</a></div></div></article>`;
   }).join('');
   empty.hidden=!!list.length;
   root.querySelectorAll('.add-cart').forEach(b=>b.addEventListener('click',()=>{
