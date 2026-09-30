@@ -1,4 +1,4 @@
-let products=[];let filter='All';let brandFilter='All';
+let products=[];let filter='All';let brandFilter='All';let stockRefreshTimer=null;let loadingProducts=false;
 
 function money(v){return '$'+Number(v||0).toFixed(2)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -19,28 +19,32 @@ function startShop(){
   }));
   document.getElementById('stockOnly')?.addEventListener('change',render);
   if(window.sb) loadProducts();
+  if(!stockRefreshTimer) stockRefreshTimer=setInterval(()=>{if(document.visibilityState==='visible'&&window.sb)loadProducts(true)},15000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&window.sb)loadProducts(true)});
+  window.addEventListener('focus',()=>{if(window.sb)loadProducts(true)});
 }
 document.addEventListener('DOMContentLoaded',startShop);
 document.addEventListener('supabase-ready',loadProducts);
 window.addEventListener('cart-updated',()=>{if(products.length)render()});
 
-async function loadProducts(){
-  if(!window.sb)return;
+async function loadProducts(silent=false){
+  if(!window.sb||loadingProducts)return;
+  loadingProducts=true;
   const status=document.getElementById('shopStatus');
   try{
-    if(status)status.textContent='Loading live inventory from SwiftSupply Ops...';
+    if(status&&!silent)status.textContent='Loading live inventory from SwiftSupply Ops...';
     const {data,error}=await sb.from('storefront_products').select('*').eq('active',true).order('brand').order('name');
     if(error)throw error;
     products=data||[];
     if(brandFilter!=='All'&&!products.some(p=>(p.brand||'').toLowerCase()===brandFilter.toLowerCase()))brandFilter='All';
     buildBrandFilters();
-    if(status)status.textContent=products.length?products.length+' products in the catalog · stock synced with SwiftSupply Ops.':'No products are currently listed.';
+    if(status&&!silent)status.textContent=products.length?products.length+' products in the catalog · stock synced with SwiftSupply Ops.':'No products are currently listed.';
     render();
   }catch(e){
     console.error('SwiftSupply catalog error:',e);
-    if(status)status.textContent='Could not load the live catalog. Refresh the page and try again.';
-    const empty=document.getElementById('empty');if(empty){empty.hidden=false;empty.textContent='The catalog could not be loaded.'}
-  }
+    if(status&&!silent)status.textContent='Could not load the live catalog. Refresh the page and try again.';
+    const empty=document.getElementById('empty');if(empty&&!silent){empty.hidden=false;empty.textContent='The catalog could not be loaded.'}
+  }finally{loadingProducts=false}
 }
 function buildBrandFilters(){
   const row=document.getElementById('brandFilters');if(!row)return;
