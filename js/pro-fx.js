@@ -182,7 +182,8 @@
   }
 
   function directFallback(frame){
-    frame.src=`https://sketchfab.com/models/${MODEL_UID}/embed?autostart=1&autospin=0&preload=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0`;
+    frame.src=`https://sketchfab.com/models/${MODEL_UID}/embed?autostart=1&autospin=0&preload=1&dnt=1&ui_theme=dark&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0`;
+    frame.closest('.monster-viewer-shell,.mz-model-wrap')?.classList.add('viewer-ready');
   }
 
   function initViewer(viewer){
@@ -196,16 +197,22 @@
         animation_autoplay:0,
         camera:0,
         preload:1,
+        transparent:0,
         dnt:1,
         scrollwheel:0,
         double_click:0,
+        ui_theme:'dark',
         ui_hint:0,
         ui_infos:0,
         ui_controls:0,
+        ui_stop:0,
         ui_help:0,
         ui_settings:0,
         ui_vr:0,
         ui_fullscreen:0,
+        ui_annotations:0,
+        ui_inspector:0,
+        ui_ar:0,
         success(api){
           state.api=api;
 
@@ -220,14 +227,17 @@
           });
 
           api.addEventListener('viewerready',()=>{
-            state.viewerReady=true;
+            // Force the viewer background to SwiftSupply's dark surface instead
+            // of the model's white studio background.
+            api.setBackground({color:[0.035,0.039,0.051]},()=>{});
             api.setUserInteraction(true,()=>{});
+
+            state.viewerReady=true;
+            viewer.frame.closest('.monster-viewer-shell,.mz-model-wrap')?.classList.add('viewer-ready');
             maybeFinish();
             resolve(api);
           });
 
-          // Load first, then start. This guarantees our progress listeners are
-          // attached before the 21 MB scan begins downloading.
           api.load(()=>{
             state.preloadDone=true;
             state.mesh=Math.max(state.mesh,1);
@@ -251,8 +261,6 @@
     .catch(err=>{
       console.error('Sketchfab API initialization failed; restoring direct embeds.',err);
       viewers.forEach(v=>directFallback(v.frame));
-      // The fallback keeps the cans visible and mouse-draggable instead of blank.
-      // The loader stays below 100 because the API can no longer prove readiness.
       setTarget(96);
     });
 })();
