@@ -1,4 +1,4 @@
-/* SwiftSupply presentation FX — shared motion + exact 3D model scroll staging. */
+/* SwiftSupply presentation FX — shared motion + real loading progress. */
 (()=>{
   const $=s=>document.querySelector(s);
   const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
@@ -45,5 +45,79 @@
   document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest(tiltSelector);if(c)c.style.transform=''});
 
   const intro=$('#intro');
-  setTimeout(()=>{intro&&intro.classList.add('done');document.body.classList.add('ready')},file==='index'?850:450);
+  const progress=$('#introProgress');
+  let visualProgress=0;
+  let targetProgress=0;
+  let loaderDone=false;
+
+  function setTarget(n){targetProgress=Math.max(targetProgress,Math.min(100,n));}
+  function tickProgress(){
+    if(!progress)return;
+    visualProgress+=(targetProgress-visualProgress)*.11;
+    if(targetProgress>=100&&100-visualProgress<.25)visualProgress=100;
+    progress.style.width=`${visualProgress}%`;
+    progress.setAttribute('aria-valuenow',String(Math.round(visualProgress)));
+    if(!loaderDone)requestAnimationFrame(tickProgress);
+  }
+
+  function finishLoader(){
+    if(loaderDone)return;
+    setTarget(100);
+    const complete=()=>{
+      if(visualProgress<99.8){requestAnimationFrame(complete);return}
+      visualProgress=100;
+      if(progress)progress.style.width='100%';
+      setTimeout(()=>{
+        intro&&intro.classList.add('done');
+        document.body.classList.add('ready');
+        loaderDone=true;
+      },180);
+    };
+    complete();
+  }
+
+  if(progress){
+    progress.style.width='0%';
+    progress.setAttribute('role','progressbar');
+    progress.setAttribute('aria-valuemin','0');
+    progress.setAttribute('aria-valuemax','100');
+    tickProgress();
+  }
+
+  if(!intro){document.body.classList.add('ready');return}
+
+  if(file!=='index'){
+    setTarget(35);
+    const done=()=>{setTarget(100);finishLoader()};
+    if(document.readyState==='complete')done();else addEventListener('load',done,{once:true});
+    setTimeout(done,7000);
+    return;
+  }
+
+  const tracked=[...document.querySelectorAll('.js-loader-asset')];
+  let loaded=0;
+  const total=Math.max(1,tracked.length+1); // +1 for the page itself
+
+  const mark=()=>{
+    loaded++;
+    setTarget(8+(loaded/total)*82);
+    if(loaded>=total)finishLoader();
+  };
+
+  setTarget(8);
+  tracked.forEach(el=>{
+    let settled=false;
+    const once=()=>{if(settled)return;settled=true;mark()};
+    el.addEventListener('load',once,{once:true});
+    el.addEventListener('error',once,{once:true});
+  });
+
+  const pageReady=()=>mark();
+  if(document.readyState==='complete')pageReady();else addEventListener('load',pageReady,{once:true});
+
+  // Never leave somebody stuck forever if a third-party viewer fails.
+  setTimeout(()=>{
+    setTarget(95);
+    if(!loaderDone)finishLoader();
+  },12000);
 })();
