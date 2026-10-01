@@ -1,18 +1,16 @@
 let products=[];let filter='All';let brandFilter='All';let stockRefreshTimer=null;let loadingProducts=false;let stockChannel=null;let liveRefreshTimer=null;
 
 function money(v){return '$'+Number(v||0).toFixed(2)}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]))}
 function availableFor(p){return window.SwiftCart?SwiftCart.available(p):Math.max(0,Number(p.stock||0))}
-function stockText(p,available){
-  if(available<1)return 'Out of stock';
-  if(p.shared_stock&&String(p.brand||'').toLowerCase()==='monster')return `${available} total Monster cans available`;
-  return `${available} in stock`;
-}
+function stockText(_p,available){return available<1?'Out of stock':`${available} in stock`}
 function scheduleLiveRefresh(){clearTimeout(liveRefreshTimer);liveRefreshTimer=setTimeout(()=>loadProducts(true),180)}
 function subscribeLiveStock(){
   if(!window.sb||stockChannel)return;
   stockChannel=sb.channel('swiftsupply-storefront-stock')
     .on('postgres_changes',{event:'*',schema:'public',table:'products'},scheduleLiveRefresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'ops_products'},scheduleLiveRefresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'ops_product_variants'},scheduleLiveRefresh)
     .subscribe();
 }
 function connectStorefront(){loadProducts();subscribeLiveStock()}
@@ -75,7 +73,7 @@ function render(){
   if(status&&products.length)status.textContent=list.length===products.length?`${products.length} products · live stock from SwiftSupply Ops.`:`${list.length} of ${products.length} products shown.`;
   root.innerHTML=list.map(p=>{
     const available=availableFor(p);
-    return `<article class="product-card reveal visible"><a class="product-image" href="product.html?id=${encodeURIComponent(p.id)}">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy">`:'<span>SwiftSupply</span>'}</a><div class="product-body"><span class="product-category">${esc(p.brand||p.category)}${p.flavor?` · ${esc(p.flavor)}`:''}</span><h3><a href="product.html?id=${encodeURIComponent(p.id)}">${esc(p.name)}</a></h3><p>${esc(p.description||'')}</p><div class="product-bottom"><strong>${money(p.price)}</strong><span class="stock-pill ${available>0?'in':'out'}">${esc(stockText(p,available))}</span></div>${p.shared_stock&&String(p.brand||'').toLowerCase()==='monster'?'<small>All Monster flavors share the same live SwiftSupply inventory total.</small>':(p.bundle_label?`<small>${esc(p.bundle_label)}</small>`:'')}<div class="button-row"><button type="button" class="button button-primary add-cart" data-id="${p.id}" ${available<1?'disabled':''}>${available>0?'Add to Cart':'Out of Stock'}</button><a class="button button-secondary" href="product.html?id=${encodeURIComponent(p.id)}">Details</a></div></div></article>`;
+    return `<article class="product-card reveal visible"><a class="product-image" href="product.html?id=${encodeURIComponent(p.id)}">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}" loading="lazy">`:'<span>SwiftSupply</span>'}</a><div class="product-body"><span class="product-category">${esc(p.brand||p.category)}${p.flavor?` · ${esc(p.flavor)}`:''}</span><h3><a href="product.html?id=${encodeURIComponent(p.id)}">${esc(p.name)}</a></h3><p>${esc(p.description||'')}</p><div class="product-bottom"><strong>${money(p.price)}</strong><span class="stock-pill ${available>0?'in':'out'}">${esc(stockText(p,available))}</span></div>${p.flavor_tracked?'<small>Flavor stock is tracked live in SwiftSupply Ops.</small>':(p.bundle_label?`<small>${esc(p.bundle_label)}</small>`:'')}<div class="button-row"><button type="button" class="button button-primary add-cart" data-id="${p.id}" ${available<1?'disabled':''}>${available>0?'Add to Cart':'Out of Stock'}</button><a class="button button-secondary" href="product.html?id=${encodeURIComponent(p.id)}">Details</a></div></div></article>`;
   }).join('');
   empty.hidden=!!list.length;
   root.querySelectorAll('.add-cart').forEach(b=>b.addEventListener('click',()=>{
