@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="css/monster-hero.css">
 </head>
 <body>
-<div id="intro"><div><b>Swift<span>Supply</span></b><i></i></div></div>
+<div id="intro"><div><b>Swift<span>Supply</span></b><i id="introProgress"></i></div></div>
 <header class="site-header">
 <nav class="navbar container" aria-label="Main navigation">
 <a class="brand" href="index.html"><img src="assets/logo.png" alt="SwiftSupply logo">Swift<span>Supply</span></a>
@@ -34,9 +34,10 @@
     <div class="hero-monster-glow" aria-hidden="true"></div>
     <div class="monster-viewer-shell monster-viewer-hero">
       <iframe
-        class="monster-viewer"
+        class="monster-viewer js-loader-asset"
+        data-loader-name="hero-model"
         title="White Monster 3D Scan by Laser Design"
-        src="https://sketchfab.com/models/62f9706628244398804e23adeb2bc982/embed?autostart=1&autospin=0.22&preload=1&transparent=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0"
+        src="https://sketchfab.com/models/62f9706628244398804e23adeb2bc982/embed?autostart=1&autospin=0&preload=1&transparent=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0"
         allow="autoplay; fullscreen; xr-spatial-tracking"
         allowfullscreen
         loading="eager"
@@ -53,16 +54,17 @@
     <div class="mz-bg"></div><div class="mz-ring"></div>
     <div class="mz-model-wrap" aria-hidden="true">
       <iframe
-        class="monster-viewer monster-viewer-scroll"
-        title="Spinning White Monster 3D Scan"
-        src="https://sketchfab.com/models/62f9706628244398804e23adeb2bc982/embed?autostart=1&autospin=0.38&preload=1&transparent=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0"
+        class="monster-viewer monster-viewer-scroll js-loader-asset"
+        data-loader-name="scroll-model"
+        title="White Monster 3D Scan"
+        src="https://sketchfab.com/models/62f9706628244398804e23adeb2bc982/embed?autostart=1&autospin=0&preload=1&transparent=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0"
         allow="autoplay; fullscreen; xr-spatial-tracking"
         tabindex="-1"
-        loading="lazy"
+        loading="eager"
         referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
     <div class="mz-copy">
-      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>The actual 3D scan.</h3><p>A real scanned White Monster can, spinning in 3D instead of a generated cylinder.</p></div>
+      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>The actual 3D scan.</h3><p>A real scanned White Monster can in 3D instead of a generated cylinder.</p></div>
       <div><p class="eyebrow">02 · Live stock</p><h3>See what's in.</h3><p>Availability updates as you browse, so you only cart what we have.</p></div>
       <div><p class="eyebrow">03 · One cart</p><h3>Send it together.</h3><p>Build one cart and submit a single order request. No online payment.</p></div>
       <div><p class="eyebrow">04 · Follow-up</p><h3>We'll confirm.</h3><p>We review your request and reach out using the contact info you provide.</p></div>
