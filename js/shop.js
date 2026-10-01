@@ -1,7 +1,7 @@
 let products=[];let filter='All';let brandFilter='All';let stockRefreshTimer=null;let loadingProducts=false;let stockChannel=null;let liveRefreshTimer=null;
 
 function money(v){return '$'+Number(v||0).toFixed(2)}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function availableFor(p){return window.SwiftCart?SwiftCart.available(p):Math.max(0,Number(p.stock||0))}
 function stockText(_p,available){return available<1?'Out of stock':`${available} in stock`}
 function scheduleLiveRefresh(){clearTimeout(liveRefreshTimer);liveRefreshTimer=setTimeout(()=>loadProducts(true),180)}
