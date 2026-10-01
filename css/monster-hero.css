@@ -1,41 +1,45 @@
-/* True 3D White Monster Zero Ultra hero + lower showcase */
-.hero3d{grid-template-columns:minmax(0,1fr) minmax(390px,.92fr);gap:34px;padding:0 max(4vw,24px);background:radial-gradient(circle at 76% 45%,rgba(246,200,76,.13),transparent 31%),linear-gradient(135deg,#090a0d 0%,#111318 54%,#090a0d 100%)}
+/* Exact White Monster 3D Scan integration */
+.hero3d{
+  grid-template-columns:minmax(0,1fr) minmax(390px,.92fr);
+  gap:34px;
+  padding:0 max(4vw,24px);
+  background:radial-gradient(circle at 76% 45%,rgba(246,200,76,.14),transparent 31%),linear-gradient(135deg,#090a0d 0%,#111318 54%,#090a0d 100%);
+}
 .hero3d-copy{margin-left:0!important;max-width:650px}
-.hero-monster-stage{position:relative;z-index:2;min-height:610px;display:grid;place-items:center;perspective:1300px}
-.hero-monster-glow{position:absolute;width:min(38vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(246,200,76,.25) 0%,rgba(246,200,76,.075) 42%,transparent 72%);filter:blur(22px);opacity:.95}
-.hero-monster-frame{position:relative;width:min(38vw,510px);height:min(76vh,650px);min-height:520px;border-radius:36px;overflow:visible;background:transparent;border:0;box-shadow:none;transform-style:preserve-3d;cursor:grab;touch-action:none}
-.hero-monster-frame:active{cursor:grabbing}
-.hero-monster-frame:before{content:"";position:absolute;inset:9% 8%;border:1px solid rgba(246,200,76,.18);border-radius:50%;box-shadow:0 0 0 42px rgba(246,200,76,.018),0 0 90px rgba(246,200,76,.08);pointer-events:none}
-.hero-monster-img{position:absolute;inset:0;margin:auto;width:72%;height:88%;object-fit:contain;filter:drop-shadow(0 34px 48px rgba(0,0,0,.5));opacity:.95}
-.monster-3d-canvas{display:block;width:100%;height:100%;position:absolute;inset:0;z-index:3;background:transparent}
-body.monster-3d-ready .hero-monster-img,body.monster-3d-ready .mz-can{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
-.hero-monster-canvas{filter:drop-shadow(0 42px 72px rgba(0,0,0,.32))}
+.hero-monster-stage{position:relative;z-index:2;min-height:620px;display:grid;place-items:center;align-content:center}
+.hero-monster-glow{position:absolute;width:min(41vw,560px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(246,200,76,.26),rgba(246,200,76,.07) 46%,transparent 72%);filter:blur(24px);opacity:.95;pointer-events:none}
+.monster-viewer-shell{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.05),rgba(5,6,9,.94) 68%);border:1px solid rgba(246,200,76,.22);box-shadow:0 42px 100px rgba(0,0,0,.52),0 0 90px rgba(246,200,76,.08);isolation:isolate}
+.monster-viewer-hero{width:min(39vw,520px);height:min(77vh,660px);min-height:540px;border-radius:36px;animation:monsterHeroFloat 5.5s ease-in-out infinite}
+.monster-viewer{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);border:0;background:transparent;display:block}
+.monster-viewer-rim{position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.045),inset 0 -50px 90px rgba(0,0,0,.22)}
+.monster-model-credit{position:relative;z-index:3;max-width:520px;margin:14px auto 0;text-align:center;color:#707989;font-size:11px;line-height:1.5}
+.monster-model-credit a{color:#9ca5b2;text-decoration:none}.monster-model-credit a:hover{color:#f6c84c}
+@keyframes monsterHeroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-.mz{background:radial-gradient(circle at 50% 45%,rgba(246,200,76,.095),transparent 36%),#090a0d}
+.mz{height:360vh;background:radial-gradient(circle at 50% 45%,rgba(246,200,76,.105),transparent 36%),#090a0d}
 .mz-stick{isolation:isolate}
-.mz-stick:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,10,13,.94) 0%,rgba(9,10,13,.22) 36%,rgba(9,10,13,.22) 64%,rgba(9,10,13,.94) 100%);pointer-events:none;z-index:2}
-.mz-monster-canvas{z-index:1;pointer-events:none}
-.mz-can{z-index:1;height:min(72vh,640px)!important;width:auto;max-width:min(42vw,520px);object-fit:contain;filter:drop-shadow(0 36px 60px rgba(0,0,0,.55))!important}
+.mz-stick:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,10,13,.95) 0%,rgba(9,10,13,.18) 35%,rgba(9,10,13,.18) 65%,rgba(9,10,13,.95) 100%);pointer-events:none;z-index:2}
+.mz-model-wrap{position:relative;z-index:1;width:min(45vw,560px);height:min(78vh,690px);border-radius:32px;overflow:hidden;border:1px solid rgba(246,200,76,.13);box-shadow:0 34px 90px rgba(0,0,0,.42),0 0 70px rgba(246,200,76,.06);will-change:transform,opacity;transition:box-shadow .25s ease}
+.monster-viewer-scroll{pointer-events:none}
 .mz-copy{z-index:4}
 .mz-ring,.mz-bg{z-index:0}
 .mz-copy div{background:rgba(9,10,13,.5);backdrop-filter:blur(12px);padding:18px 20px;border-radius:18px;border:1px solid rgba(255,255,255,.065);box-shadow:0 16px 40px rgba(0,0,0,.16)}
-
 .home-brand-card:first-child .home-brand-image img{object-fit:contain!important;padding:18px!important;width:100%!important;height:100%!important;max-width:86%!important;max-height:190px!important}
 
 @media(max-width:980px){
-  .hero3d{grid-template-columns:1fr;align-content:center;padding-top:90px;padding-bottom:30px;min-height:auto;height:auto}
+  .hero3d{grid-template-columns:1fr;align-content:center;padding-top:90px;padding-bottom:32px;min-height:auto;height:auto}
   .hero3d-copy{max-width:720px}
-  .hero-monster-stage{min-height:510px}
-  .hero-monster-frame{width:min(82vw,510px);height:520px;min-height:0}
+  .hero-monster-stage{min-height:560px}
+  .monster-viewer-hero{width:min(82vw,500px);height:560px;min-height:0}
+  .monster-model-credit{max-width:min(82vw,500px)}
 }
 @media(max-width:760px){
   .hero3d{padding-left:20px;padding-right:20px}
-  .hero-monster-stage{min-height:420px}
-  .hero-monster-frame{width:min(92vw,410px);height:430px}
+  .hero-monster-stage{min-height:470px}
+  .monster-viewer-hero{width:min(92vw,410px);height:450px;border-radius:24px}
+  .monster-model-credit{max-width:90vw;font-size:10px}
   .mz{height:300vh}
+  .mz-model-wrap{width:min(84vw,430px);height:min(62vh,520px);border-radius:24px}
   .mz-copy div{left:18px!important;right:18px!important;bottom:6vh!important;padding:15px 16px}
 }
-@media(prefers-reduced-motion:reduce){
-  .monster-3d-canvas{display:none!important}
-  .hero-monster-img,.mz-can{opacity:1!important;visibility:visible!important}
-}
+@media(prefers-reduced-motion:reduce){.monster-viewer-hero{animation:none}.mz-model-wrap{transform:none!important}}
