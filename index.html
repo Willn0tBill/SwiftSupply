@@ -23,21 +23,26 @@
 </header>
 <main>
 <section class="hero3d">
-<canvas id="gl" aria-hidden="true"></canvas>
 <div class="hero3d-copy">
 <p class="home-kicker">Fast. Simple. Convenient.</p>
 <h1 class="home-title">Snacks.<br>Drinks.<br><span>Convenience.</span></h1>
 <p class="home-lead">A simple way to find the snacks and drinks you want, build one cart, and send in your order. Built locally with bigger plans ahead.</p>
 <div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div>
 </div>
+<div class="hero-monster-stage" aria-label="Monster Zero Ultra feature">
+  <div class="hero-monster-glow"></div>
+  <div class="hero-monster-frame">
+    <img class="hero-monster-img" src="assets/monster-zero-ultra.webp" alt="White Monster Zero Ultra can">
+  </div>
+</div>
 <div class="cue" aria-hidden="true"></div>
 </section>
-<section class="mz" id="mz" aria-label="Monster feature">
+<section class="mz" id="mz" aria-label="Monster Zero Ultra feature">
 <div class="mz-stick">
 <div class="mz-bg"></div><div class="mz-ring"></div>
-<img class="mz-can" src="assets/home-monster.webp?v=2" alt="Monster Zero Ultra can">
+<img class="mz-can" src="assets/monster-zero-ultra.webp" alt="White Monster Zero Ultra can">
 <div class="mz-copy">
-<div><p class="eyebrow">01 · Monster</p><h3>Fuel on demand.</h3><p>Your favorite Monster flavors, stocked locally and ready to order.</p></div>
+<div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Clean look. Cold can.</h3><p>A real white Monster Zero Ultra visual instead of a fake 3D cylinder.</p></div>
 <div><p class="eyebrow">02 · Live stock</p><h3>See what's in.</h3><p>Availability updates as you browse, so you only cart what we have.</p></div>
 <div><p class="eyebrow">03 · One cart</p><h3>Send it together.</h3><p>Build one cart and submit a single order request. No online payment.</p></div>
 <div><p class="eyebrow">04 · Follow-up</p><h3>We'll confirm.</h3><p>We review your request and reach out using the contact info you provide.</p></div>
@@ -63,12 +68,11 @@
 <footer class="site-footer"><div class="footer-inner container"><div><div class="footer-brand">Swift<span>Supply</span></div><p class="footer-text">Fast. Simple. Convenient.</p><p class="footer-copy">© <span data-year>2026</span> SwiftSupply.</p></div><div><a class="footer-link" href="goal.html">Our goal</a></div></div></footer>
 <script src="js/main.js"></script><script src="js/config.js"></script><script src="js/supabase.js"></script>
 <script>
-function esc(s){return String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]))}
-const HOME_BRAND_IMAGES={'Monster':'assets/home-monster.webp?v=2','Alani Nu':'assets/home-alani-cutout.webp?v=2','Cheetos':'assets/home-cheetos.webp?v=2'};
+function esc(s){return String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot',"'":'&#39;'}[m]))}
+const HOME_BRAND_IMAGES={'Monster':'assets/monster-zero-ultra.webp','Alani Nu':'assets/home-alani-cutout.webp?v=2','Cheetos':'assets/home-cheetos.webp?v=2'};
 function brandCard(name,products){const items=products.filter(p=>(p.brand||'').toLowerCase()===name.toLowerCase());const flavors=items.filter(p=>p.flavor).map(p=>p.flavor);const image=HOME_BRAND_IMAGES[name];return `<a class="home-brand-card" href="shop.html?brand=${encodeURIComponent(name)}"><div class="home-brand-image"><img src="${image}" alt="${esc(name)} product"></div><div class="home-brand-copy"><span class="home-brand-count">${items.length} ${items.length===1?'product':'products'}</span><h3>${esc(name)}</h3><p>${flavors.length?esc(flavors.slice(0,3).join(' · ')):'Add flavors in the Admin Panel.'}</p><span class="home-brand-link">View flavors →</span></div></a>`}
 async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')}}catch(e){console.error(e)}}document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/pro-fx.js" defer></script>
 </body>
 </html>
