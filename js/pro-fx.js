@@ -1,4 +1,4 @@
-/* SwiftSupply presentation FX — shared motion + Sketchfab-controlled loading. */
+/* SwiftSupply presentation FX — shared motion + real Sketchfab model readiness. */
 (()=>{
   const $=s=>document.querySelector(s);
   const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
@@ -15,7 +15,7 @@
   const bar=$('#sp-progress');
   const hdr=$('.site-header');
   const mz=$('#mz');
-  const model=$('.mz-model-wrap');
+  const lowerWrap=$('.mz-model-wrap');
   const steps=[...document.querySelectorAll('.mz-copy div')];
 
   function onScroll(){
@@ -28,15 +28,13 @@
       const r=mz.getBoundingClientRect();
       const p=clamp(-r.top/Math.max(1,r.height-innerHeight));
       mz.style.setProperty('--p',p);
-
-      if(model&&!reduce){
+      if(lowerWrap&&!reduce){
         const x=Math.sin(p*Math.PI*2)*1.5;
         const y=(.5-p)*4.5;
         const s=.9+Math.sin(p*Math.PI)*.12;
         const rz=Math.sin(p*Math.PI*2)*1.8;
-        model.style.transform=`translate3d(${x}vw,${y}vh,0) rotateZ(${rz}deg) scale(${s})`;
+        lowerWrap.style.transform=`translate3d(${x}vw,${y}vh,0) rotateZ(${rz}deg) scale(${s})`;
       }
-
       const i=Math.min(steps.length-1,Math.floor(p*steps.length));
       steps.forEach((step,k)=>step.classList.toggle('on',k===i&&p>.015));
     }
@@ -46,12 +44,8 @@
 
   if('IntersectionObserver'in window){
     const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
+      if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}
     }),{threshold:.1,rootMargin:'0px 0px -36px 0px'});
-
     const watch=()=>document.querySelectorAll('.reveal:not(.visible),.reveal-left:not(.visible),.reveal-right:not(.visible)').forEach(el=>io.observe(el));
     watch();
     new MutationObserver(watch).observe(document.body,{childList:true,subtree:true});
@@ -76,44 +70,39 @@
   const progress=$('#introProgress');
   let visualProgress=0;
   let targetProgress=0;
-  let loaderDone=false;
+  let loaderFinished=false;
 
   function setTarget(n){
-    const next=Math.min(loaderDone?100:99,Math.max(0,n));
-    targetProgress=Math.max(targetProgress,next);
+    targetProgress=Math.max(targetProgress,Math.min(loaderFinished?100:99,Math.max(0,n)));
   }
 
-  function tickProgress(){
-    if(!progress||loaderDone)return;
+  function animateProgress(){
+    if(!progress||loaderFinished)return;
     visualProgress+=(targetProgress-visualProgress)*.12;
     if(Math.abs(targetProgress-visualProgress)<.08)visualProgress=targetProgress;
     progress.style.width=`${visualProgress}%`;
     progress.setAttribute('aria-valuenow',String(Math.round(visualProgress)));
-    requestAnimationFrame(tickProgress);
+    requestAnimationFrame(animateProgress);
   }
 
-  function completeLoader(){
-    if(loaderDone)return;
-    loaderDone=true;
+  function revealPage(){
+    if(loaderFinished)return;
+    loaderFinished=true;
     targetProgress=100;
-
-    const finishBar=()=>{
-      visualProgress+=(100-visualProgress)*.2;
-      if(100-visualProgress<.12)visualProgress=100;
+    const fill=()=>{
+      visualProgress+=(100-visualProgress)*.22;
+      if(100-visualProgress<.1)visualProgress=100;
       if(progress){
         progress.style.width=`${visualProgress}%`;
         progress.setAttribute('aria-valuenow',String(Math.round(visualProgress)));
       }
-      if(visualProgress<100){
-        requestAnimationFrame(finishBar);
-        return;
-      }
+      if(visualProgress<100){requestAnimationFrame(fill);return}
       setTimeout(()=>{
         intro&&intro.classList.add('done');
         document.body.classList.add('ready');
-      },180);
+      },160);
     };
-    finishBar();
+    fill();
   }
 
   if(progress){
@@ -122,23 +111,14 @@
     progress.setAttribute('aria-valuemin','0');
     progress.setAttribute('aria-valuemax','100');
     progress.setAttribute('aria-valuenow','0');
-    requestAnimationFrame(tickProgress);
+    requestAnimationFrame(animateProgress);
   }
 
-  if(!intro){
-    document.body.classList.add('ready');
-    return;
-  }
+  if(!intro){document.body.classList.add('ready');return}
 
   if(file!=='index'){
-    setTarget(55);
-    const done=()=>{
-      loaderDone=true;
-      visualProgress=100;
-      if(progress)progress.style.width='100%';
-      intro.classList.add('done');
-      document.body.classList.add('ready');
-    };
+    setTarget(70);
+    const done=()=>revealPage();
     if(document.readyState==='complete')done();
     else addEventListener('load',done,{once:true});
     return;
@@ -146,86 +126,82 @@
 
   const MODEL_UID='62f9706628244398804e23adeb2bc982';
   const viewers=[
-    {name:'hero',frame:document.querySelector('.monster-viewer-hero iframe.monster-viewer')},
-    {name:'scroll',frame:document.querySelector('.mz-model-wrap iframe.monster-viewer')}
+    {name:'hero',frame:$('#monsterHeroViewer')},
+    {name:'scroll',frame:$('#monsterScrollViewer')}
   ].filter(v=>v.frame);
 
-  const pageState={ready:document.readyState==='complete'?1:0};
-  const viewerState=Object.fromEntries(viewers.map(v=>[v.name,{mesh:0,texture:0,ready:false,error:false,api:null}]));
+  const pageReady={value:document.readyState==='complete'};
+  const states=Object.fromEntries(viewers.map(v=>[v.name,{
+    mesh:0,
+    texture:0,
+    preloadDone:false,
+    viewerReady:false,
+    error:false,
+    api:null
+  }]));
 
-  function allModelsReady(){
-    return viewers.length>0&&viewers.every(v=>{
-      const s=viewerState[v.name];
-      return s.ready&&s.mesh>=.999&&s.texture>=.999&&!s.error;
-    });
-  }
-
-  function updateLoaderFromReality(){
-    // 10% = page, 45% = each of the two real Sketchfab models.
-    // A model's share is based on actual mesh progress, texture progress,
-    // and viewerready. The bar is hard-capped at 99 until both are truly ready.
-    let p=pageState.ready*10;
-    const share=viewers.length?90/viewers.length:90;
+  function actualProgress(){
+    let total=pageReady.value?10:0;
+    const each=viewers.length?90/viewers.length:90;
     viewers.forEach(v=>{
-      const s=viewerState[v.name];
-      const part=(s.mesh*.44)+(s.texture*.44)+(s.ready ? .12 : 0);
-      p+=share*part;
+      const s=states[v.name];
+      const readyPart=s.viewerReady?0.1:0;
+      const preloadPart=s.preloadDone?0.1:0;
+      const part=(s.mesh*.4)+(s.texture*.4)+readyPart+preloadPart;
+      total+=each*Math.min(1,part);
     });
-    setTarget(Math.min(99,p));
-
-    if(pageState.ready&&allModelsReady())completeLoader();
+    setTarget(Math.min(99,total));
   }
 
-  function markPageReady(){
-    pageState.ready=1;
-    updateLoaderFromReality();
+  function modelsAreActuallyVisible(){
+    return viewers.length===2&&viewers.every(v=>{
+      const s=states[v.name];
+      return !s.error&&s.preloadDone&&s.viewerReady;
+    });
   }
+
+  function maybeFinish(){
+    actualProgress();
+    if(pageReady.value&&modelsAreActuallyVisible())revealPage();
+  }
+
+  const markPageReady=()=>{pageReady.value=true;maybeFinish()};
   if(document.readyState==='complete')markPageReady();
   else addEventListener('load',markPageReady,{once:true});
 
   function loadSketchfabApi(){
     if(window.Sketchfab)return Promise.resolve();
     return new Promise((resolve,reject)=>{
-      const existing=document.querySelector('script[data-sketchfab-api]');
-      if(existing){
-        existing.addEventListener('load',resolve,{once:true});
-        existing.addEventListener('error',reject,{once:true});
-        return;
-      }
       const script=document.createElement('script');
       script.src='https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js';
       script.async=true;
-      script.dataset.sketchfabApi='1';
       script.onload=resolve;
-      script.onerror=reject;
+      script.onerror=()=>reject(new Error('Sketchfab Viewer API failed to load'));
       document.head.appendChild(script);
     });
   }
 
+  function directFallback(frame){
+    frame.src=`https://sketchfab.com/models/${MODEL_UID}/embed?autostart=1&autospin=0&preload=1&dnt=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0`;
+  }
+
   function initViewer(viewer){
     return new Promise((resolve,reject)=>{
-      const frame=viewer.frame;
-      const state=viewerState[viewer.name];
+      const state=states[viewer.name];
+      const client=new window.Sketchfab('1.12.1',viewer.frame);
 
-      // client.init owns the iframe. Clearing the old embed first prevents the
-      // page from keeping an independently running non-API viewer around.
-      try{frame.src='about:blank'}catch(_e){}
-
-      const client=new window.Sketchfab('1.12.1',frame);
       client.init(MODEL_UID,{
-        autostart:1,
+        autostart:0,
         autospin:0,
         animation_autoplay:0,
         camera:0,
         preload:1,
-        transparent:1,
         dnt:1,
         scrollwheel:0,
         double_click:0,
         ui_hint:0,
         ui_infos:0,
         ui_controls:0,
-        ui_stop:0,
         ui_help:0,
         ui_settings:0,
         ui_vr:0,
@@ -235,41 +211,48 @@
 
           api.addEventListener('modelLoadProgress',factor=>{
             state.mesh=Math.max(state.mesh,Number(factor)||0);
-            updateLoaderFromReality();
+            actualProgress();
           });
 
           api.addEventListener('textureLoadProgress',factor=>{
             state.texture=Math.max(state.texture,Number(factor)||0);
-            updateLoaderFromReality();
+            actualProgress();
           });
 
           api.addEventListener('viewerready',()=>{
-            state.ready=true;
-            // Make the actual Sketchfab camera draggable/orbitable with the mouse.
+            state.viewerReady=true;
             api.setUserInteraction(true,()=>{});
-            updateLoaderFromReality();
+            maybeFinish();
             resolve(api);
           });
 
-          api.start(()=>{});
+          // Load first, then start. This guarantees our progress listeners are
+          // attached before the 21 MB scan begins downloading.
+          api.load(()=>{
+            state.preloadDone=true;
+            state.mesh=Math.max(state.mesh,1);
+            actualProgress();
+            api.start(()=>{});
+          });
         },
         error(err){
           state.error=true;
-          console.error(`Sketchfab ${viewer.name} viewer failed to initialize`,err);
-          updateLoaderFromReality();
+          console.error(`Sketchfab ${viewer.name} viewer failed`,err);
+          directFallback(viewer.frame);
           reject(err||new Error('Sketchfab viewer failed'));
         }
       });
     });
   }
 
-  setTarget(4);
+  setTarget(3);
   loadSketchfabApi()
     .then(()=>Promise.all(viewers.map(initViewer)))
     .catch(err=>{
-      // Do not lie with a 100% bar if the 3D models are not actually ready.
-      // Keep the loader below 100 and expose the failure in the console.
-      console.error('SwiftSupply 3D loading stopped before completion',err);
-      setTarget(99);
+      console.error('Sketchfab API initialization failed; restoring direct embeds.',err);
+      viewers.forEach(v=>directFallback(v.frame));
+      // The fallback keeps the cans visible and mouse-draggable instead of blank.
+      // The loader stays below 100 because the API can no longer prove readiness.
+      setTarget(96);
     });
 })();
