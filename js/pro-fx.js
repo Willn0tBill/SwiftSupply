@@ -6,6 +6,37 @@
   const file=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,'')||'index';
   document.body.dataset.proPage=file;
 
+  // Keep the Monster viewer still by default. It remains manually rotatable by
+  // the visitor, while the lower feature section only moves with page scroll.
+  // The watermark flags are official Sketchfab embed options; Sketchfab may
+  // still enforce branding if the model/account does not permit white-labeling.
+  if(file==='index'){
+    document.querySelectorAll('iframe.monster-viewer').forEach(frame=>{
+      try{
+        const url=new URL(frame.src,location.href);
+        const params={
+          autospin:'0',
+          camera:'0',
+          animation_autoplay:'0',
+          ui_animations:'0',
+          ui_hint:'0',
+          ui_infos:'0',
+          ui_controls:'0',
+          ui_stop:'0',
+          ui_help:'0',
+          ui_settings:'0',
+          ui_vr:'0',
+          ui_fullscreen:'0',
+          ui_watermark:'0',
+          ui_watermark_link:'0'
+        };
+        Object.entries(params).forEach(([key,value])=>url.searchParams.set(key,value));
+        const next=url.toString();
+        if(frame.src!==next)frame.src=next;
+      }catch(e){console.warn('Could not normalize Monster viewer settings',e)}
+    });
+  }
+
   if(!document.getElementById('sp-progress')){const bar=document.createElement('div');bar.id='sp-progress';document.body.appendChild(bar)}
   const bar=$('#sp-progress'),hdr=$('.site-header'),mz=$('#mz'),model=$('.mz-model-wrap'),steps=[...document.querySelectorAll('.mz-copy div')];
 
