@@ -1,4 +1,5 @@
 /* Exact White Monster 3D Scan integration */
+#intro i#introProgress{animation:none!important;width:0;transition:width .18s linear}
 .hero3d{
   grid-template-columns:minmax(0,1fr) minmax(390px,.92fr);
   gap:34px;
