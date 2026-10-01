@@ -168,7 +168,7 @@
     const share=viewers.length?90/viewers.length:90;
     viewers.forEach(v=>{
       const s=viewerState[v.name];
-      const part=(s.mesh*.44)+(s.texture*.44)+(s.ready?.12:0);
+      const part=(s.mesh*.44)+(s.texture*.44)+(s.ready ? .12 : 0);
       p+=share*part;
     });
     setTarget(Math.min(99,p));
@@ -208,7 +208,7 @@
       const state=viewerState[viewer.name];
 
       // client.init owns the iframe. Clearing the old embed first prevents the
-      // page from downloading the same 21 MB model twice.
+      // page from keeping an independently running non-API viewer around.
       try{frame.src='about:blank'}catch(_e){}
 
       const client=new window.Sketchfab('1.12.1',frame);
