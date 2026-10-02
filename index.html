@@ -33,40 +33,21 @@
 
   <div class="hero-monster-stage" aria-label="Interactive 3D Monster Zero Ultra can">
     <div class="hero-monster-glow" aria-hidden="true"></div>
-    <div class="monster-scan-shell monster-scan-hero">
-      <iframe
-        id="monsterHeroViewer"
-        class="monster-scan-viewer"
-        title="Interactive Monster Zero Ultra 3D model"
-        src="https://sketchfab.com/models/771b841d079d4c5992801fea5421e399/embed?autostart=1&autospin=0.35&preload=1&transparent=1&scrollwheel=0&dnt=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0&ui_watermark=0&ui_watermark_link=0"
-        allow="autoplay; fullscreen; xr-spatial-tracking"
-        allowfullscreen
-        loading="eager"></iframe>
-    </div>
-    <p class="monster-drag-hint">Drag to rotate · real scanned 3D can</p>
-    <p class="monster-model-credit">3D model: <a href="https://sketchfab.com/3d-models/monster-ultra-zero-white-no-771b841d079d4c5992801fea5421e399" target="_blank" rel="noopener">Monster Ultra Zero White (NO)</a> by yO_ey · CC BY</p>
+    <canvas id="monsterHeroCanvas" class="monster-canvas monster-canvas-hero" aria-label="Clean rotating 3D Monster Zero Ultra product model"></canvas>
+    <p class="monster-drag-hint">Drag to rotate · clean 360° product model</p>
   </div>
   <div class="cue" aria-hidden="true"></div>
 </section>
 
 <section class="mz" id="mz" aria-label="Monster Zero Ultra feature">
   <div class="mz-stick">
-    <div class="mz-bg"></div><div class="mz-ring"></div>
+    <div class="mz-bg"></div>
     <div class="mz-model-wrap">
-      <div class="monster-scan-shell monster-scan-scroll">
-        <iframe
-          id="monsterScrollViewer"
-          class="monster-scan-viewer"
-          title="Interactive Monster Zero Ultra 3D model"
-          src="https://sketchfab.com/models/771b841d079d4c5992801fea5421e399/embed?autostart=1&autospin=0.22&preload=1&transparent=1&scrollwheel=0&dnt=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0&ui_watermark=0&ui_watermark_link=0"
-          allow="autoplay; fullscreen; xr-spatial-tracking"
-          allowfullscreen
-          loading="eager"></iframe>
-      </div>
+      <canvas id="monsterScrollCanvas" class="monster-canvas monster-canvas-scroll" aria-label="3D Monster Zero Ultra product model"></canvas>
     </div>
     <div class="mz-copy">
-      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Actual scanned can.</h3><p>This uses a real 3D scan with the actual can shape and baked surface detail instead of our homemade cylinder.</p></div>
-      <div><p class="eyebrow">02 · 360°</p><h3>Front. Side. Back.</h3><p>The can continuously rotates, and you can drag it to inspect the model yourself.</p></div>
+      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Clean 3D product model.</h3><p>A crisp product-style can with no scan background, baked outline, iframe, or viewer UI.</p></div>
+      <div><p class="eyebrow">02 · 360°</p><h3>Front. Side. Back.</h3><p>Scroll through the section to rotate around the can, or drag it yourself to inspect every side.</p></div>
       <div><p class="eyebrow">03 · Live stock</p><h3>See what's in.</h3><p>Availability updates as you browse, so you only cart what we have.</p></div>
       <div><p class="eyebrow">04 · One cart</p><h3>Send it together.</h3><p>Build one cart and submit a single order request. No online payment.</p></div>
     </div>
@@ -91,6 +72,7 @@ const HOME_BRAND_IMAGES={'Monster':'assets/monster-zero-ultra.webp','Alani Nu':'
 function brandCard(name,products){const items=products.filter(p=>(p.brand||'').toLowerCase()===name.toLowerCase());const flavors=items.filter(p=>p.flavor).map(p=>p.flavor);const image=HOME_BRAND_IMAGES[name];return `<a class="home-brand-card" href="shop.html?brand=${encodeURIComponent(name)}"><div class="home-brand-image"><img src="${image}" alt="${esc(name)} product"></div><div class="home-brand-copy"><span class="home-brand-count">${items.length} ${items.length===1?'product':'products'}</span><h3>${esc(name)}</h3><p>${flavors.length?esc(flavors.slice(0,3).join(' · ')):'Add flavors in the Admin Panel.'}</p><span class="home-brand-link">View flavors →</span></div></a>`}
 async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')}}catch(e){console.error(e)}}document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
 </script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="js/pro-fx.js" defer></script>
 </body>
 </html>
