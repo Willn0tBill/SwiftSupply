@@ -30,10 +30,21 @@
     <p class="home-lead">A simple way to find the snacks and drinks you want, build one cart, and send in your order. Built locally with bigger plans ahead.</p>
     <div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div>
   </div>
+
   <div class="hero-monster-stage" aria-label="Interactive 3D Monster Zero Ultra can">
     <div class="hero-monster-glow" aria-hidden="true"></div>
-    <canvas id="monsterHeroCanvas" class="monster-canvas monster-canvas-hero" aria-label="Spinning 3D Monster Zero Ultra can"></canvas>
-    <p class="monster-drag-hint">Drag to rotate · full 360° model</p>
+    <div class="monster-scan-shell monster-scan-hero">
+      <iframe
+        id="monsterHeroViewer"
+        class="monster-scan-viewer"
+        title="Interactive Monster Zero Ultra 3D model"
+        src="https://sketchfab.com/models/771b841d079d4c5992801fea5421e399/embed?autostart=1&autospin=0.35&preload=1&transparent=1&scrollwheel=0&dnt=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0&ui_watermark=0&ui_watermark_link=0"
+        allow="autoplay; fullscreen; xr-spatial-tracking"
+        allowfullscreen
+        loading="eager"></iframe>
+    </div>
+    <p class="monster-drag-hint">Drag to rotate · real scanned 3D can</p>
+    <p class="monster-model-credit">3D model: <a href="https://sketchfab.com/3d-models/monster-ultra-zero-white-no-771b841d079d4c5992801fea5421e399" target="_blank" rel="noopener">Monster Ultra Zero White (NO)</a> by yO_ey · CC BY</p>
   </div>
   <div class="cue" aria-hidden="true"></div>
 </section>
@@ -42,11 +53,20 @@
   <div class="mz-stick">
     <div class="mz-bg"></div><div class="mz-ring"></div>
     <div class="mz-model-wrap">
-      <canvas id="monsterScrollCanvas" class="monster-canvas monster-canvas-scroll" aria-label="3D Monster Zero Ultra can"></canvas>
+      <div class="monster-scan-shell monster-scan-scroll">
+        <iframe
+          id="monsterScrollViewer"
+          class="monster-scan-viewer"
+          title="Interactive Monster Zero Ultra 3D model"
+          src="https://sketchfab.com/models/771b841d079d4c5992801fea5421e399/embed?autostart=1&autospin=0.22&preload=1&transparent=1&scrollwheel=0&dnt=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0&ui_watermark=0&ui_watermark_link=0"
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          allowfullscreen
+          loading="eager"></iframe>
+      </div>
     </div>
     <div class="mz-copy">
-      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Spin the whole can.</h3><p>The hero is a real WebGL 3D can with a modeled body, metal lid, bottom, pull tab, front branding, side detail, and back label.</p></div>
-      <div><p class="eyebrow">02 · 360°</p><h3>Front. Side. Back.</h3><p>Scroll through the section and the can rotates around so it never turns into a flat picture.</p></div>
+      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Actual scanned can.</h3><p>This uses a real 3D scan with the actual can shape and baked surface detail instead of our homemade cylinder.</p></div>
+      <div><p class="eyebrow">02 · 360°</p><h3>Front. Side. Back.</h3><p>The can continuously rotates, and you can drag it to inspect the model yourself.</p></div>
       <div><p class="eyebrow">03 · Live stock</p><h3>See what's in.</h3><p>Availability updates as you browse, so you only cart what we have.</p></div>
       <div><p class="eyebrow">04 · One cart</p><h3>Send it together.</h3><p>Build one cart and submit a single order request. No online payment.</p></div>
     </div>
@@ -62,15 +82,15 @@
 <section class="section home-section-dark"><div class="container"><div class="section-heading reveal"><p class="eyebrow">LATEST UPDATES</p><h2 class="section-title">What's <span>new.</span></h2></div><div id="announcements" class="home-announcements"><div class="status-box">Loading updates...</div></div></div></section>
 <section class="section home-section-dark"><div class="container"><div class="home-goal reveal"><p class="eyebrow">OUR FIRST MILESTONE</p><h2 class="section-title">Building toward our first machine.</h2><p class="section-intro">Our first major goal is a $5,000 vending-machine fund. This will help SwiftSupply move from small orders toward a larger service.</p><div class="goal-number" id="goal">$5,000</div><p class="footer-text" id="goalText">Current progress: $0</p><div class="progress-track"><div class="progress-fill" id="progress"></div></div></div></div></section>
 </main>
+
 <footer class="site-footer"><div class="footer-inner container"><div><div class="footer-brand">Swift<span>Supply</span></div><p class="footer-text">Fast. Simple. Convenient.</p><p class="footer-copy">© <span data-year>2026</span> SwiftSupply.</p></div><div><a class="footer-link" href="goal.html">Our goal</a></div></div></footer>
 <script src="js/main.js"></script><script src="js/config.js"></script><script src="js/supabase.js"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]))}
-const HOME_BRAND_IMAGES={'Monster':'assets/home-monster.webp?v=2','Alani Nu':'assets/home-alani-cutout.webp?v=2','Cheetos':'assets/home-cheetos.webp?v=2'};
+const HOME_BRAND_IMAGES={'Monster':'assets/monster-zero-ultra.webp','Alani Nu':'assets/home-alani-cutout.webp?v=2','Cheetos':'assets/home-cheetos.webp?v=2'};
 function brandCard(name,products){const items=products.filter(p=>(p.brand||'').toLowerCase()===name.toLowerCase());const flavors=items.filter(p=>p.flavor).map(p=>p.flavor);const image=HOME_BRAND_IMAGES[name];return `<a class="home-brand-card" href="shop.html?brand=${encodeURIComponent(name)}"><div class="home-brand-image"><img src="${image}" alt="${esc(name)} product"></div><div class="home-brand-copy"><span class="home-brand-count">${items.length} ${items.length===1?'product':'products'}</span><h3>${esc(name)}</h3><p>${flavors.length?esc(flavors.slice(0,3).join(' · ')):'Add flavors in the Admin Panel.'}</p><span class="home-brand-link">View flavors →</span></div></a>`}
 async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')}}catch(e){console.error(e)}}document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="js/pro-fx.js" defer></script>
 </body>
 </html>
