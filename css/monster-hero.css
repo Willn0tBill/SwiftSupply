@@ -1,24 +1,21 @@
 #intro i#introProgress{animation:none!important;width:0;transition:width .18s linear}
-.hero3d{grid-template-columns:minmax(0,1fr) minmax(390px,.92fr);gap:34px;padding:0 max(4vw,24px);background:radial-gradient(circle at 76% 45%,rgba(246,200,76,.14),transparent 31%),linear-gradient(135deg,#090a0d 0%,#111318 54%,#090a0d 100%)}
+.hero3d{grid-template-columns:minmax(0,1fr) minmax(390px,.92fr);gap:34px;padding:0 max(4vw,24px);background:radial-gradient(circle at 76% 45%,rgba(246,200,76,.10),transparent 32%),linear-gradient(135deg,#090a0d 0%,#111318 54%,#090a0d 100%)}
 .hero3d-copy{margin-left:0!important;max-width:650px}
 .hero-monster-stage{position:relative;z-index:2;min-height:650px;display:grid;place-items:center;align-content:center;overflow:visible}
-.hero-monster-glow{position:absolute;width:min(46vw,650px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(246,200,76,.24),rgba(246,200,76,.07) 46%,transparent 72%);filter:blur(34px);opacity:.92;pointer-events:none}
-.monster-scan-shell{position:relative;z-index:2;overflow:hidden;background:transparent;isolation:isolate}
-.monster-scan-hero{width:min(47vw,620px);height:min(83vh,740px);min-height:600px;border-radius:34px;filter:drop-shadow(0 44px 48px rgba(0,0,0,.48));animation:monsterFloat 5.6s ease-in-out infinite}
-.monster-scan-viewer{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);border:0;background:transparent;display:block;outline:0}
-.monster-drag-hint{position:relative;z-index:3;margin:4px 0 0;color:#7c8592;font-size:11px;letter-spacing:.09em;text-transform:uppercase}
-.monster-model-credit{position:relative;z-index:3;max-width:600px;margin:7px auto 0;text-align:center;color:#606976;font-size:10px;line-height:1.45}
-.monster-model-credit a{color:#858e9b;text-decoration:none}.monster-model-credit a:hover{color:#f6c84c}
-@keyframes monsterFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.mz{height:360vh;background:radial-gradient(circle at 50% 46%,rgba(246,200,76,.1),transparent 37%),#090a0d}
+.hero-monster-glow{position:absolute;width:min(40vw,560px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(246,200,76,.13),rgba(246,200,76,.035) 44%,transparent 70%);filter:blur(26px);opacity:.62;pointer-events:none}
+.monster-canvas{display:block;background:transparent!important;border:0!important;outline:0;touch-action:none;user-select:none;-webkit-user-select:none}
+.monster-canvas-hero{position:relative;z-index:2;width:min(46vw,610px);height:min(82vh,720px);filter:drop-shadow(0 30px 34px rgba(0,0,0,.36));cursor:grab}
+.monster-canvas-hero:active,.monster-canvas-scroll:active{cursor:grabbing}
+.monster-drag-hint{position:relative;z-index:3;margin:0;color:#737c8a;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.mz{height:340vh;background:radial-gradient(circle at 50% 46%,rgba(246,200,76,.07),transparent 38%),#090a0d}
 .mz-stick{isolation:isolate}
-.mz-stick:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,10,13,.96) 0%,rgba(9,10,13,.14) 34%,rgba(9,10,13,.14) 66%,rgba(9,10,13,.96) 100%);pointer-events:none;z-index:2}
-.mz-model-wrap{position:relative;z-index:1;width:min(50vw,650px);height:min(84vh,740px);display:grid;place-items:center;will-change:transform;transition:transform .08s linear}
-.monster-scan-scroll{width:100%;height:100%;filter:drop-shadow(0 38px 48px rgba(0,0,0,.52));border-radius:32px}
-.monster-scan-scroll .monster-scan-viewer{inset:-24px;width:calc(100% + 48px);height:calc(100% + 48px)}
-.mz-copy{z-index:4}.mz-ring,.mz-bg{z-index:0}
+.mz-stick:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,10,13,.96) 0%,rgba(9,10,13,.12) 34%,rgba(9,10,13,.12) 66%,rgba(9,10,13,.96) 100%);pointer-events:none;z-index:2}
+.mz-ring{display:none!important}
+.mz-model-wrap{position:relative;z-index:1;width:min(48vw,620px);height:min(82vh,720px);display:grid;place-items:center;will-change:transform;transition:transform .08s linear}
+.monster-canvas-scroll{width:100%;height:100%;filter:drop-shadow(0 28px 32px rgba(0,0,0,.36));cursor:grab}
+.mz-copy{z-index:4}.mz-bg{z-index:0}
 .mz-copy div{background:rgba(9,10,13,.52);backdrop-filter:blur(12px);padding:18px 20px;border-radius:18px;border:1px solid rgba(255,255,255,.065);box-shadow:0 16px 40px rgba(0,0,0,.16)}
 .home-brand-card:first-child .home-brand-image img{object-fit:contain!important;padding:18px!important;width:100%!important;height:100%!important;max-width:86%!important;max-height:190px!important}
-@media(max-width:980px){.hero3d{grid-template-columns:1fr;align-content:center;padding-top:90px;padding-bottom:34px;height:auto;min-height:auto}.hero3d-copy{max-width:720px}.hero-monster-stage{min-height:580px}.monster-scan-hero{width:min(88vw,560px);height:580px;min-height:0}.monster-model-credit{max-width:min(88vw,560px)}}
-@media(max-width:760px){.hero3d{padding-left:20px;padding-right:20px}.hero-monster-stage{min-height:500px}.monster-scan-hero{width:min(94vw,440px);height:480px;border-radius:24px}.monster-drag-hint{font-size:10px}.monster-model-credit{font-size:9px;max-width:90vw}.mz{height:300vh}.mz-model-wrap{width:min(92vw,470px);height:min(68vh,560px)}.mz-copy div{left:18px!important;right:18px!important;bottom:6vh!important;padding:15px 16px}}
-@media(prefers-reduced-motion:reduce){.monster-scan-hero{animation:none}.mz-model-wrap{transform:none!important}}
+@media(max-width:980px){.hero3d{grid-template-columns:1fr;align-content:center;padding-top:90px;padding-bottom:34px;height:auto;min-height:auto}.hero3d-copy{max-width:720px}.hero-monster-stage{min-height:570px}.monster-canvas-hero{width:min(88vw,540px);height:560px}}
+@media(max-width:760px){.hero3d{padding-left:20px;padding-right:20px}.hero-monster-stage{min-height:470px}.monster-canvas-hero{width:min(94vw,430px);height:470px}.monster-drag-hint{font-size:10px}.mz{height:285vh}.mz-model-wrap{width:min(90vw,460px);height:min(65vh,540px)}.mz-copy div{left:18px!important;right:18px!important;bottom:6vh!important;padding:15px 16px}}
+@media(prefers-reduced-motion:reduce){.mz-model-wrap{transform:none!important}}
