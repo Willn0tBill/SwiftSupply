@@ -1,266 +1,44 @@
-/* SwiftSupply presentation FX — shared motion + real Sketchfab model readiness. */
+/* SwiftSupply presentation FX + native Three.js Monster Zero Ultra model. */
 (()=>{
-  const $=s=>document.querySelector(s);
-  const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+  const $=s=>document.querySelector(s),clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const file=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,'')||'index';
-  document.body.dataset.proPage=file;
+  document.body.dataset.proPage=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,'')||'index';
 
-  if(!document.getElementById('sp-progress')){
-    const bar=document.createElement('div');
-    bar.id='sp-progress';
-    document.body.appendChild(bar);
-  }
+  if(!$('#sp-progress')){const b=document.createElement('div');b.id='sp-progress';document.body.appendChild(b)}
+  const bar=$('#sp-progress'),hdr=$('.site-header'),mz=$('#mz'),lowerWrap=$('.mz-model-wrap'),steps=[...document.querySelectorAll('.mz-copy div')];
+  let lowerProgress=0;
+  function onScroll(){const sy=scrollY,h=document.documentElement.scrollHeight-innerHeight;if(bar)bar.style.transform=`scaleX(${h?sy/h:0})`;hdr?.classList.toggle('scrolled',sy>30);if(mz){const r=mz.getBoundingClientRect();lowerProgress=clamp(-r.top/Math.max(1,r.height-innerHeight));mz.style.setProperty('--p',lowerProgress);if(lowerWrap&&!reduce){const y=(.5-lowerProgress)*4,s=.9+Math.sin(lowerProgress*Math.PI)*.12;lowerWrap.style.transform=`translate3d(0,${y}vh,0) scale(${s})`}const i=Math.min(steps.length-1,Math.floor(lowerProgress*steps.length));steps.forEach((x,k)=>x.classList.toggle('on',k===i&&lowerProgress>.015))}}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
 
-  const bar=$('#sp-progress');
-  const hdr=$('.site-header');
-  const mz=$('#mz');
-  const lowerWrap=$('.mz-model-wrap');
-  const steps=[...document.querySelectorAll('.mz-copy div')];
+  if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -36px 0px'});const watch=()=>document.querySelectorAll('.reveal:not(.visible),.reveal-left:not(.visible),.reveal-right:not(.visible)').forEach(el=>io.observe(el));watch();new MutationObserver(watch).observe(document.body,{childList:true,subtree:true})}
+  const tilt='.home-brand-card,.product-card,.home-feature,.pw-service,.about-pro-card';
+  document.addEventListener('pointermove',e=>{if(reduce||matchMedia('(pointer: coarse)').matches)return;const c=e.target.closest?.(tilt);if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(950px) rotateX(${-y*4.5}deg) rotateY(${x*5.5}deg) translateY(-3px)`});
+  document.addEventListener('pointerout',e=>{const c=e.target.closest?.(tilt);if(c)c.style.transform=''});
 
-  function onScroll(){
-    const sy=scrollY;
-    const h=document.documentElement.scrollHeight-innerHeight;
-    if(bar)bar.style.transform=`scaleX(${h?sy/h:0})`;
-    if(hdr)hdr.classList.toggle('scrolled',sy>30);
+  const intro=$('#intro'),introProgress=$('#introProgress');
+  let introDone=false;
+  function finishIntro(){if(introDone)return;introDone=true;if(introProgress)introProgress.style.width='100%';setTimeout(()=>{intro?.classList.add('done');document.body.classList.add('ready')},180)}
+  if(introProgress)introProgress.style.width='22%';
 
-    if(mz){
-      const r=mz.getBoundingClientRect();
-      const p=clamp(-r.top/Math.max(1,r.height-innerHeight));
-      mz.style.setProperty('--p',p);
-      if(lowerWrap&&!reduce){
-        const x=Math.sin(p*Math.PI*2)*1.5;
-        const y=(.5-p)*4.5;
-        const s=.9+Math.sin(p*Math.PI)*.12;
-        const rz=Math.sin(p*Math.PI*2)*1.8;
-        lowerWrap.style.transform=`translate3d(${x}vw,${y}vh,0) rotateZ(${rz}deg) scale(${s})`;
-      }
-      const i=Math.min(steps.length-1,Math.floor(p*steps.length));
-      steps.forEach((step,k)=>step.classList.toggle('on',k===i&&p>.015));
-    }
-  }
-  addEventListener('scroll',onScroll,{passive:true});
-  onScroll();
+  if(!window.THREE||!$('#monsterHeroCanvas')){finishIntro();return}
+  const THREE=window.THREE;
 
-  if('IntersectionObserver'in window){
-    const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
-      if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}
-    }),{threshold:.1,rootMargin:'0px 0px -36px 0px'});
-    const watch=()=>document.querySelectorAll('.reveal:not(.visible),.reveal-left:not(.visible),.reveal-right:not(.visible)').forEach(el=>io.observe(el));
-    watch();
-    new MutationObserver(watch).observe(document.body,{childList:true,subtree:true});
-  }
+  function makeFiligreeTexture(){const c=document.createElement('canvas');c.width=1024;c.height=1024;const x=c.getContext('2d');x.fillStyle='#f7f7f5';x.fillRect(0,0,c.width,c.height);x.strokeStyle='rgba(95,102,108,.19)';x.lineWidth=2;for(let i=0;i<34;i++){x.beginPath();const ox=Math.random()*1024,oy=Math.random()*1024;for(let t=0;t<1.01;t+=.02){const px=ox+Math.cos(t*10+i)*80*t,py=oy+t*280+Math.sin(t*13+i)*36;if(t===0)x.moveTo(px,py);else x.lineTo(px,py)}x.stroke()}x.fillStyle='rgba(20,25,30,.68)';x.font='700 38px Arial';x.fillText('+ ZERO SUGAR +',310,70);const tex=new THREE.CanvasTexture(c);tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.colorSpace=THREE.SRGBColorSpace;return tex}
+  function makeBackTexture(){const c=document.createElement('canvas');c.width=700;c.height=1500;const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.fillStyle='rgba(255,255,255,.97)';x.fillRect(70,80,560,1320);x.strokeStyle='#111';x.lineWidth=8;x.strokeRect(70,80,560,1320);x.fillStyle='#111';x.font='900 62px Arial';x.fillText('MONSTER',120,155);x.font='700 30px Arial';x.fillText('ENERGY · ZERO ULTRA',120,202);x.lineWidth=5;x.beginPath();x.moveTo(90,230);x.lineTo(610,230);x.stroke();x.font='900 58px Arial';x.fillText('Nutrition Facts',95,300);x.font='700 27px Arial';x.fillText('Serving size 1 can',95,345);x.lineWidth=7;x.beginPath();x.moveTo(90,372);x.lineTo(610,372);x.stroke();x.font='900 48px Arial';x.fillText('Calories   10',95,440);x.font='700 24px Arial';const rows=['Total Fat 0g                 0%','Sodium 360mg             16%','Total Carbohydrate 3g     1%','Total Sugars 0g','Protein 0g','Niacin · B6 · B12','Taurine 1000mg','Caffeine 160mg'];rows.forEach((r,i)=>x.fillText(r,95,510+i*55));x.lineWidth=3;for(let i=0;i<12;i++){const xx=120+i*34,w=i%3===0?10:5;x.fillRect(xx,1030,w,260)}x.font='700 24px Arial';x.fillText('ENERGY DRINK · 16 FL OZ',110,1360);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex}
+  function makeSideText(text){const c=document.createElement('canvas');c.width=512;c.height=1200;const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.save();x.translate(256,600);x.rotate(-Math.PI/2);x.fillStyle='rgba(20,23,28,.9)';x.font='800 42px Arial';x.textAlign='center';x.fillText(text,0,0);x.restore();const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex}
+  function curvedGeometry(radius,height,arc,segments=64){const p=[],u=[],idx=[];for(let i=0;i<=segments;i++){const uu=i/segments,a=-arc/2+uu*arc,xx=Math.sin(a)*radius,zz=Math.cos(a)*radius;p.push(xx,-height/2,zz,xx,height/2,zz);u.push(uu,0,uu,1);if(i<segments){const n=i*2;idx.push(n,n+2,n+1,n+1,n+2,n+3)}}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(u,2));g.setIndex(idx);g.computeVertexNormals();return g}
 
-  const tiltSelector='.home-brand-card,.product-card,.home-feature,.pw-service,.about-pro-card';
-  document.addEventListener('pointermove',e=>{
-    if(reduce||matchMedia('(pointer: coarse)').matches)return;
-    const c=e.target.closest&&e.target.closest(tiltSelector);
-    if(!c)return;
-    const r=c.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width-.5;
-    const y=(e.clientY-r.top)/r.height-.5;
-    c.style.transform=`perspective(950px) rotateX(${-y*4.5}deg) rotateY(${x*5.5}deg) translateY(-3px)`;
-  });
-  document.addEventListener('pointerout',e=>{
-    const c=e.target.closest&&e.target.closest(tiltSelector);
-    if(c)c.style.transform='';
-  });
+  const frontTexturePromise=new Promise(resolve=>{new THREE.TextureLoader().load('assets/home-monster.webp?v=2',t=>{t.colorSpace=THREE.SRGBColorSpace;t.minFilter=THREE.LinearFilter;t.magFilter=THREE.LinearFilter;resolve(t)},undefined,()=>resolve(null))});
 
-  const intro=$('#intro');
-  const progress=$('#introProgress');
-  let visualProgress=0;
-  let targetProgress=0;
-  let loaderFinished=false;
+  function buildCan(frontTex){const group=new THREE.Group();const bodyMat=new THREE.MeshPhysicalMaterial({map:makeFiligreeTexture(),metalness:.42,roughness:.28,clearcoat:1,clearcoatRoughness:.16});const silver=new THREE.MeshPhysicalMaterial({color:0xc7ccd0,metalness:1,roughness:.18,clearcoat:.6});const dark=new THREE.MeshStandardMaterial({color:0x17191d,metalness:.8,roughness:.28});const body=new THREE.Mesh(new THREE.CylinderGeometry(1.34,1.34,5.45,96,1,true),bodyMat);group.add(body);const top=new THREE.Mesh(new THREE.CylinderGeometry(1.30,1.30,.13,96),silver);top.position.y=2.77;group.add(top);const bottom=new THREE.Mesh(new THREE.CylinderGeometry(1.27,1.30,.14,96),silver);bottom.position.y=-2.78;group.add(bottom);const tr=new THREE.Mesh(new THREE.TorusGeometry(1.18,.052,16,96),silver);tr.rotation.x=Math.PI/2;tr.position.y=2.835;group.add(tr);const br=new THREE.Mesh(new THREE.TorusGeometry(1.17,.045,16,96),silver);br.rotation.x=Math.PI/2;br.position.y=-2.845;group.add(br);const tab=new THREE.Mesh(new THREE.TorusGeometry(.28,.07,16,48),dark);tab.rotation.x=Math.PI/2;tab.scale.z=.58;tab.position.set(.08,2.89,.05);group.add(tab);const tabBar=new THREE.Mesh(new THREE.BoxGeometry(.48,.04,.17),dark);tabBar.position.set(.08,2.86,-.12);group.add(tabBar);
+    if(frontTex){const front=new THREE.Mesh(curvedGeometry(1.355,5.24,2.05,72),new THREE.MeshBasicMaterial({map:frontTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));front.renderOrder=3;group.add(front)}
+    const backTex=makeBackTexture(),back=new THREE.Mesh(curvedGeometry(1.357,4.95,1.72,64),new THREE.MeshBasicMaterial({map:backTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));back.rotation.y=Math.PI;back.renderOrder=3;group.add(back);
+    const sideTex=makeSideText('+ ZERO SUGAR + MONSTER ENERGY +');[-Math.PI/2,Math.PI/2].forEach(a=>{const s=new THREE.Mesh(curvedGeometry(1.356,4.85,.72,28),new THREE.MeshBasicMaterial({map:sideTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));s.rotation.y=a;s.renderOrder=3;group.add(s)});
+    group.rotation.z=-.045;return group}
 
-  function setTarget(n){
-    targetProgress=Math.max(targetProgress,Math.min(loaderFinished?100:99,Math.max(0,n)));
-  }
+  function makeScene(canvas,kind,frontTex){const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);renderer.outputColorSpace=THREE.SRGBColorSpace;const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(0,.1,12.5);scene.add(new THREE.HemisphereLight(0xffffff,0x111318,2));const key=new THREE.DirectionalLight(0xffffff,3.5);key.position.set(-4,5,7);scene.add(key);const gold=new THREE.PointLight(0xf6c84c,5,22);gold.position.set(5,1,5);scene.add(gold);const cool=new THREE.PointLight(0xbfe6ff,2.2,18);cool.position.set(-4,-1,-4);scene.add(cool);const can=buildCan(frontTex);scene.add(can);const ring=new THREE.Mesh(new THREE.TorusGeometry(3.5,.015,12,160),new THREE.MeshBasicMaterial({color:0xf6c84c,transparent:true,opacity:.33}));ring.rotation.x=1.1;scene.add(ring);let drag=false,lastX=0,spin=0,px=0,py=0;canvas.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;canvas.setPointerCapture?.(e.pointerId)});canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5;if(drag){spin+=(e.clientX-lastX)*.012;lastX=e.clientX}});canvas.addEventListener('pointerup',e=>{drag=false;canvas.releasePointerCapture?.(e.pointerId)});canvas.addEventListener('pointercancel',()=>drag=false);
+    function resize(){const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);if(canvas.width!==Math.floor(w*renderer.getPixelRatio())||canvas.height!==Math.floor(h*renderer.getPixelRatio())){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}}
+    return {renderer,scene,camera,can,ring,gold,resize,getPointer:()=>({px,py}),getSpin:()=>spin}}
 
-  function animateProgress(){
-    if(!progress||loaderFinished)return;
-    visualProgress+=(targetProgress-visualProgress)*.12;
-    if(Math.abs(targetProgress-visualProgress)<.08)visualProgress=targetProgress;
-    progress.style.width=`${visualProgress}%`;
-    progress.setAttribute('aria-valuenow',String(Math.round(visualProgress)));
-    requestAnimationFrame(animateProgress);
-  }
-
-  function revealPage(){
-    if(loaderFinished)return;
-    loaderFinished=true;
-    targetProgress=100;
-    const fill=()=>{
-      visualProgress+=(100-visualProgress)*.22;
-      if(100-visualProgress<.1)visualProgress=100;
-      if(progress){
-        progress.style.width=`${visualProgress}%`;
-        progress.setAttribute('aria-valuenow',String(Math.round(visualProgress)));
-      }
-      if(visualProgress<100){requestAnimationFrame(fill);return}
-      setTimeout(()=>{
-        intro&&intro.classList.add('done');
-        document.body.classList.add('ready');
-      },160);
-    };
-    fill();
-  }
-
-  if(progress){
-    progress.style.width='0%';
-    progress.setAttribute('role','progressbar');
-    progress.setAttribute('aria-valuemin','0');
-    progress.setAttribute('aria-valuemax','100');
-    progress.setAttribute('aria-valuenow','0');
-    requestAnimationFrame(animateProgress);
-  }
-
-  if(!intro){document.body.classList.add('ready');return}
-
-  if(file!=='index'){
-    setTarget(70);
-    const done=()=>revealPage();
-    if(document.readyState==='complete')done();
-    else addEventListener('load',done,{once:true});
-    return;
-  }
-
-  const MODEL_UID='62f9706628244398804e23adeb2bc982';
-  const viewers=[
-    {name:'hero',frame:$('#monsterHeroViewer')},
-    {name:'scroll',frame:$('#monsterScrollViewer')}
-  ].filter(v=>v.frame);
-
-  const pageReady={value:document.readyState==='complete'};
-  const states=Object.fromEntries(viewers.map(v=>[v.name,{
-    mesh:0,
-    texture:0,
-    preloadDone:false,
-    viewerReady:false,
-    error:false,
-    api:null
-  }]));
-
-  function actualProgress(){
-    let total=pageReady.value?10:0;
-    const each=viewers.length?90/viewers.length:90;
-    viewers.forEach(v=>{
-      const s=states[v.name];
-      const readyPart=s.viewerReady?0.1:0;
-      const preloadPart=s.preloadDone?0.1:0;
-      const part=(s.mesh*.4)+(s.texture*.4)+readyPart+preloadPart;
-      total+=each*Math.min(1,part);
-    });
-    setTarget(Math.min(99,total));
-  }
-
-  function modelsAreActuallyVisible(){
-    return viewers.length===2&&viewers.every(v=>{
-      const s=states[v.name];
-      return !s.error&&s.preloadDone&&s.viewerReady;
-    });
-  }
-
-  function maybeFinish(){
-    actualProgress();
-    if(pageReady.value&&modelsAreActuallyVisible())revealPage();
-  }
-
-  const markPageReady=()=>{pageReady.value=true;maybeFinish()};
-  if(document.readyState==='complete')markPageReady();
-  else addEventListener('load',markPageReady,{once:true});
-
-  function loadSketchfabApi(){
-    if(window.Sketchfab)return Promise.resolve();
-    return new Promise((resolve,reject)=>{
-      const script=document.createElement('script');
-      script.src='https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js';
-      script.async=true;
-      script.onload=resolve;
-      script.onerror=()=>reject(new Error('Sketchfab Viewer API failed to load'));
-      document.head.appendChild(script);
-    });
-  }
-
-  function directFallback(frame){
-    frame.src=`https://sketchfab.com/models/${MODEL_UID}/embed?autostart=1&autospin=0&preload=1&dnt=1&ui_theme=dark&ui_hint=0&ui_infos=0&ui_controls=0&ui_stop=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_inspector=0&ui_ar=0`;
-    frame.closest('.monster-viewer-shell,.mz-model-wrap')?.classList.add('viewer-ready');
-  }
-
-  function initViewer(viewer){
-    return new Promise((resolve,reject)=>{
-      const state=states[viewer.name];
-      const client=new window.Sketchfab('1.12.1',viewer.frame);
-
-      client.init(MODEL_UID,{
-        autostart:0,
-        autospin:0,
-        animation_autoplay:0,
-        camera:0,
-        preload:1,
-        transparent:0,
-        dnt:1,
-        scrollwheel:0,
-        double_click:0,
-        ui_theme:'dark',
-        ui_hint:0,
-        ui_infos:0,
-        ui_controls:0,
-        ui_stop:0,
-        ui_help:0,
-        ui_settings:0,
-        ui_vr:0,
-        ui_fullscreen:0,
-        ui_annotations:0,
-        ui_inspector:0,
-        ui_ar:0,
-        success(api){
-          state.api=api;
-
-          api.addEventListener('modelLoadProgress',factor=>{
-            state.mesh=Math.max(state.mesh,Number(factor)||0);
-            actualProgress();
-          });
-
-          api.addEventListener('textureLoadProgress',factor=>{
-            state.texture=Math.max(state.texture,Number(factor)||0);
-            actualProgress();
-          });
-
-          api.addEventListener('viewerready',()=>{
-            // Force the viewer background to SwiftSupply's dark surface instead
-            // of the model's white studio background.
-            api.setBackground({color:[0.035,0.039,0.051]},()=>{});
-            api.setUserInteraction(true,()=>{});
-
-            state.viewerReady=true;
-            viewer.frame.closest('.monster-viewer-shell,.mz-model-wrap')?.classList.add('viewer-ready');
-            maybeFinish();
-            resolve(api);
-          });
-
-          api.load(()=>{
-            state.preloadDone=true;
-            state.mesh=Math.max(state.mesh,1);
-            actualProgress();
-            api.start(()=>{});
-          });
-        },
-        error(err){
-          state.error=true;
-          console.error(`Sketchfab ${viewer.name} viewer failed`,err);
-          directFallback(viewer.frame);
-          reject(err||new Error('Sketchfab viewer failed'));
-        }
-      });
-    });
-  }
-
-  setTarget(3);
-  loadSketchfabApi()
-    .then(()=>Promise.all(viewers.map(initViewer)))
-    .catch(err=>{
-      console.error('Sketchfab API initialization failed; restoring direct embeds.',err);
-      viewers.forEach(v=>directFallback(v.frame));
-      setTarget(96);
-    });
+  frontTexturePromise.then(frontTex=>{if(introProgress)introProgress.style.width='72%';const hero=makeScene($('#monsterHeroCanvas'),'hero',frontTex),lower=makeScene($('#monsterScrollCanvas'),'scroll',frontTex);if(introProgress)introProgress.style.width='92%';const start=performance.now();function frame(){const t=(performance.now()-start)/1000;hero.resize();lower.resize();const hp=hero.getPointer();if(!reduce){hero.can.rotation.y=t*.55+hero.getSpin()+hp.px*.38;hero.can.rotation.x=hp.py*.12+Math.sin(t*.8)*.02;hero.can.position.y=Math.sin(t*.9)*.09;hero.ring.rotation.z=t*.12;hero.gold.intensity=4.8+Math.sin(t*1.7)*.5}else hero.can.rotation.y=.15;hero.renderer.render(hero.scene,hero.camera);lower.can.rotation.y=lowerProgress*Math.PI*4+t*(reduce?0:.12)+lower.getSpin();lower.can.rotation.x=Math.sin(lowerProgress*Math.PI*2)*.08;lower.ring.rotation.z=-lowerProgress*Math.PI*2;lower.renderer.render(lower.scene,lower.camera);requestAnimationFrame(frame)}frame();finishIntro()}).catch(e=>{console.error('Monster 3D setup failed',e);finishIntro()});
 })();
