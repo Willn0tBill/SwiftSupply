@@ -31,6 +31,7 @@ function startShop(){
 }
 document.addEventListener('DOMContentLoaded',startShop);
 document.addEventListener('supabase-ready',connectStorefront);
+document.addEventListener('supabase-error',()=>{const status=document.getElementById('shopStatus');if(status)status.innerHTML='Live inventory is temporarily unavailable. <button type="button" class="button button-secondary" id="retryCatalog">Retry</button>';document.getElementById('retryCatalog')?.addEventListener('click',()=>location.reload());});
 window.addEventListener('cart-updated',()=>{if(products.length)render()});
 
 async function loadProducts(silent=false){
@@ -44,11 +45,12 @@ async function loadProducts(silent=false){
     products=data||[];
     if(brandFilter!=='All'&&!products.some(p=>(p.brand||'').toLowerCase()===brandFilter.toLowerCase()))brandFilter='All';
     buildBrandFilters();
-    if(status&&!silent)status.textContent=products.length?products.length+' products in the catalog · stock synced with SwiftSupply Ops.':'No products are currently listed.';
+    if(status)status.textContent=products.length?products.length+' products in the catalog · stock synced with SwiftSupply Ops.':'No products are currently listed.';
     render();
   }catch(e){
     console.error('SwiftSupply catalog error:',e);
-    if(status&&!silent)status.textContent='Could not load the live catalog. Refresh the page and try again.';
+    if(status)status.innerHTML='We could not load live stock. <button type="button" class="button button-secondary" id="retryCatalog">Retry catalog</button>';
+    document.getElementById('retryCatalog')?.addEventListener('click',()=>loadProducts(false));
     const empty=document.getElementById('empty');if(empty&&!silent){empty.hidden=false;empty.textContent='The catalog could not be loaded.'}
   }finally{loadingProducts=false}
 }
@@ -77,8 +79,8 @@ function render(){
   }).join('');
   empty.hidden=!!list.length;
   root.querySelectorAll('.add-cart').forEach(b=>b.addEventListener('click',()=>{
-    const p=products.find(x=>x.id===b.dataset.id);if(!p||!window.SwiftCart)return;
+    const p=products.find(x=>String(x.id)===b.dataset.id);if(!p||!window.SwiftCart)return;
     const result=SwiftCart.add(p,1);
-    if(result.ok){render()}else{b.textContent='Out of Stock';}
+    if(result.ok){b.textContent='Added ✓';render()}else{b.textContent=result.available>0?'Not enough stock':'Out of Stock';}
   }));
 }
