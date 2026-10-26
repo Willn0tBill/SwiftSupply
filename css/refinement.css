@@ -1,0 +1,17 @@
+/* Shared SwiftSupply storefront refinement: cleaner hierarchy, tap targets and readable status. */
+:root{--ss-line:rgba(156,182,206,.22)}
+body{font-feature-settings:"kern" 1}
+.site-header{backdrop-filter:blur(18px)}
+.page-hero{background:radial-gradient(ellipse at 82% 12%,rgba(54,146,246,.14),transparent 55%)}
+.page-hero h1,.section-title{letter-spacing:-.038em;line-height:1.12}
+.button,.menu-button,.qty-btn{min-height:44px}
+.product-card,.checkout-summary,.form-card-pro,.shop-quick-card{box-shadow:0 16px 36px rgba(0,0,0,.1);transition:transform .2s ease,box-shadow .2s ease}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 20px 46px rgba(0,0,0,.16)}
+.product-card .product-body{display:flex;flex-direction:column;flex:1}
+.product-card .product-bottom{margin-top:auto}
+#shopStatus{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#shopStatus .button{padding:8px 18px}
+.form-message.show{padding:12px;border-radius:10px;word-break:break-word}
+:focus-visible{outline:3px solid #60c5ff!important;outline-offset:3px}
+@media(max-width:780px){.page-hero{padding-top:118px}.shop-layout-pro,.checkout-layout,.checkout-form-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}.shop-sidebar-pro{position:static!important}.filter-row{flex-wrap:wrap}.cart-controls{flex-wrap:wrap}.cart-qty{max-width:92px}.button-row{gap:10px}.button-row .button{flex:1 1 160px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
