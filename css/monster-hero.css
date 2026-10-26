@@ -46,3 +46,5 @@ body.model-unavailable .monster-canvas-hero{display:none}
 @media(prefers-reduced-motion:reduce){
   .monster-canvas-hero{filter:none}
 }
+
+@media(max-width:760px){.monster-canvas-hero{touch-action:pan-y!important}}
