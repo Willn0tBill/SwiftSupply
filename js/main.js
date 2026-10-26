@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const isAdmin=location.pathname.includes("/admin/");
   const prefix=isAdmin?"../":"";
-  ["css/decor.css","css/mobile.css","css/store-upgrade.css","css/dark-theme.css","css/professional.css"].forEach(file=>{const link=document.createElement("link");link.rel="stylesheet";link.href=prefix+file;document.head.appendChild(link)});
+  ["css/decor.css","css/mobile.css","css/store-upgrade.css","css/dark-theme.css","css/professional.css","css/refinement.css"].forEach(file=>{const link=document.createElement("link");link.rel="stylesheet";link.href=prefix+file;document.head.appendChild(link)});
   if(!isAdmin&&!document.querySelector('link[href$="css/pro.css"]')){const link=document.createElement('link');link.rel='stylesheet';link.href=prefix+'css/pro.css';document.head.appendChild(link)}
   const menuButton=document.querySelector(".menu-button"),navLinks=document.querySelector(".nav-links");
 
@@ -14,7 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if(navLinks&&!isAdmin&&!navLinks.querySelector('.admin-link')){const li=document.createElement('li');li.innerHTML=`<a class="nav-link admin-link" href="${prefix}admin/">Admin</a>`;navLinks.appendChild(li)}
   if(navLinks&&!navLinks.querySelector('.cart-link')){const li=document.createElement('li');li.innerHTML=`<a class="nav-link cart-link" href="${prefix}checkout.html">Cart <span data-cart-count hidden>0</span></a>`;navLinks.appendChild(li)}
 
-  if(menuButton&&navLinks){menuButton.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open))});navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("open");menuButton.setAttribute("aria-expanded","false")}))}
+  if(menuButton&&navLinks){
+    menuButton.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open));menuButton.setAttribute("aria-label",open?"Close navigation":"Open navigation")});
+    navLinks.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("open");menuButton.setAttribute("aria-expanded","false");menuButton.setAttribute("aria-label","Open navigation")}));
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"){navLinks.classList.remove("open");menuButton.setAttribute("aria-expanded","false");menuButton.setAttribute("aria-label","Open navigation")}});
+  }
 
   if(isAdmin&&!document.querySelector('script[data-admin-powerwashing]')){
     const script=document.createElement('script');
