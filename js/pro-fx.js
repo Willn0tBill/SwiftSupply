@@ -51,7 +51,7 @@
     setTimeout(()=>{intro?.classList.add('done');document.body.classList.add('ready')},170);
   }
   if(progress)progress.style.width='20%';
-  if(!window.THREE||!$('#monsterHeroCanvas')){modelFallback();finishIntro();return}
+  if(!window.THREE||!$('#monsterHeroCanvas')){document.querySelector('#modelToggle')?.remove();finishIntro();return}
   const THREE=window.THREE;
 
   function roundedRect(ctx,x,y,w,h,r){
@@ -207,37 +207,45 @@
     return {renderer,scene,camera,can,resize,getPointer:()=>({px,py}),getSpin:()=>userSpin,isDragging:()=>drag,gold};
   }
 
-  try{
-    if(progress)progress.style.width='48%';
-    const maps=makeProductMaps();
-    if(progress)progress.style.width='72%';
-    const hero=makeScene($('#monsterHeroCanvas'),maps);
-    // Mobile only needs one interactive WebGL model; the extra renderer wasted memory.
-    const lower=mobile?null:makeScene($('#monsterScrollCanvas'),maps);
-    if(progress)progress.style.width='92%';
-
-    const start=performance.now();
-    (function frame(){
-      const t=(performance.now()-start)/1000;
-      hero.resize();if(lower)lower.resize();
-      const hp=hero.getPointer();
-
-      // Keep the FRONT branding in view. Rotate only when the visitor drags the model.
-      hero.can.rotation.y=hero.getSpin()+(!reduce&&!mobile?hp.px*.08:0);
-      hero.can.rotation.x=!reduce&&!mobile?hp.py*.04:0;
-      hero.can.position.y=0;
-      hero.gold.intensity=17+Math.sin(t*1.1)*.7;
-      hero.renderer.render(hero.scene,hero.camera);
-
-      // Scroll-driven second render is desktop-only, and skips offscreen frames.
-      if(lower){
-        lower.can.rotation.y=lowerProgress*Math.PI*2.35+lower.getSpin();
-        lower.can.rotation.x=0;
-        const bounds=mz.getBoundingClientRect();
-        if(bounds.bottom>0&&bounds.top<innerHeight)lower.renderer.render(lower.scene,lower.camera);
-      }
-      requestAnimationFrame(frame);
-    })();
-    finishIntro();
-   }catch(err){console.error('Monster product model failed to initialize',err);modelFallback();finishIntro()}
+  // Real product photography is the default. This illustrative 3D model only
+  // initializes after the visitor explicitly requests it, saving mobile GPU memory.
+  const stage=$('.hero-monster-stage'),toggle=$('#modelToggle'),hint=$('#modelHint'),canvas=$('#monsterHeroCanvas');
+  let hero=null,previewActive=false;
+  const showPhoto=()=>{
+    previewActive=false;
+    stage?.classList.remove('is-3d');
+    if(canvas)canvas.hidden=true;
+    if(toggle){toggle.textContent='View illustrative 3D';toggle.setAttribute('aria-pressed','false');}
+    if(hint)hint.textContent='Actual product photo · packaging may vary';
+  };
+  const draw=()=>{
+    if(!previewActive||!hero)return;
+    hero.resize();
+    hero.can.rotation.y=-Math.PI/2+hero.getSpin();
+    hero.can.rotation.x=0;
+    hero.renderer.render(hero.scene,hero.camera);
+    requestAnimationFrame(draw);
+  };
+  toggle?.addEventListener('click',()=>{
+    if(previewActive){showPhoto();return}
+    try{
+      if(!window.THREE)throw new Error('3D library unavailable');
+      if(!hero)hero=makeScene(canvas,makeProductMaps());
+      previewActive=true;
+      stage.classList.add('is-3d');
+      canvas.hidden=false;
+      toggle.textContent='Show real product photo';
+      toggle.setAttribute('aria-pressed','true');
+      if(hint)hint.textContent='Illustrative 3D preview · drag to rotate';
+      draw();
+    }catch(err){
+      console.warn('3D preview unavailable',err);
+      showPhoto();
+      if(hint)hint.textContent='3D preview unavailable. Showing actual product photo.';
+    }
+  });
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden&&previewActive)showPhoto();
+  });
+  finishIntro();
 })();
