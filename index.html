@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/alani-fix.css">
 <link rel="stylesheet" href="css/power-washing.css">
 <link rel="stylesheet" href="css/pro.css">
-<link rel="stylesheet" href="css/monster-hero.css">
+<link rel="stylesheet" href="css/monster-hero.css?v=20261026-3">
 </head>
 <body>
 <div id="intro"><div><b>Swift<span>Supply</span></b><i id="introProgress"></i></div></div>
@@ -31,28 +31,14 @@
     <div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div>
   </div>
 
-  <div class="hero-monster-stage" aria-label="Interactive 3D Monster Zero Ultra can">
+  <div class="hero-monster-stage" aria-label="Featured Monster Zero Ultra product">
     <div class="hero-monster-glow" aria-hidden="true"></div>
-    <canvas id="monsterHeroCanvas" class="monster-canvas monster-canvas-hero" aria-label="Clean rotating 3D Monster Zero Ultra product model"></canvas>
-    <img class="monster-static-fallback" src="assets/monster-zero-ultra.webp" alt="Monster Zero Ultra product image" decoding="async">
-    <p class="monster-drag-hint">Drag to explore the 360° product model</p>
+    <span class="product-photo-kicker">PRODUCT SPOTLIGHT <span>·</span> ZERO ULTRA</span>
+    <img class="monster-static-fallback" src="assets/monster-zero-ultra.webp?v=20261026-3" alt="Front product photograph of Monster Zero Ultra can" decoding="async" fetchpriority="high">
+    <canvas id="monsterHeroCanvas" class="monster-canvas monster-canvas-hero" role="img" aria-label="Interactive illustrative 3D can, not a precise product image" hidden></canvas>
+    <div class="product-photo-footer"><span id="modelHint">Actual product photo · packaging may vary</span><button type="button" id="modelToggle" class="model-toggle" aria-pressed="false">View illustrative 3D</button></div>
   </div>
   <div class="cue" aria-hidden="true"></div>
-</section>
-
-<section class="mz" id="mz" aria-label="Monster Zero Ultra feature">
-  <div class="mz-stick">
-    <div class="mz-bg"></div>
-    <div class="mz-model-wrap">
-      <canvas id="monsterScrollCanvas" class="monster-canvas monster-canvas-scroll" aria-label="3D Monster Zero Ultra product model"></canvas>
-    </div>
-    <div class="mz-copy">
-      <div><p class="eyebrow">01 · Monster Zero Ultra</p><h3>Clean 3D product model.</h3><p>A crisp product-style can with no scan background, baked outline, iframe, or viewer UI.</p></div>
-      <div><p class="eyebrow">02 · 360°</p><h3>Front. Side. Back.</h3><p>Scroll through the section to rotate around the can, or drag it yourself to inspect every side.</p></div>
-      <div><p class="eyebrow">03 · Live stock</p><h3>See what's in.</h3><p>Availability updates as you browse, so you only cart what we have.</p></div>
-      <div><p class="eyebrow">04 · One cart</p><h3>Send it together.</h3><p>Build one cart and submit a single order request. No online payment.</p></div>
-    </div>
-  </div>
 </section>
 
 <section class="home-brands-section"><div class="container"><div class="section-heading reveal"><p class="eyebrow">SHOP BY BRAND</p><h2 class="section-title">Pick a <span>favorite.</span></h2><p class="section-intro">Browse flavors from the brands currently carried by SwiftSupply.</p></div><div id="homeBrands" class="home-brand-grid"><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Monster</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Alani Nu</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Cheetos</h3><p>Loading flavors...</p></div></article></div></div></section>
@@ -74,6 +60,6 @@ function brandCard(name,products){const items=products.filter(p=>(p.brand||'').t
 async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')} }catch(e){console.error(e);document.getElementById('announcements').innerHTML='<div class="status-box">Latest updates are unavailable right now. Try again shortly.</div>';document.getElementById('homeBrands').innerHTML='<div class="status-box">Unable to load brands. <a href="shop.html">Open the catalog</a> or try again later.</div>'}}document.addEventListener('supabase-error',()=>{document.getElementById('announcements').innerHTML='<div class="status-box">Updates are temporarily unavailable.</div>';document.getElementById('homeBrands').innerHTML='<div class="status-box">Live stock could not be loaded. <a href="shop.html">Try the shop</a>.</div>'});document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="js/pro-fx.js" defer></script>
+<script src="js/pro-fx.js?v=20261026-3" defer></script>
 </body>
 </html>
