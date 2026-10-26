@@ -1,7 +1,8 @@
 (() => {
   const KEY = 'swiftsupplyCartV1';
-  const read = () => { try { const value = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } };
-  const write = (items) => { localStorage.setItem(KEY, JSON.stringify(items)); window.dispatchEvent(new CustomEvent('cart-updated')); };
+  let inMemoryCart = [];
+  const read = () => { try { const value = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(value) ? value : []; } catch { return inMemoryCart; } };
+  const write = (items) => { inMemoryCart = items; try { localStorage.setItem(KEY, JSON.stringify(items)); } catch(e) { console.warn('Cart storage unavailable; keeping this cart for this tab.',e); } window.dispatchEvent(new CustomEvent('cart-updated')); };
   const clean = (items) => items.filter(i => i && i.id && Number(i.quantity) > 0).map(i => ({...i, quantity: Math.max(1, Math.floor(Number(i.quantity)))}));
   const groupKey = item => item?.stock_group || `catalog:${item?.id || ''}`;
   const reservedGroup = item => {
@@ -49,11 +50,12 @@
     const desired = Math.max(1, Math.floor(Number(quantity) || 1));
     const otherGroupQty = items.filter(i => i.id !== id && groupKey(i) === groupKey(item)).reduce((n,i)=>n+Number(i.quantity||0),0);
     const maxForItem = Math.max(0, Math.floor(Number(item.stock) || 0) - otherGroupQty);
-    item.quantity = Math.max(1, Math.min(desired, Math.max(1,maxForItem)));
+    if (maxForItem < 1) { remove(id); return; }
+    item.quantity = Math.min(desired, maxForItem);
     write(clean(items));
   }
   function remove(id) { write(read().filter(i => i.id !== id)); }
-  function clear() { localStorage.removeItem(KEY); window.dispatchEvent(new CustomEvent('cart-updated')); }
+  function clear() { inMemoryCart=[]; try{localStorage.removeItem(KEY)}catch(e){} window.dispatchEvent(new CustomEvent('cart-updated')); }
   function count() { return read().reduce((n, i) => n + Number(i.quantity || 0), 0); }
   function bundle(item) {
     const m = String(item.bundle_label || '').match(/^\s*(\d+)\s+for\s+\$?([0-9]+(?:\.[0-9]{1,2})?)\s*$/i);
@@ -69,4 +71,5 @@
   window.SwiftCart = { read, add, update, remove, clear, count, total, lineTotal, money, bundle, reserved, reservedGroup, available, groupKey, renderBadges };
   document.addEventListener('DOMContentLoaded', renderBadges);
   window.addEventListener('cart-updated', renderBadges);
+  window.addEventListener('storage', e => { if(e.key===KEY) renderBadges(); });
 })();
