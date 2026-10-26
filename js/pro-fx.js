@@ -3,6 +3,8 @@
   const $=s=>document.querySelector(s);
   const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobile=window.matchMedia&&window.matchMedia('(max-width:760px)').matches;
+  function modelFallback(){document.body.classList.add('model-unavailable');}
   document.body.dataset.proPage=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,'')||'index';
 
   if(!$('#sp-progress')){const el=document.createElement('div');el.id='sp-progress';document.body.appendChild(el)}
@@ -49,7 +51,7 @@
     setTimeout(()=>{intro?.classList.add('done');document.body.classList.add('ready')},170);
   }
   if(progress)progress.style.width='20%';
-  if(!window.THREE||!$('#monsterHeroCanvas')){finishIntro();return}
+  if(!window.THREE||!$('#monsterHeroCanvas')){modelFallback();finishIntro();return}
   const THREE=window.THREE;
 
   function roundedRect(ctx,x,y,w,h,r){
@@ -178,7 +180,7 @@
 
   function makeScene(canvas,maps){
     const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,mobile?1.5:2));
     renderer.setClearColor(0x000000,0);
     renderer.outputColorSpace=THREE.SRGBColorSpace;
     renderer.toneMapping=THREE.ACESFilmicToneMapping;
@@ -209,31 +211,33 @@
     if(progress)progress.style.width='48%';
     const maps=makeProductMaps();
     if(progress)progress.style.width='72%';
-    const hero=makeScene($('#monsterHeroCanvas'),maps),lower=makeScene($('#monsterScrollCanvas'),maps);
+    const hero=makeScene($('#monsterHeroCanvas'),maps);
+    // Mobile only needs one interactive WebGL model; the extra renderer wasted memory.
+    const lower=mobile?null:makeScene($('#monsterScrollCanvas'),maps);
     if(progress)progress.style.width='92%';
 
     const start=performance.now();
     (function frame(){
       const t=(performance.now()-start)/1000;
-      hero.resize();lower.resize();
+      hero.resize();if(lower)lower.resize();
       const hp=hero.getPointer();
 
-      // Hero: only the can turns. No orbit ring, no iframe background, no wrapper spin.
-      if(!reduce){
-        const auto=hero.isDragging()?0:t*.17;
-        hero.can.rotation.y=auto+hero.getSpin()+hp.px*.16;
-        hero.can.rotation.x=hp.py*.06;
-        hero.can.position.y=Math.sin(t*.75)*.035;
-      }else hero.can.rotation.y=.12+hero.getSpin();
+      // Keep the FRONT branding in view. Rotate only when the visitor drags the model.
+      hero.can.rotation.y=hero.getSpin()+(!reduce&&!mobile?hp.px*.08:0);
+      hero.can.rotation.x=!reduce&&!mobile?hp.py*.04:0;
+      hero.can.position.y=0;
       hero.gold.intensity=17+Math.sin(t*1.1)*.7;
       hero.renderer.render(hero.scene,hero.camera);
 
-      // Lower section: rotation is driven by scroll, not constant spinning.
-      lower.can.rotation.y=lowerProgress*Math.PI*2.35+lower.getSpin();
-      lower.can.rotation.x=0;
-      lower.renderer.render(lower.scene,lower.camera);
+      // Scroll-driven second render is desktop-only, and skips offscreen frames.
+      if(lower){
+        lower.can.rotation.y=lowerProgress*Math.PI*2.35+lower.getSpin();
+        lower.can.rotation.x=0;
+        const bounds=mz.getBoundingClientRect();
+        if(bounds.bottom>0&&bounds.top<innerHeight)lower.renderer.render(lower.scene,lower.camera);
+      }
       requestAnimationFrame(frame);
     })();
     finishIntro();
-  }catch(err){console.error('Monster product model failed to initialize',err);finishIntro()}
+   }catch(err){console.error('Monster product model failed to initialize',err);modelFallback();finishIntro()}
 })();
