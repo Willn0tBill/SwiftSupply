@@ -7,14 +7,15 @@
 <title>SwiftSupply | Fast. Simple. Convenient.</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/home.css?v=20261026-restore">
 <link rel="stylesheet" href="css/alani-fix.css">
+
 <link rel="stylesheet" href="css/power-washing.css">
 <link rel="stylesheet" href="css/pro.css">
-<link rel="stylesheet" href="css/monster-hero.css?v=20261026-3">
+
 </head>
 <body>
-<div id="intro"><div><b>Swift<span>Supply</span></b><i id="introProgress"></i></div></div>
+
 <header class="site-header">
 <nav class="navbar container" aria-label="Main navigation">
 <a class="brand" href="index.html"><img src="assets/logo.png" alt="SwiftSupply logo">Swift<span>Supply</span></a>
@@ -23,23 +24,7 @@
 </nav>
 </header>
 <main>
-<section class="hero3d">
-  <div class="hero3d-copy">
-    <p class="home-kicker">Fast. Simple. Convenient.</p>
-    <h1 class="home-title">Snacks.<br>Drinks.<br><span>Convenience.</span></h1>
-    <p class="home-lead">A simple way to find the snacks and drinks you want, build one cart, and send in your order. Built locally with bigger plans ahead.</p>
-    <div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div>
-  </div>
-
-  <div class="hero-monster-stage" aria-label="Featured Monster Zero Ultra product">
-    <div class="hero-monster-glow" aria-hidden="true"></div>
-    <span class="product-photo-kicker">PRODUCT SPOTLIGHT <span>·</span> ZERO ULTRA</span>
-    <img class="monster-static-fallback" src="assets/monster-zero-ultra.webp?v=20261026-3" alt="Front product photograph of Monster Zero Ultra can" decoding="async" fetchpriority="high">
-    <canvas id="monsterHeroCanvas" class="monster-canvas monster-canvas-hero" role="img" aria-label="Interactive illustrative 3D can, not a precise product image" hidden></canvas>
-    <div class="product-photo-footer"><span id="modelHint">Actual product photo · packaging may vary</span><button type="button" id="modelToggle" class="model-toggle" aria-pressed="false">View illustrative 3D</button></div>
-  </div>
-  <div class="cue" aria-hidden="true"></div>
-</section>
+<section class="home-hero"><div class="home-hero-inner"><div class="home-copy reveal"><p class="home-kicker">Fast. Simple. Convenient.</p><h1 class="home-title">Snacks.<br>Drinks.<br><span>Convenience.</span></h1><p class="home-lead">A simple way to find the snacks and drinks you want, build one cart, and send in your order. Built locally with bigger plans ahead.</p><div class="home-actions"><a class="button button-primary" href="shop.html">Shop now</a><a class="button button-secondary" href="alerts.html">Get stock alerts</a></div></div><div class="home-visual reveal-right" aria-label="Popular SwiftSupply products"><div class="home-glow"></div><div class="home-card home-card-left"><img class="home-product-image" src="assets/home-monster.webp?v=2" alt="Monster Zero Ultra can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Monster</span></div><div class="home-card home-card-main"><img class="home-product-image" src="assets/home-alani-cutout.webp?v=2" alt="Alani energy drink can" style="width:78%;height:78%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Alani</span></div><div class="home-card home-card-right"><img class="home-product-image" src="assets/home-cheetos.webp?v=2" alt="Cheetos snack bag" style="width:86%;height:86%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 16px 24px rgba(0,0,0,.55));"><span class="home-card-label">Cheetos</span></div><div class="home-visual-tag">Local. Simple. Ready.</div></div></div></section>
 
 <section class="home-brands-section"><div class="container"><div class="section-heading reveal"><p class="eyebrow">SHOP BY BRAND</p><h2 class="section-title">Pick a <span>favorite.</span></h2><p class="section-intro">Browse flavors from the brands currently carried by SwiftSupply.</p></div><div id="homeBrands" class="home-brand-grid"><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Monster</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Alani Nu</h3><p>Loading flavors...</p></div></article><article class="home-brand-card home-brand-loading"><div class="home-brand-image"><span>Loading...</span></div><div><h3>Cheetos</h3><p>Loading flavors...</p></div></article></div></div></section>
 
@@ -59,7 +44,7 @@ const HOME_BRAND_IMAGES={'Monster':'assets/monster-zero-ultra.webp','Alani Nu':'
 function brandCard(name,products){const items=products.filter(p=>(p.brand||'').toLowerCase()===name.toLowerCase());const flavors=items.filter(p=>p.flavor).map(p=>p.flavor);const image=HOME_BRAND_IMAGES[name];return `<a class="home-brand-card" href="shop.html?brand=${encodeURIComponent(name)}"><div class="home-brand-image"><img src="${image}" alt="${esc(name)} product"></div><div class="home-brand-copy"><span class="home-brand-count">${items.length} ${items.length===1?'product':'products'}</span><h3>${esc(name)}</h3><p>${flavors.length?esc(flavors.slice(0,3).join(' · ')):'Add flavors in the Admin Panel.'}</p><span class="home-brand-link">View flavors →</span></div></a>`}
 async function loadHome(){if(!window.sb)return;try{const[a,g,p]=await Promise.all([sb.from('announcements').select('*').eq('active',true).order('created_at',{ascending:false}).limit(3),sb.from('site_settings').select('*').in('key',['goal_amount','current_amount']),sb.from('products').select('id,name,brand,flavor,image_url,active,category').eq('active',true)]);if(!a.error)document.getElementById('announcements').innerHTML=a.data.length?a.data.map(x=>`<article class="home-announcement reveal visible"><h3>${esc(x.title)}</h3><p>${esc(x.body)}</p><time>${new Date(x.created_at).toLocaleDateString()}</time></article>`).join(''):'<div class="status-box">No announcements yet.</div>';if(!g.error){const x=Object.fromEntries(g.data.map(v=>[v.key,Number(v.value)])),goal=x.goal_amount||5000,current=x.current_amount||0;document.getElementById('goal').textContent='$'+goal.toLocaleString();document.getElementById('goalText').textContent='Current progress: $'+current.toLocaleString();document.getElementById('progress').style.width=Math.min(100,current/goal*100)+'%'}if(!p.error){const names=['Monster','Alani Nu','Cheetos'];document.getElementById('homeBrands').innerHTML=names.map(n=>brandCard(n,p.data||[])).join('')} }catch(e){console.error(e);document.getElementById('announcements').innerHTML='<div class="status-box">Latest updates are unavailable right now. Try again shortly.</div>';document.getElementById('homeBrands').innerHTML='<div class="status-box">Unable to load brands. <a href="shop.html">Open the catalog</a> or try again later.</div>'}}document.addEventListener('supabase-error',()=>{document.getElementById('announcements').innerHTML='<div class="status-box">Updates are temporarily unavailable.</div>';document.getElementById('homeBrands').innerHTML='<div class="status-box">Live stock could not be loaded. <a href="shop.html">Try the shop</a>.</div>'});document.addEventListener('supabase-ready',loadHome);document.addEventListener('DOMContentLoaded',()=>{if(window.sb)loadHome()});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="js/pro-fx.js?v=20261026-3" defer></script>
+
+
 </body>
 </html>
